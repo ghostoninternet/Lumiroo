@@ -1,0 +1,1 @@
+// Write authentication middleware
