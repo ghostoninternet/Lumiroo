@@ -6,7 +6,7 @@ const corsConfig = {
   origin: function (origin, callback) {
     if (WHITELIST_DOMAIN.includes(origin) !== -1 || !origin) {
       callback(null, true)
-    }
+    }else
     callback(new Error("Not allowed by CORS"))
   },
   optionsSuccessStatus: 204,
