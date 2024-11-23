@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { signUp } from "../../../apis/auth";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const [avatar, setAvatar] = useState(null);
@@ -210,15 +211,15 @@ const SignUp = () => {
             />
           </div>
           <div className="col-span-2 flex justify-between items-center">
-          <a href="/auth/sign-in" className="text-blue-500">
-            アカウントをお持ちですか？ログインへ
-          </a>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600"
-          >
-            登録
-          </button>
+            <Link to="/auth/sign-in" className="text-blue-500">
+              アカウントをお持ちですか？ログインへ
+            </Link>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600"
+            >
+              登録
+            </button>
           </div>
         </div>
       </form>
