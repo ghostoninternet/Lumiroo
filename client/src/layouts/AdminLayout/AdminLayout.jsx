@@ -1,38 +1,24 @@
-import React from 'react'
+import React from 'react';
 import Header from '../MainLayout/Header';
 import Footer from '../MainLayout/Footer';
 
 function AdminLayout() {
   return (
-    <div style={styles.layout}>
+    <div className="flex flex-col min-h-screen">
       <header>
-        <Header role="user"/>
+        <Header role="admin" />
       </header>
 
-      <main style={styles.mainContent}>
+      <main className="flex-grow p-5 bg-gray-100">
         <h2>This main layout of website!</h2>
         <p>This is the main content of admin page.</p>
       </main>
 
-      <footer style={styles.footer}>
-        <Footer/>
+      <footer>
+        <Footer />
       </footer>
-
     </div>
   );
 }
 
-const styles = {
-  layout: {
-    display: 'flex',         
-    flexDirection: 'column',       
-    minHeight: '100vh',            
-  },
-  mainContent: {
-    flexGrow: 1,                  
-    padding: '20px',
-    backgroundColor: '#f4f4f4',
-  },
-};
-
-export default AdminLayout
+export default AdminLayout;

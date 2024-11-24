@@ -3,6 +3,7 @@ import MainLayout from './layouts/MainLayout/MainLayout'
 import SignIn from './pages/Auth/SignIn/SignIn'
 import SignUp from './pages/Auth/SignUp/SignUp'
 import PlaygroundRecommendation from './pages/PlaygroundRecommendation/PlaygroundRecommendation'
+import AdminLayout from './layouts/AdminLayout/AdminLayout'
 
 function App() {
   return (

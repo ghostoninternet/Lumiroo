@@ -1,69 +1,32 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Header({ role }) {
   return (
-    <header style={styles.header}>
+    <header className="flex justify-between items-center p-4 bg-white border-b border-gray-300">
       {/* Logo */}  
-      <div style={styles.logo}>Lumiroo</div>
+      <div className="text-xl font-bold">Lumiroo</div>
 
       {/* Navigation Links */}
       {role !== 'admin' && (
-        <nav style={styles.nav}>
-          <a href="/" style={styles.link}>ホームページ</a>
-          <a href="/search" style={styles.link}>遊び/編集検索</a>
-          <a href="/favorites" style={styles.link}>お気に入りの遊び場</a>
+        <nav className="flex gap-16 ml-auto mr-8">
+          <Link to="/" className="text-black text-base no-underline">ホームページ</Link>
+          <Link to="/search" className="text-black text-base no-underline">遊び/編集検索</Link>
+          <Link to="/favorites" className="text-black text-base no-underline">お気に入りの遊び場</Link>
         </nav>
       )}
 
       {/* Profile Section */}
-      <div style={styles.profile}>
+      <div className="flex items-center gap-2 overflow-hidden">
         <img
-          src="https://avatars.dicebear.com/api/bottts/johndoe.svg" // URL ảnh đại diện
+          src="https://avatars.dicebear.com/api/bottts/johndoe.svg"
           alt="User Avatar"
-          style={styles.icon}
+          className="w-8 h-8 rounded-full object-cover"
         />
-        <span style={styles.profileText}>User</span>
+        <span className="text-base">User</span>
       </div>
     </header>
-  )
+  );
 }
 
-const styles = {
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '10px 20px',
-    backgroundColor: '#fff',
-    borderBottom: '1px solid #ddd',
-  },
-  logo: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-  },
-  nav: {
-    display: 'flex',
-    gap: '60px', 
-    marginLeft: 'auto', 
-    marginRight: '30px',
-  },
-  link: {
-    textDecoration: 'none',
-    color: '#000',
-    fontSize: '16px',
-  },
-  profile: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    overflow: 'hidden',
-  },
-  icon: {
-    width: '30px',
-    height: '30px',
-    borderRadius: '50%',
-    objectFit: 'cover',
-  },
-};
-
-export default Header
+export default Header;
