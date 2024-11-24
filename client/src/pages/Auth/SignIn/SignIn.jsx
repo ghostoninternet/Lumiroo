@@ -33,20 +33,19 @@ const SignIn = () => {
           autoplay
           loop
           src={lottieAnimation}
-          className="w-3/4 h-auto mb-10"
-          style={{ marginBottom: "2rem" }}
+          className="w-3/4 h-auto mb-8"
         />
-        <h2 className="text-3xl font-extrabold text-green-700 mb-4 highlight-text">
+        <h2 className="text-3xl font-extrabold text-green-700 mb-4 mt-4">
           新しいユーザーですか？
         </h2>
-        <p className="text-gray-700 text-center mb-6">
+        <p className="text-gray-800 text-center mb-6">
           まだアカウントをお持ちでない場合は、今すぐ登録してください。
         </p>
         <a
           href="/auth/sign-up"
-          className="button px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition transform hover:-translate-y-1 shadow-lg"
+          className="px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-2"
         >
-          <i className="fas fa-user-plus"></i> サインアップ
+          <i className="fa-solid fa-user"></i> サインアップ
         </a>
       </motion.div>
 
@@ -71,7 +70,7 @@ const SignIn = () => {
         >
           Lumiroo
         </motion.h1>
-        <p className="highlight-text mb-8 text-center text-green-700 z-10">
+        <p className="text-lg font-bold text-green-700 bg-green-100 p-2 rounded-lg mb-8 z-10">
           楽しい時間を見つけるための最適な場所！
         </p>
 
@@ -115,23 +114,23 @@ const SignIn = () => {
 
           <motion.button
             type="submit"
-            className="button w-full bg-green-500 text-white font-medium py-3 mt-6 rounded-lg hover:bg-green-600 shadow-lg transition duration-300 transform hover:-translate-y-1"
+            className="flex items-center justify-center gap-2 w-full bg-green-500 text-white font-medium py-3 mt-6 rounded-lg hover:bg-green-600 shadow-lg transition duration-300 transform hover:-translate-y-1"
             whileHover={{ scale: 1.05 }}
           >
-            <i className="fas fa-sign-in-alt"></i> ログイン
+            <i className="fa-solid fa-right-to-bracket"></i> ログイン
           </motion.button>
         </form>
 
-        <div className="flex justify-center items-center mt-6 space-x-4 z-10">
-          <p className="text-gray-700">またはソーシャルアカウントでログイン</p>
-          <div className="flex space-x-4">
-            <a href="#" className="text-gray-700 hover:text-gray-900">
-              <i className="fab fa-facebook fa-2x"></i>
-            </a>
-            <a href="#" className="text-gray-700 hover:text-gray-900">
-              <i className="fab fa-google fa-2x"></i>
-            </a>
-          </div>
+        <p className="text-sm text-gray-700 mt-4">
+          またはソーシャルアカウントでログイン
+        </p>
+        <div className="flex justify-center items-center mt-2 space-x-4 z-10">
+          <a href="#" className="text-gray-700 hover:text-gray-900">
+            <i className="fab fa-facebook fa-2x"></i>
+          </a>
+          <a href="#" className="text-gray-700 hover:text-gray-900">
+            <i className="fab fa-google fa-2x"></i>
+          </a>
         </div>
       </motion.div>
     </div>
