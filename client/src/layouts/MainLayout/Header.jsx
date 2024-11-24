@@ -1,17 +1,19 @@
 import React from 'react'
 
-function Header() {
+function Header({ role }) {
   return (
     <header style={styles.header}>
       {/* Logo */}  
       <div style={styles.logo}>Lumiroo</div>
 
       {/* Navigation Links */}
-      <nav style={styles.nav}>
-        <a href="/" style={styles.link}>ホームページ</a>
-        <a href="/search" style={styles.link}>遊び/編集検索</a>
-        <a href="/favorites" style={styles.link}>お気に入りの遊び場</a>
-      </nav>
+      {role !== 'admin' && (
+        <nav style={styles.nav}>
+          <a href="/" style={styles.link}>ホームページ</a>
+          <a href="/search" style={styles.link}>遊び/編集検索</a>
+          <a href="/favorites" style={styles.link}>お気に入りの遊び場</a>
+        </nav>
+      )}
 
       {/* Profile Section */}
       <div style={styles.profile}>
@@ -20,7 +22,7 @@ function Header() {
           alt="User Avatar"
           style={styles.icon}
         />
-        <span style={styles.profileText}>Me</span>
+        <span style={styles.profileText}>User</span>
       </div>
     </header>
   )
@@ -41,9 +43,9 @@ const styles = {
   },
   nav: {
     display: 'flex',
-    gap: '40px', // Khoảng cách giữa các liên kết
-    marginLeft: 'auto', // Đẩy nav sang bên phải
-    marginRight: '30px', // Giữ khoảng cách với thẻ ngoài cùng bên phải
+    gap: '60px', 
+    marginLeft: 'auto', 
+    marginRight: '30px',
   },
   link: {
     textDecoration: 'none',
