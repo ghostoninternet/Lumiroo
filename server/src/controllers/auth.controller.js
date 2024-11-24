@@ -12,29 +12,40 @@ const signin = async (req, res) => {
 
   res.status(200).json({
     message: 'Login successful',
-    user: req.session.user,
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+    },
   });
 };
 
 const signup = async (req, res) => {
-  try {
-    const { email, password, gender, phoneNumber, dob} = req.body;
-    if (!email || !password || !gender || !phoneNumber || !dob) {
-      throw new BadRequestError('Missing required fields');
-    }
+  const { email, password, gender, phoneNumber, dob, avatarUrl } = req.body;
 
-    const newUser = await authService.signup({ email, password, gender, phoneNumber, dob, avatarUrl, role});
+  const newUser = await authService.signup({
+    email,
+    password,
+    gender,
+    phoneNumber,
+    dob,
+    avatarUrl,
+  });
 
-    res.status(201).json({
-      message: 'User registered successfully',
-      user: newUser,
-    });
-  } catch (error) {
-    if (error instanceof UserAlreadyExistError) {
-      return res.status(409).json({ message: error.message });
-    }
-    res.status(error.status || 500).json({ message: error.message || 'Internal server error' });
-  }
+  req.session.user = {
+    id: newUser._id,
+    email: newUser.email,
+    role: newUser.role,
+  };
+
+  res.status(201).json({
+    message: 'User registered successfully',
+    user: {
+      id: newUser._id,
+      email: newUser.email,
+      role: newUser.role,
+    },
+  });
 };
 
 const refreshToken = async (req, res, next) => {
