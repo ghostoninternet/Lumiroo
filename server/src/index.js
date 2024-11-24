@@ -2,7 +2,10 @@ const express = require('express')
 const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
+
+const MongoStore = require('connect-mongo');
 const session = require('express-session');
+
 const corsConfig = require('./configs/cors.config')
 const ENV = require('./configs')
 const errorHandler = require('./middlewares/errorHandler.middleware')
@@ -13,13 +16,17 @@ connectDatabase()
 const app = express()
 const PORT = ENV.PORT || 8000
 
-// Middleware cho session
 app.use(
   session({
-    secret: 'your-secret-key', // Đổi thành một chuỗi bí mật an toàn
+    secret: ENV.SESSION_SECRET, // Secret từ biến môi trường
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }, // Đặt thành true nếu sử dụng HTTPS
+    store: MongoStore.create({
+      mongoUrl: ENV.MONGO_URI, // URL MongoDB từ file .env
+      dbName: ENV.DB_NAME, // Tên cơ sở dữ liệu từ file .env
+      ttl: 14 * 24 * 60 * 60, // Session tồn tại 14 ngày
+    }),
+    cookie: { secure: false },  // True if https
   })
 );
 

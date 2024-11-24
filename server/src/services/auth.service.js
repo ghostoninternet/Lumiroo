@@ -4,18 +4,21 @@ const { NotFoundError, BadRequestError, UserAlreadyExistError } = require('../er
 const { ROLE } = require('../constants/model');
 
 const signin = async ({ email, password }) => {
-  // Tìm người dùng bằng email
   const foundUser = await userDaos.findUserByEmail(email);
   if (!foundUser) throw new NotFoundError('User not found!');
 
-  // So sánh mật khẩu
   const passwordCompare = await bcrypt.compare(password, foundUser.password);
   if (!passwordCompare) throw new BadRequestError('Password is incorrect');
 
-  return foundUser; // Trả về thông tin người dùng
+  // Chỉ trả về các trường cần thiết
+  return {
+    _id: foundUser._id,
+    email: foundUser.email,
+    role: foundUser.role,
+  };
 };
 
-const signup = async ({ email, password, gender, phoneNumber, dob, avatarUrl, role }) => {
+const signup = async ({ email, password, gender, phoneNumber, dob, avatarUrl }) => {
   const foundUser = await userDaos.findUserByEmail(email);
   if (foundUser) throw new UserAlreadyExistError();
 
@@ -28,11 +31,10 @@ const signup = async ({ email, password, gender, phoneNumber, dob, avatarUrl, ro
     phoneNumber,
     dob,
     avatarUrl,
-    role: ROLE.USER,
+    role: 'USER', // Đặt mặc định là USER
   };
 
-  const newUser = await userDaos.createNewUser(newUserData);
-  return newUser;
+  return userDaos.createNewUser(newUserData);
 };
 
 const refreshToken = async () => {
@@ -46,6 +48,6 @@ const logout = async () => {
 module.exports = {
   signin,
   signup,
-  refreshToken: async () => null,
-  logout: async () => null,
+  refreshToken,
+  logout,
 }
