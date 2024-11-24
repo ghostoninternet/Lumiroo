@@ -10,15 +10,23 @@ const playgroundsModel = new mongoose.Schema({
     required: true,
   },
   address: {
-    type: Number,
+    type: String,
     required: true,
   },
   area: {
     type: String,
     required: true,
   },
-  attraction: {
+  attractions: {
     type: [String],
+    required: true,
+  },
+  openingTime: {
+    type: Number,
+    required: true,
+  },
+  closingTime: {
+    type: Number,
     required: true,
   },
   description: {
@@ -41,5 +49,11 @@ const playgroundsModel = new mongoose.Schema({
 }, {
   timestamps: true,
 })
+
+playgroundsModel.index({ admissionFee: 1 })
+playgroundsModel.index({ openingTime: 1 })
+playgroundsModel.index({ closingTime: 1 })
+playgroundsModel.index({ area: 1 })
+playgroundsModel.index({ attractions: 1 })
 
 module.exports = mongoose.model('playgrounds', playgroundsModel)
