@@ -2,7 +2,6 @@ const authService = require('../services/auth.service')
 
 const signin = async (req, res) => {
   const { email, password } = req.body;
-
   const user = await authService.signin({ email, password });
 
   req.session.user = {
@@ -19,13 +18,12 @@ const signin = async (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const { email, password, gender, phoneNumber, dob, avatarUrl, role } = req.body;
-
-    if (!email || !password || !gender || !phoneNumber || !dob || !avatarUrl || !role) {
+    const { email, password, gender, phoneNumber, dob} = req.body;
+    if (!email || !password || !gender || !phoneNumber || !dob) {
       throw new BadRequestError('Missing required fields');
     }
 
-    const newUser = await authService.signup({ email, password, gender, phoneNumber, dob, avatarUrl, role });
+    const newUser = await authService.signup({ email, password, gender, phoneNumber, dob, avatarUrl, role});
 
     res.status(201).json({
       message: 'User registered successfully',

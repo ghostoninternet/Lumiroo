@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const userDaos = require('../daos/user.daos')
-const { NotFoundError, BadRequestError, UserAlreadyExistError } = require('../errors/customError')
+const { NotFoundError, BadRequestError, UserAlreadyExistError } = require('../errors/customError');
+const { ROLE } = require('../constants/model');
 
 const signin = async ({ email, password }) => {
   // Tìm người dùng bằng email
@@ -27,11 +28,10 @@ const signup = async ({ email, password, gender, phoneNumber, dob, avatarUrl, ro
     phoneNumber,
     dob,
     avatarUrl,
-    role,
+    role: ROLE.USER,
   };
 
   const newUser = await userDaos.createNewUser(newUserData);
-
   return newUser;
 };
 
