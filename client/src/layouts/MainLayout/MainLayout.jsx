@@ -1,6 +1,6 @@
-import { Outlet } from 'react-router-dom';
-import Header from './Header.jsx';
-import Footer from './Footer.jsx';
+import { Outlet } from "react-router-dom";
+import Header from "./Header.jsx";
+import Footer from "./Footer.jsx";
 
 function MainLayout() {
   return (
@@ -9,9 +9,8 @@ function MainLayout() {
         <Header role="user" />
       </header>
 
-      <main className="flex-grow p-5 bg-gray-100">
-        <h2>This main layout of website!</h2>
-        <p>This is the main content of the page.</p>
+      <main className="flex-grow bg-gray-100">
+        <Outlet />
       </main>
 
       <footer>
