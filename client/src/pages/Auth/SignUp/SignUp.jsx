@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { signUp } from "../../../apis/auth";
 import { Link } from "react-router-dom";
-
+import BeachBackground from "../../../assets/signup_background.webp";
 const SignUp = () => {
   const [avatar, setAvatar] = useState(null);
   const [formData, setFormData] = useState({
@@ -42,10 +42,19 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div
+      className="flex justify-center items-center min-h-screen bg-green-50"
+      style={{
+        backgroundImage: `url(${BeachBackground})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        width: "100%",
+        height:"auto",
+      }}
+    >
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 shadow-lg rounded-lg w-full max-w-4xl flex space-x-6"
+        className="p-8 shadow-lg rounded-lg w-full max-w-4xl flex space-x-6 bg-green-50"
       >
         {/* Section 1: Avatar */}
         <div className="w-1/3 flex flex-col items-center border-r border-gray-300 pr-4">
@@ -54,7 +63,7 @@ const SignUp = () => {
             alt="Avatar"
             className="w-24 h-24 rounded-full mb-4 border border-gray-300"
           />
-          <label className="text-blue-500 cursor-pointer">
+          <label className="text-green-500 cursor-pointer">
             アバターを選択
             <input
               type="file"
@@ -131,7 +140,7 @@ const SignUp = () => {
                   value="男性"
                   checked={formData.gender === "男性"}
                   onChange={handleInputChange}
-                  className="mr-1"
+                  className="mr-1 accent-green-500"
                 />
                 男性
               </label>
@@ -142,7 +151,7 @@ const SignUp = () => {
                   value="女性"
                   checked={formData.gender === "女性"}
                   onChange={handleInputChange}
-                  className="mr-1"
+                  className="mr-1 accent-green-500"
                 />
                 女性
               </label>
@@ -153,9 +162,9 @@ const SignUp = () => {
                   value="その他"
                   checked={formData.gender === "その他"}
                   onChange={handleInputChange}
-                  className="mr-1"
+                  className="mr-1 accent-green-500"
                 />
-                その他
+                トゥックさん
               </label>
             </div>
           </div>
@@ -211,12 +220,12 @@ const SignUp = () => {
             />
           </div>
           <div className="col-span-2 flex justify-between items-center">
-            <Link to="/auth/sign-in" className="text-blue-500">
+            <Link to="/auth/sign-in" className="text-green-500">
               アカウントをお持ちですか？ログインへ
             </Link>
             <button
               type="submit"
-              className="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600"
+              className="text-green-500 text-white py-2 px-4 rounded-md shadow-md hover:text-green-600"
             >
               登録
             </button>
