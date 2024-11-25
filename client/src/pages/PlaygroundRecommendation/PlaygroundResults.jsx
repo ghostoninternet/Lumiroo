@@ -17,7 +17,7 @@ const PlaygroundResults = () => {
   const totalPages = Math.ceil(results.length / resultsPerPage);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen flex flex-col">
+    <div className="p-6 bg-gray-50 h-full flex flex-col">
       {/* Breadcrumb */}
       <Breadcrumb path={["ホーム", "遊び場リスト"]} />
 
@@ -36,7 +36,7 @@ const PlaygroundResults = () => {
         />
 
         {/* Phân trang */}
-        <div className="mt-6 mb-12">
+        <div className="mt-2 mb-12">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}

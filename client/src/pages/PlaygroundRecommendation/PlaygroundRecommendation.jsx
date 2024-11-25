@@ -19,7 +19,7 @@ import TimeDropdown from "../../components/Dropdown/TimeDropdown";
 import PriceInput from "../../components/Input/PriceInput";
 
 function PlaygroundRecommendation() {
-  const [selectedAddress, setSelectedAdress] = useState("All addresses");
+  const [selectedAddress, setSelectedAdress] = useState("すべての地域");
   const [showAddressDropdown, setShowAddressDropdown] = useState(false);
   const shortAttractions = attractions.slice(0, 12);
   const [checkedAttractions, setCheckedAttractions] = useState(
