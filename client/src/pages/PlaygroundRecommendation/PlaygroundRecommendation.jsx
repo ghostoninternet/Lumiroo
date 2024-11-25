@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { FaCaretDown, FaSearch, FaArrowRight, FaClock } from "react-icons/fa";
 import { addresses, attractions } from "../../constants/playground";
 import FilterCheckbox from "../../components/Checkbox/FilterCheckbox";
+import PlaygroundResults from "./PlaygroundResults";
+
 
 function PlaygroundRecommendation() {
   const [selectedAddress, setSelectedAdress] = useState("All addresses");
@@ -167,7 +169,10 @@ function PlaygroundRecommendation() {
         <button>filter</button> */}
       </div>
 
-      <div className="w-[80%]"> result filter</div>
+      <div className="w-[80%]">
+        <PlaygroundResults />
+      </div>
+
     </div>
   );
 }
