@@ -3,21 +3,21 @@ import Header from "./Header.jsx";
 import Footer from "./Footer.jsx";
 
 function MainLayout() {
-  return (
-    <div className="flex flex-col min-h-screen">
-      <header>
-        <Header role="user" />
-      </header>
+ return (
+   <div className="min-h-screen flex flex-col relative">
+     <header>
+       <Header role="user" />
+     </header>
 
-      <main className="flex-grow bg-gray-100">
-        <Outlet />
-      </main>
+     <main className="flex-grow bg-gray-100 mb-16">
+       <Outlet />
+     </main>
 
-      <footer>
-        <Footer />
-      </footer>
-    </div>
-  );
+     <footer className="bg-black text-white">
+       <Footer />
+     </footer>
+   </div>
+ );
 }
 
 export default MainLayout;
