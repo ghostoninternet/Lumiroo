@@ -1,20 +1,30 @@
-import { Routes, Route } from 'react-router-dom'
-import MainLayout from './layouts/MainLayout/MainLayout'
-import SignIn from './pages/Auth/SignIn/SignIn'
-import SignUp from './pages/Auth/SignUp/SignUp'
-import PlaygroundRecommendation from './pages/PlaygroundRecommendation/PlaygroundRecommendation'
-import AdminLayout from './layouts/AdminLayout/AdminLayout'
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+import MainLayout from "./layouts/MainLayout/MainLayout";
+import SignIn from "./pages/Auth/SignIn/SignIn";
+import SignUp from "./pages/Auth/SignUp/SignUp";
+import PlaygroundRecommendation from "./pages/PlaygroundRecommendation/PlaygroundRecommendation";
 
 function App() {
+  const location = useLocation();
+
   return (
-    <Routes>
-      <Route path='/auth/sign-in' element={<SignIn />} />
-      <Route path='/auth/sign-up' element={<SignUp />} />
-      <Route path='/' element={<MainLayout />}>
-        <Route path='/playground-recommendation' element={<PlaygroundRecommendation />} />
-      </Route>
-    </Routes>
-  )
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Route cho trang Sign In */}
+        <Route path="/auth/sign-in" element={<SignIn />} />
+        {/* Route cho trang Sign Up */}
+        <Route path="/auth/sign-up" element={<SignUp />} />
+        {/* Route cho layout chính */}
+        <Route path="/" element={<MainLayout />}>
+          <Route
+            path="/playground-recommendation"
+            element={<PlaygroundRecommendation />}
+          />
+        </Route>
+      </Routes>
+    </AnimatePresence>
+  );
 }
 
-export default App
+export default App;
