@@ -1,10 +1,22 @@
 import React, { useEffect, useState } from "react";
 // import { getPlayground } from "../../apis/playground";
-import { FaCaretDown, FaSearch, FaArrowRight, FaClock } from "react-icons/fa";
-import { addresses, attractions } from "../../constants/playground";
+import {
+  FaCaretDown,
+  FaSearch,
+  FaArrowRight,
+  FaClock,
+  FaDollarSign,
+} from "react-icons/fa";
+import {
+  addresses,
+  attractions,
+  openTime,
+  closeTime,
+} from "../../constants/playground";
 import FilterCheckbox from "../../components/Checkbox/FilterCheckbox";
 import PlaygroundResults from "./PlaygroundResults";
-
+import TimeDropdown from "../../components/Dropdown/TimeDropdown";
+import PriceInput from "../../components/Input/PriceInput";
 
 function PlaygroundRecommendation() {
   const [selectedAddress, setSelectedAdress] = useState("All addresses");
@@ -17,6 +29,12 @@ function PlaygroundRecommendation() {
   const [attractionSearchResult, setAttractionSearchResult] =
     useState(attractions);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedOpenTime, setSelectedOpenTime] = useState(openTime[0]);
+  const [showOpenTimeDropdown, setShowOpenTimeDropdown] = useState(false);
+  const [selectedCloseTime, setSelectedCloseTime] = useState(closeTime[0]);
+  const [showCloseTimeDropdown, setShowCloseTimeDropdown] = useState(false);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(99999999);
 
   const handleToggleAddress = (label) => {
     setSelectedAdress(label);
@@ -38,6 +56,30 @@ function PlaygroundRecommendation() {
   const handleExpandedAttraction = () => {
     setIsExpanded(true);
   };
+
+  const handleSelectOpenTime = (item) => {
+    setSelectedOpenTime(item);
+    setShowOpenTimeDropdown(false);
+  };
+
+  const handleClickOpenTime = () => {
+    setShowOpenTimeDropdown(!showOpenTimeDropdown);
+    setShowCloseTimeDropdown(false);
+  };
+
+  const handleSelectCloseTime = (item) => {
+    setSelectedCloseTime(item);
+    setShowCloseTimeDropdown(false);
+  };
+
+  const handleClickCloseTime = () => {
+    setShowCloseTimeDropdown(!showCloseTimeDropdown);
+    setShowOpenTimeDropdown(false);
+  };
+
+  const handleClickFilter = () => {
+    alert("Tính năng đang phát triển");
+  };
   // const fetchPlayground = async () => {
   //   try {
   //     const response = await getPlayground();
@@ -53,7 +95,7 @@ function PlaygroundRecommendation() {
 
   return (
     <div className="flex" style={{ height: "calc(100vh - 130px)" }}>
-      <div className="w-[20%] flex flex-col gap-6 py-4 px-4 bg-green-50 border">
+      <div className="w-[20%] flex flex-col gap-8 py-4 px-4 bg-green-50 border">
         <div className="relative">
           <button
             className="flex w-[70%] border items-center bg-white"
@@ -68,8 +110,10 @@ function PlaygroundRecommendation() {
               {addresses.map((item, index) => (
                 <button
                   key={index}
-                  className={`text-left pl-1 hover:bg-gray-50 ${
-                    item.label === selectedAddress ? "bg-gray-300" : "bg-white"
+                  className={`text-left pl-1 hover:bg-green-700 hover:text-white ${
+                    item.label === selectedAddress
+                      ? "bg-green-500 text-white"
+                      : "bg-white"
                   }`}
                   onClick={() => handleToggleAddress(item.label)}
                 >
@@ -134,45 +178,65 @@ function PlaygroundRecommendation() {
           </div>
         )}
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 relative">
           <span className="font-bold">時間</span>
           <div className="border bg-white flex w-[70%] items-center px-4 h-10">
             <div className="flex-1 flex gap-4 items-center">
-              <button className="w-30 text-sm rounded-md py-1 px-2 border">
-                06:00
+              <button
+                className="w-30 text-sm rounded-md py-1 px-2 border"
+                onClick={() => handleClickOpenTime()}
+              >
+                {selectedOpenTime.label}
               </button>
               <FaArrowRight />
-              <button className="w-30 text-sm rounded-md py-1 px-2 border">
-                22:00
+              <button
+                className="w-30 text-sm rounded-md py-1 px-2 border"
+                onClick={() => handleClickCloseTime()}
+              >
+                {selectedCloseTime.label}
               </button>
             </div>
             <FaClock />
+          </div>
+          {showOpenTimeDropdown && (
+            <TimeDropdown
+              options={openTime}
+              selectedTime={selectedOpenTime}
+              handleSelectTime={handleSelectOpenTime}
+            />
+          )}
+          {showCloseTimeDropdown && (
+            <TimeDropdown
+              options={closeTime}
+              selectedTime={selectedCloseTime}
+              handleSelectTime={handleSelectCloseTime}
+            />
+          )}
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <span className="font-bold">価格帯</span>
+          <div className="border bg-white flex w-[70%] items-center px-4 h-10">
+            <div className="flex-1 flex gap-1 items-center">
+              <PriceInput value={minPrice} setValue={setMinPrice} />
+              <FaArrowRight />
+              <PriceInput value={maxPrice} setValue={setMaxPrice} />
+            </div>
+            <FaDollarSign />
           </div>
         </div>
 
-        {/* <div className="flex flex-col gap-1">
-          <span className="font-bold">価格帯</span>
-          <div className="border bg-white flex w-[70%] items-center px-4 h-10">
-            <div className="flex-1 flex gap-4 items-center">
-              <button className="w-30 text-sm rounded-md py-1 px-2 border">
-                06:00
-              </button>
-              <FaArrowRight />
-              <button className="w-30 text-sm rounded-md py-1 px-2 border">
-                22:00
-              </button>
-            </div>
-            <FaClock />
-          </div>
-        </div>
-        <div></div>
-        <button>filter</button> */}
+        <button
+          className="w-20 text-sm bg-green-500 hover:bg-green-700 rounded-md shadow-md text-gray-50 text-white py-1 px-2 items-center self-center mt-2"
+          onClick={() => handleClickFilter()}
+        >
+          確認する
+        </button>
       </div>
 
       <div className="w-[80%]">
         <PlaygroundResults />
       </div>
-
     </div>
   );
 }
