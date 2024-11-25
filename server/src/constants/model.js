@@ -6,7 +6,7 @@ const GENDER = {
 
 const ROLE = {
   ADMIN: 'admin',
-  USER: 'user,'
+  USER: 'user',
 }
 
 module.exports = {

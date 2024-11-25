@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "init": "node src/seed/seed_data.js"
   },
   "keywords": [],
   "author": "ストレスチーム",
