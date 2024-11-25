@@ -1,7 +1,19 @@
-const bcrypt = require('bcrypt')
-const userDaos = require('../daos/user.daos')
+const bcrypt = require('bcrypt');
+const userDaos = require('../daos/user.daos');
 const { NotFoundError, BadRequestError, UserAlreadyExistError } = require('../errors/customError');
 const { ROLE } = require('../constants/model');
+
+/**
+ * Utility function to filter necessary user fields.
+ * @param {Object} user - User object from the database.
+ * @returns {Object} Filtered user fields.
+ */
+
+const filterUserFields = (user) => ({
+  id: user._id,
+  email: user.email,
+  role: user.role,
+});
 
 const signin = async ({ email, password }) => {
   const foundUser = await userDaos.findUserByEmail(email);
@@ -10,12 +22,7 @@ const signin = async ({ email, password }) => {
   const passwordCompare = await bcrypt.compare(password, foundUser.password);
   if (!passwordCompare) throw new BadRequestError('Password is incorrect');
 
-  // Chỉ trả về các trường cần thiết
-  return {
-    _id: foundUser._id,
-    email: foundUser.email,
-    role: foundUser.role,
-  };
+  return filterUserFields(foundUser);
 };
 
 const signup = async ({ email, password, gender, phoneNumber, dob, avatarUrl }) => {
@@ -31,23 +38,19 @@ const signup = async ({ email, password, gender, phoneNumber, dob, avatarUrl }) 
     phoneNumber,
     dob,
     avatarUrl,
-    role: 'USER', // Đặt mặc định là USER
+    role: ROLE.USER, // Dùng constant ROLE.USER
   };
 
-  return userDaos.createNewUser(newUserData);
+  const newUser = await userDaos.createNewUser(newUserData);
+  return filterUserFields(newUser);
 };
 
 const refreshToken = async () => {
-
-}
-
-const logout = async () => {
-
-}
+  // Logic sẽ được thêm sau
+};
 
 module.exports = {
   signin,
   signup,
   refreshToken,
-  logout,
-}
+};
