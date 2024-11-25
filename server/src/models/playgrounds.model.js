@@ -18,7 +18,7 @@ const playgroundsModel = new mongoose.Schema({
     required: true,
   },
   attractions: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
     required: true,
   },
   openingTime: {

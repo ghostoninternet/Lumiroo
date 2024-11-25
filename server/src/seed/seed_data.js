@@ -73,8 +73,9 @@ const reviewsData = [
 ];
 
 const areasData = [
-    { _id: new mongoose.Types.ObjectId('648d7eb3fc13ae4d6b000300'), name: 'City A' },
-    { _id: new mongoose.Types.ObjectId('648d7eb3fc13ae4d6b000301'), name: 'City B' },
+    { _id: new mongoose.Types.ObjectId('648d7eb3fc13ae4d6b000300'), name: 'Ha Noi' },
+    { _id: new mongoose.Types.ObjectId('648d7eb3fc13ae4d6b000301'), name: 'Sai Gon' },
+    {_id: new mongoose.Types.ObjectId('648d7eb3fc13ae4d6b000302'), name: 'Da Nang'},
 ];
 
 const usersData = [

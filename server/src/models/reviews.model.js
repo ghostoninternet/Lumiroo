@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 
 const reviewsModel = new mongoose.Schema({
   playgroundId: {
-    type: [mongoose.Schema.Types.ObjectId],
-    default: [],
+    type: mongoose.Schema.Types.ObjectId, 
     ref: 'playgrounds',
+    required: true, 
   },
   userId: {
-    type: [mongoose.Schema.Types.ObjectId],
-    default: [],
-    ref: 'users',
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'users', 
+    required: true, 
   },
   content: {
     type: String,
