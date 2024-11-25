@@ -1,9 +1,9 @@
 // Constants for playground
 export const addresses = [
-  { value: "all", label: "All addresses" },
-  { value: "hn", label: "Ha Noi" },
-  { value: "hcm", label: "Ho Chi Minh" },
-  { value: "dn", label: "Da Nang" },
+  { value: "all", label: "すべての地域" },
+  { value: "hn", label: "ハノイ" },
+  { value: "hcm", label: "ホーチミン" },
+  { value: "dn", label: "ダナン" },
 ];
 
 export const attractions = [
