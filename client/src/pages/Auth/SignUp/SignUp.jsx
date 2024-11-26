@@ -8,6 +8,7 @@ import TransitionWrapper from "../../../components/TransitionWrapper"; // Import
 import { uploadImage } from "../../../apis/upload";
 import { GENDER } from "../../../constants";
 import { signUp } from "../../../apis/auth";
+import Logo from "../../../components/logo/Logo";
 
 const SignUp = () => {
   const navigate = useNavigate(); // Điều hướng giữa các trang
@@ -245,12 +246,7 @@ const SignUp = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <motion.h1
-            className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-green-500 to-green-600 mb-8 tracking-wide z-10"
-            whileHover={{ scale: 1.1 }}
-          >
-            Lumiroo
-          </motion.h1>
+          <Logo size="text-7xl" className="mb-6" />
           <Player
             autoplay
             loop
