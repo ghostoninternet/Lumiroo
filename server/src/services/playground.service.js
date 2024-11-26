@@ -1,6 +1,7 @@
 const playgroundDaos = require('../daos/playground.daos')
+const mongoose = require('mongoose')
 
-const getPlayground = async(limit, page) => {
+const getPlayground = async({limit, page}) => {
   const totalPlaygrounds = await playgroundDaos.countTotalPlaygrounds({})
   const playgrounds = await playgroundDaos.getPlaygrounds({}, limit, page)
   const totalPage = Math.ceil(totalPlaygrounds / limit)
@@ -27,9 +28,10 @@ const filterPlayground = async (filterParams) => {
   }
 
   if (attractions) {
+    const attractionsObjectId = attractions.map(attraction => new mongoose.Types.ObjectId(attraction))
     condition = {
       ...condition,
-      attractions: { $in: attractions },
+      attractions: { $in: attractionsObjectId },
     }
   }
 

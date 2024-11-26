@@ -10,8 +10,8 @@ export const getAreas = async () => {
   return response
 }
 
-export const getPlayground = async () => {
-  const response = await axiosInstance.get('/playgrounds')
+export const getPlayground = async (queryParams) => {
+  const response = await axiosInstance.get(`/playgrounds?${queryParams}`)
   return response
 }
 

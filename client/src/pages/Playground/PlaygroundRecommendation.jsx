@@ -7,8 +7,6 @@ import {
   FaDollarSign,
 } from "react-icons/fa";
 import {
-  addresses,
-  attractions,
   openTime,
   closeTime,
 } from "../../constants/playground";
@@ -94,6 +92,7 @@ function PlaygroundRecommendation() {
     console.log('🚀 ~ PlaygroundRecommendation ~ attractions:', attractions.filter((_, index) => checkedAttractions[index]))
     console.log('🚀 ~ PlaygroundRecommendation ~ selectedOpenTime:', selectedOpenTime)
     console.log('🚀 ~ PlaygroundRecommendation ~ selectedCloseTime:', selectedCloseTime)
+    fetchFilterPlaygrounds()
   }
 
   const fetchAttractions = async () => {
@@ -111,7 +110,7 @@ function PlaygroundRecommendation() {
     try {
       const response = await getAreas();
       const reponseData = response.data;
-      setAreas([...reponseData, ])
+      setAreas([{ name: "すべての地域", }, ...reponseData]);
     } catch (error) {
       console.log(error);
     }
@@ -119,9 +118,15 @@ function PlaygroundRecommendation() {
 
   const fetchPlaygrounds = async () => {
     try {
-      const response = await getPlayground();
-      const reponseData = response.data;
-      setPlaygrounds(reponseData.data)
+      const queryParams = new URLSearchParams();
+      queryParams.append('limit', limitPerPage);
+      queryParams.append('page', currentPage);
+      const response = await getPlayground(queryParams);
+      const responseData = response.data;
+      console.log('🚀 ~ fetchPlaygrounds ~ responseData:', responseData)
+      setPlaygrounds(responseData.data);
+      setTotalPage(responseData.pagination.totalPage);
+      setCurrentPage(Number.parseInt(responseData.pagination.currentPage));
     } catch (error) {
       console.log(error);
     }
@@ -130,7 +135,7 @@ function PlaygroundRecommendation() {
   const fetchFilterPlaygrounds = async () => {
     try {
       const selectedAreaValue = selectedArea;
-      const attractions = attractions.filter((_, index) => checkedAttractions[index]);
+      const selectedAttractions = attractions.filter((_, index) => checkedAttractions[index]);
       const openingTime = selectedOpenTime.value;
       const closingTime = selectedCloseTime.value;
       const minAdmissionFee = minPrice
@@ -140,17 +145,45 @@ function PlaygroundRecommendation() {
 
       const queryParams = new URLSearchParams()
 
-      if (selectedAreaValue !== addresses[0].value) {
-        queryParams.append('area',)
+      if (selectedAreaValue !== "すべての地域") {
+        queryParams.append('area', selectedAreaValue)
       }
 
-      const response = await filterPlaygrounds()
-    } catch (error) {
+      if (selectedAttractions.length !== 0) {
+        selectedAttractions.forEach((attraction) => {
+          queryParams.append('attractions', attraction._id)
+        })
+      }
 
+      queryParams.append('openingTime', openingTime)
+      queryParams.append('closingTime', closingTime)
+      queryParams.append('minAdmissionFee', minAdmissionFee)
+      queryParams.append('maxAdmissionFee', maxAdmissionFee)
+      queryParams.append('limit', limit)
+      queryParams.append('page', page)
+
+      const response = await filterPlaygrounds(queryParams)
+      setIsFiltering(true)
+      const responseData = response.data
+      console.log('🚀 ~ fetchFilterPlaygrounds ~ responseData:', responseData)
+      setPlaygrounds(responseData.data);
+      setTotalPage(responseData.pagination.totalPage);
+      setCurrentPage(Number.parseInt(responseData.pagination.currentPage));
+    } catch (error) {
+      console.log(error)
     }
   }
 
   useEffect(() => {
+    if (isFiltering) {
+      fetchFilterPlaygrounds()
+    } else {
+      fetchPlaygrounds()
+    }
+  }, [currentPage])
+
+  useEffect(() => {
+    fetchPlaygrounds()
     fetchAttractions()
     fetchAreas()
   }, []);
@@ -296,7 +329,15 @@ function PlaygroundRecommendation() {
       </div>
 
       <div className="w-[80%]">
-        <PlaygroundResults />
+        <PlaygroundResults
+          playgrounds={playgrounds}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          limitPerPage={limitPerPage}
+          setLimitPerPage={setLimitPerPage}
+          totalPage={totalPage}
+
+        />
       </div>
     </div>
   );
