@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FaCaretDown,
   FaSearch,
@@ -6,15 +6,18 @@ import {
   FaClock,
   FaDollarSign,
 } from "react-icons/fa";
-import {
-  openTime,
-  closeTime,
-} from "../../constants/playground";
+import { openTime, closeTime } from "../../constants/playground";
 import FilterCheckbox from "../../components/Checkbox/FilterCheckbox";
 import PlaygroundResults from "./PlaygroundResults";
 import TimeDropdown from "../../components/Dropdown/TimeDropdown";
 import PriceInput from "../../components/Input/PriceInput";
-import { filterPlaygrounds, getAreas, getAttractions, getPlayground } from "../../apis/playground";
+import {
+  filterPlaygrounds,
+  getAreas,
+  getAttractions,
+  getPlayground,
+} from "../../apis/playground";
+import useClickOutside from "../../utils/useClickOutSide";
 
 function PlaygroundRecommendation() {
   const [attractions, setAttractions] = useState([]);
@@ -31,7 +34,9 @@ function PlaygroundRecommendation() {
   const [showAreaDropdown, setShowAreaDropdown] = useState(false);
 
   const shortAttractions = attractions.slice(0, 12);
-  const [checkedAttractions, setCheckedAttractions] = useState(new Array(attractions.length).fill(false));
+  const [checkedAttractions, setCheckedAttractions] = useState(
+    new Array(attractions.length).fill(false)
+  );
   const [attractionSearch, setAttractionSearch] = useState("");
   const [attractionSearchResult, setAttractionSearchResult] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -87,20 +92,29 @@ function PlaygroundRecommendation() {
   };
 
   const handleClickFilter = async () => {
-    console.log('🚀 ~ PlaygroundRecommendation ~ attractions:', attractions)
-    console.log('🚀 ~ PlaygroundRecommendation ~ selectedArea:', selectedArea)
-    console.log('🚀 ~ PlaygroundRecommendation ~ attractions:', attractions.filter((_, index) => checkedAttractions[index]))
-    console.log('🚀 ~ PlaygroundRecommendation ~ selectedOpenTime:', selectedOpenTime)
-    console.log('🚀 ~ PlaygroundRecommendation ~ selectedCloseTime:', selectedCloseTime)
-    fetchFilterPlaygrounds()
-  }
+    console.log("🚀 ~ PlaygroundRecommendation ~ attractions:", attractions);
+    console.log("🚀 ~ PlaygroundRecommendation ~ selectedArea:", selectedArea);
+    console.log(
+      "🚀 ~ PlaygroundRecommendation ~ attractions:",
+      attractions.filter((_, index) => checkedAttractions[index])
+    );
+    console.log(
+      "🚀 ~ PlaygroundRecommendation ~ selectedOpenTime:",
+      selectedOpenTime
+    );
+    console.log(
+      "🚀 ~ PlaygroundRecommendation ~ selectedCloseTime:",
+      selectedCloseTime
+    );
+    fetchFilterPlaygrounds();
+  };
 
   const fetchAttractions = async () => {
     try {
       const response = await getAttractions();
       const reponseData = response.data;
-      setAttractions(reponseData)
-      setAttractionSearchResult(reponseData)
+      setAttractions(reponseData);
+      setAttractionSearchResult(reponseData);
     } catch (error) {
       console.log(error);
     }
@@ -110,7 +124,7 @@ function PlaygroundRecommendation() {
     try {
       const response = await getAreas();
       const reponseData = response.data;
-      setAreas([{ name: "すべての地域", }, ...reponseData]);
+      setAreas([{ name: "すべての地域" }, ...reponseData]);
     } catch (error) {
       console.log(error);
     }
@@ -119,11 +133,11 @@ function PlaygroundRecommendation() {
   const fetchPlaygrounds = async () => {
     try {
       const queryParams = new URLSearchParams();
-      queryParams.append('limit', limitPerPage);
-      queryParams.append('page', currentPage);
+      queryParams.append("limit", limitPerPage);
+      queryParams.append("page", currentPage);
       const response = await getPlayground(queryParams);
       const responseData = response.data;
-      console.log('🚀 ~ fetchPlaygrounds ~ responseData:', responseData)
+      console.log("🚀 ~ fetchPlaygrounds ~ responseData:", responseData);
       setPlaygrounds(responseData.data);
       setTotalPage(responseData.pagination.totalPage);
       setCurrentPage(Number.parseInt(responseData.pagination.currentPage));
@@ -135,63 +149,75 @@ function PlaygroundRecommendation() {
   const fetchFilterPlaygrounds = async () => {
     try {
       const selectedAreaValue = selectedArea;
-      const selectedAttractions = attractions.filter((_, index) => checkedAttractions[index]);
+      const selectedAttractions = attractions.filter(
+        (_, index) => checkedAttractions[index]
+      );
       const openingTime = selectedOpenTime.value;
       const closingTime = selectedCloseTime.value;
-      const minAdmissionFee = minPrice
-      const maxAdmissionFee = maxPrice
-      const limit = limitPerPage
-      const page = currentPage
+      const minAdmissionFee = minPrice;
+      const maxAdmissionFee = maxPrice;
+      const limit = limitPerPage;
+      const page = currentPage;
 
-      const queryParams = new URLSearchParams()
+      const queryParams = new URLSearchParams();
 
       if (selectedAreaValue !== "すべての地域") {
-        queryParams.append('area', selectedAreaValue)
+        queryParams.append("area", selectedAreaValue);
       }
 
       if (selectedAttractions.length !== 0) {
         selectedAttractions.forEach((attraction) => {
-          queryParams.append('attractions', attraction._id)
-        })
+          queryParams.append("attractions", attraction._id);
+        });
       }
 
-      queryParams.append('openingTime', openingTime)
-      queryParams.append('closingTime', closingTime)
-      queryParams.append('minAdmissionFee', minAdmissionFee)
-      queryParams.append('maxAdmissionFee', maxAdmissionFee)
-      queryParams.append('limit', limit)
-      queryParams.append('page', page)
+      queryParams.append("openingTime", openingTime);
+      queryParams.append("closingTime", closingTime);
+      queryParams.append("minAdmissionFee", minAdmissionFee);
+      queryParams.append("maxAdmissionFee", maxAdmissionFee);
+      queryParams.append("limit", limit);
+      queryParams.append("page", page);
 
-      const response = await filterPlaygrounds(queryParams)
-      setIsFiltering(true)
-      const responseData = response.data
-      console.log('🚀 ~ fetchFilterPlaygrounds ~ responseData:', responseData)
+      const response = await filterPlaygrounds(queryParams);
+      setIsFiltering(true);
+      const responseData = response.data;
+      console.log("🚀 ~ fetchFilterPlaygrounds ~ responseData:", responseData);
       setPlaygrounds(responseData.data);
       setTotalPage(responseData.pagination.totalPage);
       setCurrentPage(Number.parseInt(responseData.pagination.currentPage));
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     if (isFiltering) {
-      fetchFilterPlaygrounds()
+      fetchFilterPlaygrounds();
     } else {
-      fetchPlaygrounds()
+      fetchPlaygrounds();
     }
-  }, [currentPage])
+  }, [currentPage]);
 
   useEffect(() => {
-    fetchPlaygrounds()
-    fetchAttractions()
-    fetchAreas()
+    fetchPlaygrounds();
+    fetchAttractions();
+    fetchAreas();
   }, []);
+  const areaDropdownRef = useRef(null);
+  const openTimeDropdownRef = useRef(null);
+  const closeTimeDropdownRef = useRef(null);
+
+  useClickOutside(areaDropdownRef, () => setShowAreaDropdown(false));
+  useClickOutside(openTimeDropdownRef, () => setShowOpenTimeDropdown(false));
+  useClickOutside(closeTimeDropdownRef, () => setShowCloseTimeDropdown(false));
 
   return (
-    <div className="flex" style={{ height: "calc(100vh - 130px)" }}>
-      <div className="w-[20%] flex flex-col gap-8 py-4 px-4 bg-green-50 border">
-        <div className="relative">
+    <div
+      className="flex overflow-y-none"
+      style={{ height: "calc(100vh - 130px)" }}
+    >
+      <div className="w-[21%] flex flex-col gap-8 py-4 px-4 bg-green-50 border">
+        <div className="relative" ref={areaDropdownRef}>
           <button
             className="flex w-[70%] border items-center bg-white"
             onClick={() => setShowAreaDropdown(!showAreaDropdown)}
@@ -201,14 +227,15 @@ function PlaygroundRecommendation() {
           </button>
 
           {showAreaDropdown && (
-            <div className="flex flex-col border w-[70%] absolute top-7 left-0 z-10 bg-white">
+            <div className="flex flex-col border w-[70%] absolute top-7 left-0 z-10 bg-white h-[200px] overflow-y-auto">
               {areas.map((item, index) => (
                 <button
                   key={index}
-                  className={`text-left pl-1 hover:bg-green-700 hover:text-white ${item.name === selectedArea
+                  className={`text-left pl-1 hover:bg-green-700 hover:text-white ${
+                    item.name === selectedArea
                       ? "bg-green-500 text-white"
                       : "bg-white"
-                    }`}
+                  }`}
                   onClick={() => handleToggleArea(item.name)}
                 >
                   {item.name}
@@ -238,7 +265,7 @@ function PlaygroundRecommendation() {
 
         {isExpanded && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20">
-            <div className="flex flex-col gap-5 absolute top-[94px] left-[16px] z-30 bg-white w-[50%] h-[50%] px-3 pt-4 border">
+            <div className="flex flex-col gap-5 absolute top-[94px] left-[16px] z-30 bg-white w-[50%] px-3 pt-4 border pb-5">
               <div className="flex flex-col pl-2 pr-4 gap-2">
                 <span className="font-bold">アトラクション</span>
                 <div className="flex items-center rounded-2xl border w-[50%] ml-auto gap-4 px-4 py-1 ">
@@ -252,7 +279,7 @@ function PlaygroundRecommendation() {
                   />
                 </div>
               </div>
-              <div className="h-[290px] border">
+              <div className="border">
                 <FilterCheckbox
                   options={attractionSearchResult}
                   checkedState={checkedAttractions}
@@ -260,7 +287,7 @@ function PlaygroundRecommendation() {
                   checkboxWidth="15%"
                 />
               </div>
-              <div className="ml-auto px-8 ">
+              <div className="ml-auto px-8">
                 <button
                   className="w-30 text-sm bg-green-500 hover:bg-green-700 rounded-md shadow-md text-gray-50 text-white py-1 px-2"
                   onClick={() => handleConfirm()}
@@ -276,36 +303,40 @@ function PlaygroundRecommendation() {
           <span className="font-bold">時間</span>
           <div className="border bg-white flex w-[70%] items-center px-4 h-10">
             <div className="flex-1 flex gap-4 items-center">
-              <button
-                className="w-30 text-sm rounded-md py-1 px-2 border"
-                onClick={() => handleClickOpenTime()}
-              >
-                {selectedOpenTime.label}
-              </button>
+              <div ref={openTimeDropdownRef}>
+                <button
+                  className="w-30 text-sm rounded-md py-1 px-2 border"
+                  onClick={() => handleClickOpenTime()}
+                >
+                  {selectedOpenTime.label}
+                </button>
+                {showOpenTimeDropdown && (
+                  <TimeDropdown
+                    options={openTime}
+                    selectedTime={selectedOpenTime}
+                    handleSelectTime={handleSelectOpenTime}
+                  />
+                )}
+              </div>
               <FaArrowRight />
-              <button
-                className="w-30 text-sm rounded-md py-1 px-2 border"
-                onClick={() => handleClickCloseTime()}
-              >
-                {selectedCloseTime.label}
-              </button>
+              <div ref={closeTimeDropdownRef}>
+                <button
+                  className="w-30 text-sm rounded-md py-1 px-2 border"
+                  onClick={() => handleClickCloseTime()}
+                >
+                  {selectedCloseTime.label}
+                </button>
+                {showCloseTimeDropdown && (
+                  <TimeDropdown
+                    options={closeTime}
+                    selectedTime={selectedCloseTime}
+                    handleSelectTime={handleSelectCloseTime}
+                  />
+                )}
+              </div>
             </div>
             <FaClock />
           </div>
-          {showOpenTimeDropdown && (
-            <TimeDropdown
-              options={openTime}
-              selectedTime={selectedOpenTime}
-              handleSelectTime={handleSelectOpenTime}
-            />
-          )}
-          {showCloseTimeDropdown && (
-            <TimeDropdown
-              options={closeTime}
-              selectedTime={selectedCloseTime}
-              handleSelectTime={handleSelectCloseTime}
-            />
-          )}
         </div>
 
         <div className="flex flex-col gap-1">
@@ -328,7 +359,7 @@ function PlaygroundRecommendation() {
         </button>
       </div>
 
-      <div className="w-[80%]">
+      <div className="w-[79%]">
         <PlaygroundResults
           playgrounds={playgrounds}
           currentPage={currentPage}
@@ -336,7 +367,6 @@ function PlaygroundRecommendation() {
           limitPerPage={limitPerPage}
           setLimitPerPage={setLimitPerPage}
           totalPage={totalPage}
-
         />
       </div>
     </div>

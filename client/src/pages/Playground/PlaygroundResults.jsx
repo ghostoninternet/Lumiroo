@@ -11,25 +11,22 @@ const PlaygroundResults = ({
   setLimitPerPage,
   totalPage,
 }) => {
-
   return (
-    <div className="p-6 bg-gray-50 h-full flex flex-col">
+    <div className="p-5 bg-gray-50 h-full flex flex-col">
       {/* Breadcrumb */}
       <Breadcrumb path={["ホーム", "遊び場リスト"]} />
 
       {/* Nội dung chính */}
-      <div className="flex-grow bg-white p-6 rounded-lg shadow-md flex flex-col">
+      <div className="flex-grow bg-white p-4 rounded-lg shadow-md flex flex-col">
         <h2 className="text-xl font-bold text-green-600 mb-4">
           おすすめの遊び場
         </h2>
 
         {/* Hiển thị danh sách kết quả */}
-        <ResultsGrid
-          results={playgrounds}
-        />
+        <ResultsGrid results={playgrounds} />
 
         {/* Phân trang */}
-        <div className="mt-2 mb-12">
+        <div className="mt-1 mb-12">
           <Pagination
             currentPage={currentPage}
             totalPages={totalPage}
