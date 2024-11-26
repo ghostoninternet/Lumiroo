@@ -22,9 +22,7 @@ const FilterCheckbox = ({
           <input
             className="cursor-pointer accent-green-500"
             type="checkbox"
-            id={`custom-checkbox-${index}`}
-            name={item.value}
-            value={item.label}
+            value={item.name}
             checked={checkedState[index]}
             onChange={() => handleSelectCheckbox(index)}
           />
@@ -32,7 +30,7 @@ const FilterCheckbox = ({
             className="text-sm cursor-pointer"
             htmlFor={`custom-checkbox-${index}`}
           >
-            {item.label}
+            {item.name}
           </label>
         </div>
       ))}

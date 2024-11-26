@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-// import { getPlayground } from "../../apis/playground";
+import { useEffect, useState } from "react";
 import {
   FaCaretDown,
   FaSearch,
@@ -8,8 +7,6 @@ import {
   FaDollarSign,
 } from "react-icons/fa";
 import {
-  addresses,
-  attractions,
   openTime,
   closeTime,
 } from "../../constants/playground";
@@ -17,34 +14,46 @@ import FilterCheckbox from "../../components/Checkbox/FilterCheckbox";
 import PlaygroundResults from "./PlaygroundResults";
 import TimeDropdown from "../../components/Dropdown/TimeDropdown";
 import PriceInput from "../../components/Input/PriceInput";
+import { filterPlaygrounds, getAreas, getAttractions, getPlayground } from "../../apis/playground";
 
 function PlaygroundRecommendation() {
-  const [selectedAddress, setSelectedAdress] = useState("すべての地域");
-  const [showAddressDropdown, setShowAddressDropdown] = useState(false);
+  const [attractions, setAttractions] = useState([]);
+  const [areas, setAreas] = useState([]);
+  const [playgrounds, setPlaygrounds] = useState([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limitPerPage, setLimitPerPage] = useState(6);
+  const [totalPage, setTotalPage] = useState(null);
+  const [isFiltering, setIsFiltering] = useState(false);
+
+  const [selectedArea, setSelectedArea] = useState("すべての地域");
+
+  const [showAreaDropdown, setShowAreaDropdown] = useState(false);
+
   const shortAttractions = attractions.slice(0, 12);
-  const [checkedAttractions, setCheckedAttractions] = useState(
-    new Array(attractions.length).fill(false)
-  );
+  const [checkedAttractions, setCheckedAttractions] = useState(new Array(attractions.length).fill(false));
   const [attractionSearch, setAttractionSearch] = useState("");
-  const [attractionSearchResult, setAttractionSearchResult] =
-    useState(attractions);
+  const [attractionSearchResult, setAttractionSearchResult] = useState([]);
   const [isExpanded, setIsExpanded] = useState(false);
+
   const [selectedOpenTime, setSelectedOpenTime] = useState(openTime[0]);
   const [showOpenTimeDropdown, setShowOpenTimeDropdown] = useState(false);
+
   const [selectedCloseTime, setSelectedCloseTime] = useState(closeTime[0]);
   const [showCloseTimeDropdown, setShowCloseTimeDropdown] = useState(false);
+
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(99999999);
 
-  const handleToggleAddress = (label) => {
-    setSelectedAdress(label);
-    setShowAddressDropdown(false);
+  const handleToggleArea = (label) => {
+    setSelectedArea(label);
+    setShowAreaDropdown(false);
   };
 
   const handleSearchAttraction = (e) => {
     setAttractionSearch(e.target.value);
     const searchResult = attractions.filter((item) =>
-      item?.label.toLowerCase().includes(e.target.value.toLowerCase())
+      item?.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setAttractionSearchResult(searchResult);
   };
@@ -77,21 +86,107 @@ function PlaygroundRecommendation() {
     setShowOpenTimeDropdown(false);
   };
 
-  const handleClickFilter = () => {
-    alert("Tính năng đang phát triển");
-  };
-  // const fetchPlayground = async () => {
-  //   try {
-  //     const response = await getPlayground();
-  //     const data = response.data;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const handleClickFilter = async () => {
+    console.log('🚀 ~ PlaygroundRecommendation ~ attractions:', attractions)
+    console.log('🚀 ~ PlaygroundRecommendation ~ selectedArea:', selectedArea)
+    console.log('🚀 ~ PlaygroundRecommendation ~ attractions:', attractions.filter((_, index) => checkedAttractions[index]))
+    console.log('🚀 ~ PlaygroundRecommendation ~ selectedOpenTime:', selectedOpenTime)
+    console.log('🚀 ~ PlaygroundRecommendation ~ selectedCloseTime:', selectedCloseTime)
+    fetchFilterPlaygrounds()
+  }
 
-  // useEffect(() => {
-  //   fetchPlayground();
-  // }, []);
+  const fetchAttractions = async () => {
+    try {
+      const response = await getAttractions();
+      const reponseData = response.data;
+      setAttractions(reponseData)
+      setAttractionSearchResult(reponseData)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchAreas = async () => {
+    try {
+      const response = await getAreas();
+      const reponseData = response.data;
+      setAreas([{ name: "すべての地域", }, ...reponseData]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchPlaygrounds = async () => {
+    try {
+      const queryParams = new URLSearchParams();
+      queryParams.append('limit', limitPerPage);
+      queryParams.append('page', currentPage);
+      const response = await getPlayground(queryParams);
+      const responseData = response.data;
+      console.log('🚀 ~ fetchPlaygrounds ~ responseData:', responseData)
+      setPlaygrounds(responseData.data);
+      setTotalPage(responseData.pagination.totalPage);
+      setCurrentPage(Number.parseInt(responseData.pagination.currentPage));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchFilterPlaygrounds = async () => {
+    try {
+      const selectedAreaValue = selectedArea;
+      const selectedAttractions = attractions.filter((_, index) => checkedAttractions[index]);
+      const openingTime = selectedOpenTime.value;
+      const closingTime = selectedCloseTime.value;
+      const minAdmissionFee = minPrice
+      const maxAdmissionFee = maxPrice
+      const limit = limitPerPage
+      const page = currentPage
+
+      const queryParams = new URLSearchParams()
+
+      if (selectedAreaValue !== "すべての地域") {
+        queryParams.append('area', selectedAreaValue)
+      }
+
+      if (selectedAttractions.length !== 0) {
+        selectedAttractions.forEach((attraction) => {
+          queryParams.append('attractions', attraction._id)
+        })
+      }
+
+      queryParams.append('openingTime', openingTime)
+      queryParams.append('closingTime', closingTime)
+      queryParams.append('minAdmissionFee', minAdmissionFee)
+      queryParams.append('maxAdmissionFee', maxAdmissionFee)
+      queryParams.append('limit', limit)
+      queryParams.append('page', page)
+
+      const response = await filterPlaygrounds(queryParams)
+      setIsFiltering(true)
+      const responseData = response.data
+      console.log('🚀 ~ fetchFilterPlaygrounds ~ responseData:', responseData)
+      setPlaygrounds(responseData.data);
+      setTotalPage(responseData.pagination.totalPage);
+      setCurrentPage(Number.parseInt(responseData.pagination.currentPage));
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (isFiltering) {
+      fetchFilterPlaygrounds()
+    } else {
+      fetchPlaygrounds()
+    }
+  }, [currentPage])
+
+  useEffect(() => {
+    fetchPlaygrounds()
+    fetchAttractions()
+    fetchAreas()
+  }, []);
 
   return (
     <div className="flex" style={{ height: "calc(100vh - 130px)" }}>
@@ -99,25 +194,24 @@ function PlaygroundRecommendation() {
         <div className="relative">
           <button
             className="flex w-[70%] border items-center bg-white"
-            onClick={() => setShowAddressDropdown(!showAddressDropdown)}
+            onClick={() => setShowAreaDropdown(!showAreaDropdown)}
           >
-            <span className="flex-1 text-left pl-1">{selectedAddress}</span>
+            <span className="flex-1 text-left pl-1">{selectedArea}</span>
             <FaCaretDown className="border-l w-[1.5rem] h-[1.5rem]" />
           </button>
 
-          {showAddressDropdown && (
+          {showAreaDropdown && (
             <div className="flex flex-col border w-[70%] absolute top-7 left-0 z-10 bg-white">
-              {addresses.map((item, index) => (
+              {areas.map((item, index) => (
                 <button
                   key={index}
-                  className={`text-left pl-1 hover:bg-green-700 hover:text-white ${
-                    item.label === selectedAddress
+                  className={`text-left pl-1 hover:bg-green-700 hover:text-white ${item.name === selectedArea
                       ? "bg-green-500 text-white"
                       : "bg-white"
-                  }`}
-                  onClick={() => handleToggleAddress(item.label)}
+                    }`}
+                  onClick={() => handleToggleArea(item.name)}
                 >
-                  {item.label}
+                  {item.name}
                 </button>
               ))}
             </div>
@@ -235,7 +329,15 @@ function PlaygroundRecommendation() {
       </div>
 
       <div className="w-[80%]">
-        <PlaygroundResults />
+        <PlaygroundResults
+          playgrounds={playgrounds}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          limitPerPage={limitPerPage}
+          setLimitPerPage={setLimitPerPage}
+          totalPage={totalPage}
+
+        />
       </div>
     </div>
   );
