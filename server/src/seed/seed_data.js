@@ -54,7 +54,7 @@ const games = [
     'フィッシング', 'ハイキング', 'キャンプ', 'バードウォッチング'
 ];
 const attractionsData = games.map((name, index) => ({
-    _id: new mongoose.Types.ObjectId(`648d7eb3fc13ae4d6b0001${index}`),
+    _id: new mongoose.Types.ObjectId(`648d7eb3fc13ae4d6b0001${index.toString().padStart(2, '0')}`),
     name,
     createdAt: new Date(),
     updatedAt: new Date()
@@ -96,7 +96,7 @@ const areaNames = [
     'チャビン', 'カマウ'
 ];
 const areasData = areaNames.map((name, index) => ({
-    _id: new mongoose.Types.ObjectId(`648d7eb3fc13ae4d6b0003${index + 300}`),
+    _id: new mongoose.Types.ObjectId(`648d7eb3fc13ae4d6b0003${index.toString().padStart(2, '0')}`),
     name
 }));
 
