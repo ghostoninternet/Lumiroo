@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
 import lottieAnimation from "../../../assets/ride-animation.json";
 import TransitionWrapper from "../../../components/TransitionWrapper"; // Import TransitionWrapper
+import { signIn } from "../../../apis/auth";
 
 const SignIn = () => {
   const navigate = useNavigate(); // Dùng để điều hướng
@@ -13,13 +14,15 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setError("メールアドレスとパスワードを入力してください。");
       return;
     }
     setError("");
+    await signIn({ email, password });
+    navigate('/playground-recommendation');
     console.log("ログイン成功:", { email, password });
   };
 

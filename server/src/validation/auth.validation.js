@@ -7,6 +7,7 @@ const signInSchema = Joi.object({
 });
 
 const signUpSchema = Joi.object({
+  username: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
   gender: Joi.string()
@@ -14,6 +15,7 @@ const signUpSchema = Joi.object({
     .required(),
   phoneNumber: Joi.string().required(),
   dob: Joi.date().required(),
+  avatarUrl: Joi.string().uri().optional(),
 });
 
 module.exports = {

@@ -12,6 +12,7 @@ const { ROLE } = require('../constants/model');
 const filterUserFields = (user) => ({
   id: user._id,
   email: user.email,
+  username: user.username,
   role: user.role,
 });
 
@@ -25,13 +26,14 @@ const signin = async ({ email, password }) => {
   return filterUserFields(foundUser);
 };
 
-const signup = async ({ email, password, gender, phoneNumber, dob, avatarUrl }) => {
+const signup = async ({ username, email, password, gender, phoneNumber, dob, avatarUrl }) => {
   const foundUser = await userDaos.findUserByEmail(email);
   if (foundUser) throw new UserAlreadyExistError();
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const newUserData = {
+    username,
     email,
     password: hashedPassword,
     gender,
@@ -45,12 +47,7 @@ const signup = async ({ email, password, gender, phoneNumber, dob, avatarUrl }) 
   return filterUserFields(newUser);
 };
 
-const refreshToken = async () => {
-  // Logic sẽ được thêm sau
-};
-
 module.exports = {
   signin,
   signup,
-  refreshToken,
 };

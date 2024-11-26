@@ -13,9 +13,10 @@ const signin = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-  const { email, password, gender, phoneNumber, dob, avatarUrl } = req.body;
+  const { username, email, password, gender, phoneNumber, dob, avatarUrl } = req.body;
 
   const newUser = await authService.signup({
+    username,
     email,
     password,
     gender,
@@ -32,10 +33,6 @@ const signup = async (req, res) => {
   });
 };
 
-const refreshToken = async (req, res, next) => {
-  // Logic sẽ được thêm sau
-};
-
 const logout = async (req, res) => {
   req.session.destroy((err) => {
     if (err) {
@@ -48,6 +45,5 @@ const logout = async (req, res) => {
 module.exports = {
   signin,
   signup,
-  refreshToken,
   logout,
 };

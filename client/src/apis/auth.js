@@ -6,7 +6,7 @@ export const signIn = async (authData) => {
   return response
 }
 
-// http://localhost:8000/api//auth/sign-up
+// http://localhost:8000/api/auth/sign-up
 export const signUp = async (authData) => {
   const response = await axiosInstance.post('/auth/sign-up', authData)
   return response
