@@ -3,7 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import SignIn from "./pages/Auth/SignIn/SignIn";
 import SignUp from "./pages/Auth/SignUp/SignUp";
-import PlaygroundRecommendation from "./pages/PlaygroundRecommendation/PlaygroundRecommendation";
+import PlaygroundRecommendation from "./pages/Playground/PlaygroundRecommendation";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
