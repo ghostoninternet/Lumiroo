@@ -6,6 +6,7 @@ const playgroundController = require('../controllers/playground.controller')
 
 const router = express.Router()
 
+router.get('/', validation.validationQuery(playgroundValidationSchema.getPlaygrounds), asyncHandler(playgroundController.getPlayground))
 router.get('/filter', validation.validationQuery(playgroundValidationSchema.filterPlayground), asyncHandler(playgroundController.filterPlayground))
 
 module.exports = router
