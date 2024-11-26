@@ -6,6 +6,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import lottieAnimation from "../../../assets/ride-animation.json";
 import TransitionWrapper from "../../../components/TransitionWrapper"; // Import TransitionWrapper
 import { signIn } from "../../../apis/auth";
+import Logo from "../../../components/logo/Logo";
 
 const SignIn = () => {
   const navigate = useNavigate(); // Dùng để điều hướng
@@ -37,12 +38,7 @@ const SignIn = () => {
           transition={{ duration: 0.8 }}
         >
           {/* Logo Lumiroo */}
-          <motion.h1
-            className="text-center text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-green-500 to-green-600 mb-6 tracking-wide z-10"
-            whileHover={{ scale: 1.1 }}
-          >
-            Lumiroo
-          </motion.h1>
+          <Logo size="text-7xl" className="mb-6" />
           {/* Animation */}
           <Player
             autoplay

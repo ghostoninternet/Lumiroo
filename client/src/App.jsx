@@ -16,13 +16,12 @@ function App() {
         <Route path="/auth/sign-in" element={<SignIn />} />
         {/* Route cho trang Sign Up */}
         <Route path="/auth/sign-up" element={<SignUp />} />
-        {/* Route cho layout chính */}
-        <Route path="/" element={<ProtectedRoute />}>
+        {/* Route được bảo vệ */}
+        <Route element={<ProtectedRoute />}>
+          {/* Main Layout */}
           <Route path="/" element={<MainLayout />}>
-            <Route
-              path="/playground-recommendation"
-              element={<PlaygroundRecommendation />}
-            />
+            {/* Các route con */}
+            <Route path="playground-recommendation" element={<PlaygroundRecommendation />} />
           </Route>
         </Route>
       </Routes>
