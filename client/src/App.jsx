@@ -4,6 +4,7 @@ import MainLayout from "./layouts/MainLayout/MainLayout";
 import SignIn from "./pages/Auth/SignIn/SignIn";
 import SignUp from "./pages/Auth/SignUp/SignUp";
 import PlaygroundRecommendation from "./pages/PlaygroundRecommendation/PlaygroundRecommendation";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const location = useLocation();
@@ -16,11 +17,13 @@ function App() {
         {/* Route cho trang Sign Up */}
         <Route path="/auth/sign-up" element={<SignUp />} />
         {/* Route cho layout chính */}
-        <Route path="/" element={<MainLayout />}>
-          <Route
-            path="/playground-recommendation"
-            element={<PlaygroundRecommendation />}
-          />
+        <Route path="/" element={<ProtectedRoute />}>
+          <Route path="/" element={<MainLayout />}>
+            <Route
+              path="/playground-recommendation"
+              element={<PlaygroundRecommendation />}
+            />
+          </Route>
         </Route>
       </Routes>
     </AnimatePresence>

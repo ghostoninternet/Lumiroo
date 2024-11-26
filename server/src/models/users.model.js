@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const { GENDER, ROLE } = require('../constants/model')
 
 const usersModel = new mongoose.Schema({
+  username: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,

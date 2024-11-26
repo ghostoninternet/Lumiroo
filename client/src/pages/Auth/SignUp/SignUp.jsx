@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Dùng để điều hướng giữa các trang
 import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
 import amusementParkAnimation from "../../../assets/ride-animation.json";
 import amusementParkSVG from "../../../assets/amusement-park-animate.svg";
 import TransitionWrapper from "../../../components/TransitionWrapper"; // Import TransitionWrapper
+import { uploadImage } from "../../../apis/upload";
+import { GENDER } from "../../../constants";
+import { signUp } from "../../../apis/auth";
 
 const SignUp = () => {
   const navigate = useNavigate(); // Điều hướng giữa các trang
-  const [avatar, setAvatar] = useState(null);
+  const [errorConfirmPassword, setErrorConfirmPassword] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,23 +22,54 @@ const SignUp = () => {
     gender: "男性",
     address: "",
     phoneNumber: "",
+    avatarUrl: "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
   });
+
+  useEffect(() => {
+    if (formData.password !== formData.confirmPassword) {
+      setErrorConfirmPassword(true);
+    } else {
+      setErrorConfirmPassword(false);
+    }
+  }, [formData.confirmPassword]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setAvatar(URL.createObjectURL(file));
+  const handleAvatarChange = async (e) => {
+    if (e.target.files) {
+      try {
+        const formDataAvatar = new FormData();
+        formDataAvatar.append('image', e.target.files[0]);
+        const response = await uploadImage(formDataAvatar);
+        const avatarUrl = response.data.data;
+        setFormData({...formData, avatarUrl: avatarUrl });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form submitted: ", formData);
+    const signUpData = {
+      username: formData.firstName + " " + formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      gender: GENDER[formData.gender],
+      phoneNumber: formData.phoneNumber,
+      dob: formData.birthDate,
+      avatarUrl: formData.avatarUrl,
+    };
+    console.log("Form submitted: ", signUpData);
+    try {
+      await signUp(signUpData);
+      navigate('/playground-recommendation');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -69,15 +103,11 @@ const SignUp = () => {
                 htmlFor="avatar-upload"
                 className="w-24 h-24 rounded-full border-4 border-green-500 shadow-md cursor-pointer flex items-center justify-center bg-white overflow-hidden"
               >
-                {avatar ? (
-                  <img
-                    src={avatar}
+                <img
+                    src={formData.avatarUrl}
                     alt="Avatar"
                     className="w-full h-full object-cover"
                   />
-                ) : (
-                  <i className="fa-solid fa-plus text-green-500 text-3xl"></i>
-                )}
                 <input
                   id="avatar-upload"
                   type="file"
@@ -114,7 +144,7 @@ const SignUp = () => {
                 },
               ].map(({ name, label, type, icon, colSpan }) => (
                 <div className={colSpan ? "col-span-2" : ""} key={name}>
-                  <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                  <label className="text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
                     {label}
                     <i className={`fa-solid ${icon} text-green-600`}></i>
                   </label>
@@ -124,14 +154,18 @@ const SignUp = () => {
                     value={formData[name]}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none focus:border-green-500 transition-shadow duration-300"
+                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none focus:border-green-500 transition-shadow duration-300"
                   />
                 </div>
               ))}
 
+              {
+                errorConfirmPassword && <p className="text-sm col-span-2 text-red-600">正しい確認パスワードを入力してください</p>
+              }
+
               {/* Birth Date and Gender */}
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                <label className="text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
                   生年月日
                   <i className="fa-solid fa-calendar text-green-600"></i>
                 </label>
@@ -145,7 +179,7 @@ const SignUp = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                <label className="text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
                   性別
                   <i className="fa-solid fa-venus-mars text-green-600"></i>
                 </label>
@@ -168,7 +202,7 @@ const SignUp = () => {
 
               {/* Address and Phone Number */}
               <div className="col-span-2">
-                <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                <label className="text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
                   住所
                   <i className="fa-solid fa-map-marker-alt text-green-600"></i>
                 </label>
@@ -181,7 +215,7 @@ const SignUp = () => {
                 />
               </div>
               <div className="col-span-2">
-                <label className="block text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
+                <label className="text-sm font-bold text-gray-700 mb-1 flex items-center gap-2">
                   電話番号
                   <i className="fa-solid fa-phone text-green-600"></i>
                 </label>
