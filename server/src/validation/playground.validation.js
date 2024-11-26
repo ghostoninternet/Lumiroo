@@ -1,5 +1,10 @@
 const Joi = require('joi')
 
+const getPlaygrounds = Joi.object({
+  limit: Joi.number().min(8).required(),
+  page: Joi.number().min(1).required(),
+})
+
 const filterPlayground = Joi.object({
   area: Joi.string().optional(),
   attractions: Joi.array().items(Joi.string()).optional(),
@@ -12,5 +17,6 @@ const filterPlayground = Joi.object({
 })
 
 module.exports = {
-  filterPlayground
+  getPlaygrounds,
+  filterPlayground,
 }
