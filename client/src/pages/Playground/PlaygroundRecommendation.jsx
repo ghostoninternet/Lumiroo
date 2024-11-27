@@ -216,7 +216,7 @@ function PlaygroundRecommendation() {
       className="flex overflow-y-none"
       style={{ height: "calc(100vh - 130px)" }}
     >
-      <div className="w-[21%] flex flex-col gap-8 py-4 px-4 bg-green-50 border">
+      <div className="w-[21%] flex flex-col gap-8 py-4 px-4 bg-green-50 border pt-16">
         <div className="relative" ref={areaDropdownRef}>
           <button
             className="flex w-[70%] border items-center bg-white"
