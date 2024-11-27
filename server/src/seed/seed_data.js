@@ -5,11 +5,10 @@ const User = require('../models/users.model');
 const Review = require('../models/reviews.model');
 const Area = require('../models/areas.model');
 const Attraction = require('../models/attractions.model');
-const faker = require('@faker-js/faker');  // Thư viện Faker để sinh dữ liệu ngẫu nhiên
 
 
 mongoose
-    .connect(ENV.MONGO_URI, { dbName: ENV.DB_NAME, useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(ENV.MONGO_URI, { dbName: ENV.DB_NAME })
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('Failed to connect to MongoDB', err));
 
@@ -47,13 +46,13 @@ const seedDatabase = async () => {
 };
 
 seedDatabase();
-// const games = [
-//     'ブランコ', '滑り台', '観覧車', 'ジェットコースター', 'メリーゴーランド', 
-//     'トランポリン', 'ボート', 'バンパーカー', 'ミニカー', 'アーケードゲーム', 'ウォータースライダー','バンジージャンプ', 'カートレース', 'ロッククライミング', 'ジップライン', 'スカイダイビング', 
-//     'パラグライダー', 'ホットエアバルーン', 'サーフィン', 'スケートボード', 'スノーボード', 
-//     'スキー', 'カヤック', 'カヌー', 'ラフティング', 'ダイビング', 'シュノーケリング', 
-//     'フィッシング', 'ハイキング', 'キャンプ', 'バードウォッチング'
-// ];
+const games = [
+    'ブランコ', '滑り台', '観覧車', 'ジェットコースター', 'メリーゴーランド', 
+    'トランポリン', 'ボート', 'バンパーカー', 'ミニカー', 'アーケードゲーム', 'ウォータースライダー','バンジージャンプ', 'カートレース', 'ロッククライミング', 'ジップライン', 'スカイダイビング', 
+    'パラグライダー', 'ホットエアバルーン', 'サーフィン', 'スケートボード', 'スノーボード', 
+    'スキー', 'カヤック', 'カヌー', 'ラフティング', 'ダイビング', 'シュノーケリング', 
+    'フィッシング', 'ハイキング', 'キャンプ', 'バードウォッチング'
+];
 const attractionsData = games.map((name, index) => ({
     _id: new mongoose.Types.ObjectId(`648d7eb3fc13ae4d6b0001${index.toString().padStart(2, '0')}`),
     name,
@@ -84,18 +83,18 @@ const reviewsData = [
     },
 ];
 
-// const areaNames = [
-//     'ハノイ', 'ホーチミン', 'ダナン', 'ハイフォン', 'カントー', 'ニャチャン', 'ダラット', 'フエ', 
-//     'ビン', 'クアンニン', 'バクニン', 'ハザン', 'カオバン', 'ライチャウ', 'ディエンビエン', 'ラオカイ', 
-//     'イエンバイ', 'タイグエン', 'ランソン', 'クアンビン', 'クアンチ', 'クアンガイ', 'ビンディン', 
-//     'フーイエン', 'カインホア', 'ニントゥアン', 'ビントゥアン', 'コンツム', 'ザライ', 'ダクラク', 
-//     'ダクノン', 'ラムドン', 'ビンフック', 'バクザン', 'バクカン', 'トゥエンクアン', 'フート', 'ハイズオン', 
-//     'フンイエン', 'ハナム', 'ナムディン', 'タイビン', 'ニンビン', 'タインホア', 'ゲアン', 'ハティン', 
-//     'ソンラ', 'ホアビン', 'ハイズオン', 'ビンロン', 'チャビン', 'カマウ', 'アンザン', 'キエンザン', 
-//     'ソクチャン', 'バクリエウ', 'ハウザン', 'ティエンザン', 'ビンフック', 'ロンアン', 'ドンナイ', 
-//     'ビンズオン', 'バリアブンタウ', 'タイニン', 'ビンロン', 'ドンタップ', 'ハウザン', 'ソクチャン', 
-//     'チャビン', 'カマウ'
-// ];
+const areaNames = [
+    'ハノイ', 'ホーチミン', 'ダナン', 'ハイフォン', 'カントー', 'ニャチャン', 'ダラット', 'フエ', 
+    'ビン', 'クアンニン', 'バクニン', 'ハザン', 'カオバン', 'ライチャウ', 'ディエンビエン', 'ラオカイ', 
+    'イエンバイ', 'タイグエン', 'ランソン', 'クアンビン', 'クアンチ', 'クアンガイ', 'ビンディン', 
+    'フーイエン', 'カインホア', 'ニントゥアン', 'ビントゥアン', 'コンツム', 'ザライ', 'ダクラク', 
+    'ダクノン', 'ラムドン', 'ビンフック', 'バクザン', 'バクカン', 'トゥエンクアン', 'フート', 'ハイズオン', 
+    'フンイエン', 'ハナム', 'ナムディン', 'タイビン', 'ニンビン', 'タインホア', 'ゲアン', 'ハティン', 
+    'ソンラ', 'ホアビン', 'ハイズオン', 'ビンロン', 'チャビン', 'カマウ', 'アンザン', 'キエンザン', 
+    'ソクチャン', 'バクリエウ', 'ハウザン', 'ティエンザン', 'ビンフック', 'ロンアン', 'ドンナイ', 
+    'ビンズオン', 'バリアブンタウ', 'タイニン', 'ビンロン', 'ドンタップ', 'ハウザン', 'ソクチャン', 
+    'チャビン', 'カマウ'
+];
 const areasData = areaNames.map((name, index) => ({
     _id: new mongoose.Types.ObjectId(`648d7eb3fc13ae4d6b0003${index.toString().padStart(2, '0')}`),
     name
@@ -310,83 +309,3 @@ const playgroundData = [
         updatedAt: new Date(),
     },
 ];
-
-
-const areaNames = [
-    'ハノイ', 'ホーチミン', 'ダナン', 'ハイフォン', 'カントー', 'ニャチャン', 'ダラット', 'フエ', 
-    'ビン', 'クアンニン', 'バクニン', 'ハザン', 'カオバン', 'ライチャウ', 'ディエンビエン', 'ラオカイ', 
-    'イエンバイ', 'タイグエン', 'ランソン', 'クアンビン', 'クアンチ', 'クアンガイ', 'ビンディン', 
-    'フーイエン', 'カインホア', 'ニントゥアン', 'ビントゥアン', 'コンツム', 'ザライ', 'ダクラク', 
-    'ダクノン', 'ラムドン', 'ビンフック', 'バクザン', 'バクカン', 'トゥエンクアン', 'フート', 'ハイズオン', 
-    'フンイエン', 'ハナム', 'ナムディン', 'タイビン', 'ニンビン', 'タインホア', 'ゲアン', 'ハティン', 
-    'ソンラ', 'ホアビン', 'ハイズオン', 'ビンロン', 'チャビン', 'カマウ', 'アンザン', 'キエンザン', 
-    'ソクチャン', 'バクリエウ', 'ハウザン', 'ティエンザン', 'ビンフック', 'ロンアン', 'ドンナイ', 
-    'ビンズオン', 'バリアブンタウ', 'タイニン', 'ビンロン', 'ドンタップ', 'ハウザン', 'ソクチャン', 
-    'チャビン', 'カマウ'
-];
-
-const games = [
-    'ブランコ', '滑り台', '観覧車', 'ジェットコースター', 'メリーゴーランド', 
-    'トランポリン', 'ボート', 'バンパーカー', 'ミニカー', 'アーケードゲーム', 
-    'ウォータースライダー', 'バンジージャンプ', 'カートレース', 'ロッククライミング', 
-    'ジップライン', 'スカイダイビング', 'パラグライダー', 'ホットエアバルーン', 
-    'サーフィン', 'スケートボード', 'スノーボード', 'スキー', 'カヤック', 'カヌー', 
-    'ラフティング', 'ダイビング', 'シュノーケリング', 'フィッシング', 'ハイキング', 
-    'キャンプ', 'バードウォッチング'
-];
-
-const admissionFee = [
-  10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000, 
-  60000, 65000, 70000, 75000, 80000, 85000, 90000, 95000, 100000, 105000, 
-  110000, 115000, 120000, 125000, 130000, 135000, 140000, 145000, 150000, 
-  155000, 160000, 165000, 170000, 175000, 180000, 185000, 190000, 195000, 
-  200000, 205000, 210000, 215000, 220000, 225000, 230000, 235000, 240000, 
-  245000, 250000, 255000, 260000, 265000, 270000, 275000, 280000, 285000, 
-  290000, 295000, 300000, 305000, 310000, 315000, 320000, 325000, 330000, 
-  335000, 340000, 345000, 350000, 355000, 360000, 365000, 370000, 375000, 
-  380000, 385000, 390000, 395000, 400000, 405000, 410000, 415000, 420000, 
-  425000, 430000, 435000, 440000, 445000, 450000, 455000, 460000, 465000, 
-  470000, 475000, 480000, 485000, 490000, 495000, 500000
-];
-
-// Hàm sinh dữ liệu ngẫu nhiên
-function generateData(numRecords = 1000) {
-    const data = [];
-
-    for (let i = 0; i < numRecords; i++) {
-        const name = faker.company.companyName(); // Tạo tên địa điểm ngẫu nhiên
-        const admission = admissionFee[Math.floor(Math.random() * admissionFee.length)]; // Lấy ngẫu nhiên mức phí
-        const area = areaNames[Math.floor(Math.random() * areaNames.length)]; // Lấy ngẫu nhiên khu vực
-        const attractions = games.slice(0, Math.floor(Math.random() * games.length)); // Chọn ngẫu nhiên các trò chơi
-        const openingTime = 28800; // 08:00 sáng (giờ Unix)
-        const closingTime = 64800; // 18:00 tối (giờ Unix)
-        const description = faker.lorem.sentence(); // Tạo mô tả ngẫu nhiên cho địa điểm
-        const imageUrl = faker.image.city(); // Sinh URL hình ảnh ngẫu nhiên
-        const reviews = []; // Mảng đánh giá có thể để trống hoặc thêm ngẫu nhiên sau
-
-        const record = {
-            _id: new mongoose.Types.ObjectId(),
-            name: name,
-            admissionFee: admission,
-            address: `${faker.address.streetAddress()}, ${area}, ベトナム`,
-            area: area,
-            attractions: attractions,
-            openingTime: openingTime,
-            closingTime: closingTime,
-            description: description,
-            imageUrl: imageUrl,
-            reviews: reviews,
-            ratingAvg: parseFloat((Math.random() * 5).toFixed(1)), // Đánh giá trung bình ngẫu nhiên từ 0 đến 5
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        };
-
-        data.push(record);
-    }
-
-    return data;
-}
-
-// Tạo 1000 bản ghi dữ liệu
-const generatedData = generateData(1000);
-console.log(generatedData);
