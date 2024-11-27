@@ -2,24 +2,59 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <div className="bg-black text-white p-4 flex justify-center">
-      <div className="flex items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          className="w-6 h-6"
+    <footer className="bg-green-100 border-t border-gray-300 py-6">
+    <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center text-gray-600">
+      {/* Left Section */}
+      <div className="text-center sm:text-left">
+        <p className="text-sm">&copy; 2024 Lumiroo. All Rights Reserved.</p>
+        <p className="text-sm">楽しい遊び場を探しましょう！</p>
+      </div>
+
+      {/* Center Section: Links */}
+      <div className="flex space-x-6 mt-4 sm:mt-0">
+        <a
+          href="/terms"
+          className="text-sm text-gray-500 hover:text-gray-800"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M6 18c0 1.105-.895 2-2 2s-2-.895-2-2 2-2 2-2 2 .895 2 2zm10 0c0 1.105-.895 2-2 2s-2-.895-2-2 2-2 2-2 2 .895 2 2zM12 2l2.003 2.007a2.015 2.015 0 0 1 1.417-.65c.535-.001.912-.429.996-.852a.833.833 0 0 1 .996-.143c.564.561.458 1.512.124 1.846-1.167 1.095-2.898 1.29-4.344 1.005-1.446-.284-2.34-.952-2.88-1.615-1.08-1.151-1.206-2.779-.414-4.029C7.73 1.226 10.434 0 12 0c1.242 0 2.485.342 3.524.992 1.016.628 1.843 1.537 2.278 2.647A4.991 4.991 0 0 1 12 2z"
-          />
-        </svg>
+          利用規約
+        </a>
+        <a
+          href="/privacy"
+          className="text-sm text-gray-500 hover:text-gray-800"
+        >
+          プライバシーポリシー
+        </a>
+        <a
+          href="/contact"
+          className="text-sm text-gray-500 hover:text-gray-800"
+        >
+          お問い合わせ
+        </a>
+      </div>
+
+      {/* Right Section: Social Icons */}
+      <div className="flex space-x-4 mt-4 sm:mt-0">
+        <a
+          href="https://facebook.com"
+          className="text-gray-500 hover:text-blue-600"
+        >
+          <i className="fab fa-facebook-f"></i>
+        </a>
+        <a
+          href="https://twitter.com"
+          className="text-gray-500 hover:text-blue-400"
+        >
+          <i className="fab fa-twitter"></i>
+        </a>
+        <a
+          href="https://instagram.com"
+          className="text-gray-500 hover:text-pink-500"
+        >
+          <i className="fab fa-instagram"></i>
+        </a>
       </div>
     </div>
+  </footer>
   );
 };
 

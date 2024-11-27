@@ -4,8 +4,11 @@ import MainLayout from "./layouts/MainLayout/MainLayout";
 import SignIn from "./pages/Auth/SignIn/SignIn";
 import SignUp from "./pages/Auth/SignUp/SignUp";
 import PlaygroundRecommendation from "./pages/Playground/PlaygroundRecommendation";
+import ProfilePage from "./pages/User/ProfilePage";
 import ProtectedRoute from "./components/ProtectedRoute";
-
+import FavoritePage from "./pages/Favorite/FavoritePage";
+import HomePage from "./pages/Home/HomePage";
+import MapPage from "./pages/Map/MapPage";
 function App() {
   const location = useLocation();
 
@@ -20,8 +23,17 @@ function App() {
         <Route element={<ProtectedRoute />}>
           {/* Main Layout */}
           <Route path="/" element={<MainLayout />}>
+            
             {/* Các route con */}
+            {/* Trang chủ */}
+            <Route path="home" element={<HomePage/>} />
             <Route path="playground-recommendation" element={<PlaygroundRecommendation />} />
+            {/* user profile */}
+            <Route path="user-profile" element={<ProfilePage />} />
+            <Route path="favorites" element={<FavoritePage />} />
+            <Route path="map" element={<MapPage />} />
+
+          
           </Route>
         </Route>
       </Routes>
