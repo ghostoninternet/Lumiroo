@@ -44,7 +44,23 @@ mongoose
         "https://gonatour.vn/vnt_upload/news/09_2020/khu_vui_choi_dai_nam.jpg",
         "https://tinviettravel.com.vn/uploads/cam-nang-du-lich/2024_11/khu-vui-choi-samworld-4.jpg",
         "https://tourvinpearllandnamhoian.com/uploads/images/images/Khung-gio-mo-cua-cac-hoat-dong-tai-vinpearl-cgm.jpg",
-        "https://th.bing.com/th/id/R.509d09ad3740afe1e395253b12425638?rik=a7cJZo97JCAKuQ&riu=http%3a%2f%2fwww.kameyama-sunshinepark.com%2fwp%2fwp-content%2fuploads%2f2021%2f08%2fDSCN6556.jpg&ehk=4tyWS%2bcGPFOVTeoHbiOQRQr5NUXJeaqZ1ABDPdHVx1M%3d&risl=&pid=ImgRaw&r=0"
+        "https://th.bing.com/th/id/R.509d09ad3740afe1e395253b12425638?rik=a7cJZo97JCAKuQ&riu=http%3a%2f%2fwww.kameyama-sunshinepark.com%2fwp%2fwp-content%2fuploads%2f2021%2f08%2fDSCN6556.jpg&ehk=4tyWS%2bcGPFOVTeoHbiOQRQr5NUXJeaqZ1ABDPdHVx1M%3d&risl=&pid=ImgRaw&r=0",
+        "https://cdn.dealtoday.vn/img/s800x400/khu-vui-choi-chu-voi-con-5_24102024101802.jpg?sign=WJsZyBTP_Lgz7j5wxNKODg",
+        "https://img.ltn.com.tw/Upload/news/600/2016/03/30/341.jpg",
+        "https://th.bing.com/th?id=OIF.FYiNFJrR%2bnAxz1JSWGLfWA&rs=1&pid=ImgDetMain",
+        "https://skynext.vn/wp-content/uploads/2021/06/khu-vui-choi-tre-em-dep-nhat-the-gioi-Meland-Club-co-gi-hap-dan-1.jpg",
+        "https://th.bing.com/th/id/OIP.rvV1-Fgn72v8EFwGMXK47gHaE7?rs=1&pid=ImgDetMain",
+        "https://th.bing.com/th/id/OIP.lAT4Y5HEsIj63oeTdTx7vgHaEk?rs=1&pid=ImgDetMain",
+        "https://cafefcdn.com/203337114487263232/2024/11/23/photo52024-11-2210-35-10-17322465454622021425329-1732351271714-17323512721381125669073.jpg",
+        "https://th.bing.com/th/id/OIP.AsHcZ12yQfz_oSdcSslKeQHaHa?rs=1&pid=ImgDetMain",
+        "https://th.bing.com/th/id/OIP.7V_FKsdY-yVQPJu9GJYx4gHaEn?rs=1&pid=ImgDetMain",
+        "https://dulichkhampha24.com/wp-content/uploads/2020/04/khu-vui-choi-o-ha-noi-4.jpg",
+        "https://th.bing.com/th/id/OIP.882VZLqHGuX9hhKBCI4v3AHaEZ?w=800&h=475&rs=1&pid=ImgDetMain",
+        "https://th.bing.com/th/id/OIP.ujfAfuC8-g6e7U3r5ER4ZAHaE7?rs=1&pid=ImgDetMain",
+        "https://th.bing.com/th/id/OIP.AJ84MaXO3V2wUkudmHIjLAHaEK?rs=1&pid=ImgDetMain",
+        "https://th.bing.com/th/id/OIP.R2zP3D4XW5-RThVa4EY0NQHaE0?w=1000&h=650&rs=1&pid=ImgDetMain",
+        "https://th.bing.com/th/id/OIP.HMmmvaC1z1wCr42tDLDsjgAAAA?w=474&h=314&rs=1&pid=ImgDetMain"
+
       ];
       
       

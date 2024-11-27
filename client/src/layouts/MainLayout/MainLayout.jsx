@@ -16,7 +16,7 @@ function MainLayout() {
       </main>
 
       {/* Footer */}
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }

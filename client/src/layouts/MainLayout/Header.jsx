@@ -21,7 +21,9 @@ function Header({ role }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <Logo size="text-3xl" />
+          <Link to="/home">
+            <Logo size="text-3xl" />
+          </Link>
         </motion.div>
 
         {/* Navigation Links */}
@@ -33,9 +35,9 @@ function Header({ role }) {
             transition={{ duration: 0.8 }}
           >
             <Link
-              to="/"
+              to="/home"
               className={`flex items-center gap-2 transition duration-300 ${
-                isActive("/") ? "text-green-500 border-b-2 border-green-500" : "hover:text-green-500"
+                isActive("/home") ? "text-green-500 border-b-2 border-green-500" : "hover:text-green-500"
               }`}
             >
               <FontAwesomeIcon icon={faHome} /> ホームページ
@@ -70,13 +72,14 @@ function Header({ role }) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <img
-            src="https://avatars.dicebear.com/api/bottts/johndoe.svg"
-            alt="User Avatar"
-            className="w-8 h-8 rounded-full border-2 border-green-500 shadow-md"
-          />
-          <span className="text-sm font-semibold text-gray-700">User</span>
-        </motion.div>
+        <Link to="/user-profile" className="flex items-center gap-2">
+            <img
+              src="https://avatars.dicebear.com/api/bottts/johndoe.svg"
+              alt="User Avatar"
+              className="w-8 h-8 rounded-full border-2 border-green-500 shadow-md"
+            />
+            <span className="text-sm font-semibold text-gray-700">User</span>
+          </Link>        </motion.div>
       </div>
     </header>
   );
