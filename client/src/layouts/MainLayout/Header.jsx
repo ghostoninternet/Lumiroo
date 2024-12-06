@@ -1,26 +1,73 @@
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../../components/Logo/Logo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch, faHeart, faCog, faSignOutAlt, faUser, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { 
+  faHome, 
+  faSearch, 
+  faHeart, 
+  faSignOutAlt, 
+  faUser, 
+  faUserPlus,
+  faUserCircle 
+} from "@fortawesome/free-solid-svg-icons";
 
 function Header({ role }) {
-  const [isMenuOpen, setMenuOpen] = useState(false);  // Để quản lý trạng thái popup
-  const [isLoggedOut, setLoggedOut] = useState(false);  // Để quản lý trạng thái đăng nhập
+  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isLoggedOut, setLoggedOut] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const menuRef = useRef(null);
 
-  // Kiểm tra trang hiện tại để áp dụng class đánh dấu
   const isActive = (path) => location.pathname === path;
 
-  // Hàm đóng mở popup profile menu
-  const toggleMenu = () => setMenuOpen(!isMenuOpen);
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    setMenuOpen(!isMenuOpen);
+  };
 
-  // Hàm xử lý logout
   const handleLogout = () => {
     setLoggedOut(true);
-    setMenuOpen(false);  // Đóng menu khi logout
-    // Thực hiện các công việc liên quan đến logout như xoá session, token, vv
+    setMenuOpen(false);
+    // Implement logout logic here
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const dropdownVariants = {
+    hidden: { 
+      opacity: 0,
+      y: -10,
+      scale: 0.95
+    },
+    visible: { 
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.2,
+        ease: "easeOut"
+      }
+    },
+    exit: {
+      opacity: 0,
+      y: -10,
+      scale: 0.95,
+      transition: {
+        duration: 0.2,
+        ease: "easeIn"
+      }
+    }
   };
 
   return (
@@ -46,7 +93,7 @@ function Header({ role }) {
           >
             <Link
               to="/home"
-              className={`flex items-center gap-2 transition duration-300 ${isActive("/") ? "text-green-500 border-b-2 border-green-500" : "hover:text-green-500"}`}
+              className={`flex items-center gap-2 transition duration-300 ${isActive("/home") ? "text-green-500 border-b-2 border-green-500" : "hover:text-green-500"}`}
             >
               <FontAwesomeIcon icon={faHome} /> ホームページ
             </Link>
@@ -67,46 +114,75 @@ function Header({ role }) {
 
         {/* Profile Section */}
         <motion.div
-          className="flex items-center gap-4 cursor-pointer"
+          className="flex items-center gap-4"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
           {!isLoggedOut ? (
-            <div className="relative">
-              {/* Avatar */}
-              <img
-                src="https://avatars.dicebear.com/api/bottts/johndoe.svg"
-                alt="User Avatar"
-                className="w-8 h-8 rounded-full border-2 border-green-500 shadow-md"
+            <div className="relative" ref={menuRef}>
+              <button
+                className="flex items-center focus:outline-none"
                 onClick={toggleMenu}
-              />
-              {/* Popup Menu */}
-              {isMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-40 bg-white shadow-lg rounded-lg border border-gray-200 transition-all duration-300">
-                  <ul>
-                    <li>
+              >
+                <img
+                  src="https://avatars.dicebear.com/api/bottts/johndoe.svg"
+                  alt="User Avatar"
+                  className={`w-8 h-8 rounded-full border-2 transition-all duration-300 ${
+                    isMenuOpen 
+                      ? 'border-green-600 shadow-lg scale-110' 
+                      : 'border-green-500 hover:border-green-600 hover:scale-105'
+                  }`}
+                />
+              </button>
+
+              <AnimatePresence>
+                {isMenuOpen && (
+                  <motion.div
+                    variants={dropdownVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-green-100 overflow-hidden"
+                    style={{ transformOrigin: 'top right' }}
+                  >
+                    <div className="py-2">
                       <Link
-                        to="/settings"
-                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-gray-700"
+                        to="/profile"
+                        className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-colors"
+                        onClick={() => setMenuOpen(false)}
                       >
-                        <FontAwesomeIcon icon={faCog} /> 設定
+                        <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                          <FontAwesomeIcon icon={faUserCircle} className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="font-medium">プロフィール</div>
+                          <div className="text-xs text-gray-500">アカウント設定</div>
+                        </div>
                       </Link>
-                    </li>
-                    <li>
+                      
+                      <div className="px-3 my-1">
+                        <div className="border-t border-gray-200"></div>
+                      </div>
+
                       <button
                         onClick={handleLogout}
-                        className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 w-full text-left text-gray-700"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
                       >
-                        <FontAwesomeIcon icon={faSignOutAlt} /> ログアウト
+                        <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                          <FontAwesomeIcon icon={faSignOutAlt} className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="font-medium">ログアウト</div>
+                          <div className="text-xs text-gray-500">アカウントから出る</div>
+                        </div>
                       </button>
-                    </li>
-                  </ul>
-                </div>
-              )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ) : (
-            // Đăng xuất, hiển thị 2 nút
             <div className="flex gap-4">
               <Link
                 to="/auth/sign-in"

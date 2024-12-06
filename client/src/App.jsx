@@ -17,26 +17,27 @@ function App() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* Route cho trang Sign In */}
+        {/* Authentication Routes */}
         <Route path="/auth/sign-in" element={<SignIn />} />
-        {/* Route cho trang Sign Up */}
         <Route path="/auth/sign-up" element={<SignUp />} />
-        {/* Route được bảo vệ */}
+        
+        {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           {/* Main Layout */}
           <Route path="/" element={<MainLayout />}>
-            {/* Các route con */}
-            {/* Trang chủ */}
+            {/* Home Routes */}
+            <Route index element={<HomePage />} />
             <Route path="home" element={<HomePage />} />
-            <Route
-              path="playground-recommendation"
-              element={<PlaygroundRecommendation />}
-            />
-            {/* Trang chi tiết khu vui chơi */}
+            
+            {/* Playground Routes */}
+            <Route path="playground-recommendation" element={<PlaygroundRecommendation />} />
             <Route path="playground/:id" element={<PlaygroundDetail />} />
-            {/* user profile */}
-            <Route path="user-profile" element={<ProfilePage />} />
+            
+            {/* User Routes */}
+            <Route path="profile" element={<ProfilePage />} />
             <Route path="favorites" element={<FavoritePage />} />
+            
+            {/* Map Route */}
             <Route path="map" element={<MapPage />} />
           </Route>
         </Route>
