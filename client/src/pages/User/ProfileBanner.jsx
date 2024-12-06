@@ -7,7 +7,7 @@ const ProfileBanner = ({ image, onUpdateImage }) => {
 
   return (
     <motion.div 
-      className="w-full h-[32rem] relative overflow-hidden"
+      className="w-full h-[27.2rem] relative overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
