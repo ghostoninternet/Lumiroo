@@ -6,11 +6,21 @@ import AmusementParkIcon from "../../assets/Amusement park-amico.svg";
 const PlaygroundInfoCard = ({ data }) => {
   if (!data) return null;
 
-  const { name, address, admissionFee, imageUrl } = data;
+  const { _id, name, address, admissionFee, imageUrl } = data;
   const navigate = useNavigate();
 
+  const handleCardClick = (e) => {
+    // Prevent navigation to detail page if clicking on the address
+    if (!e.target.closest('p[onClick]')) {
+      navigate(`/playground/${_id}`);
+    }
+  };
+
   return (
-    <div className="w-full border rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105 hover:border-green-600 bg-white">
+    <div 
+      className="w-full border rounded-lg shadow-md hover:shadow-lg transition transform hover:scale-105 hover:border-green-600 bg-white cursor-pointer"
+      onClick={handleCardClick}
+    >
       {/* Hình ảnh */}
       <div className="relative overflow-hidden rounded-t-lg">
         <img
@@ -22,8 +32,10 @@ const PlaygroundInfoCard = ({ data }) => {
       <div className="p-4 flex items-center justify-between">
         <div>
           <h3 className="text-lg font-bold text-green-600">{name}</h3>
-          <p className="text-sm text-gray-500 flex items-center"
-          onClick={() => navigate("/map")}>
+          <p 
+            className="text-sm text-gray-500 flex items-center hover:text-green-600"
+            onClick={() => navigate("/map")}
+          >
             <MdPlace className="text-green-500 mr-2" />
             {address}
           </p>
