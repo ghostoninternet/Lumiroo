@@ -193,27 +193,40 @@ import useClickOutside from "../../utils/useClickOutSide";
 
     useEffect(() => {
       fetchPlaygrounds();
-      fetchAttractions();
-      fetchAreas();
-    }, []);
+    }
+  }, [currentPage]);
 
-    const areaDropdownRef = useRef(null);
-    const openTimeDropdownRef = useRef(null);
-    const closeTimeDropdownRef = useRef(null);
+  useEffect(() => {
+    fetchPlaygrounds();
+    fetchAttractions();
+    fetchAreas();
+  }, []);
+  const areaDropdownRef = useRef(null);
+  const openTimeDropdownRef = useRef(null);
+  const closeTimeDropdownRef = useRef(null);
 
-    useClickOutside(areaDropdownRef, () => setShowAreaDropdown(false));
-    useClickOutside(openTimeDropdownRef, () => setShowOpenTimeDropdown(false));
-    useClickOutside(closeTimeDropdownRef, () => setShowCloseTimeDropdown(false));
+  useClickOutside(areaDropdownRef, () => setShowAreaDropdown(false));
+  useClickOutside(openTimeDropdownRef, () => setShowOpenTimeDropdown(false));
+  useClickOutside(closeTimeDropdownRef, () => setShowCloseTimeDropdown(false));
 
-    return (
-      <div className="absolute inset-x-0 top-16 bottom-0 flex bg-white">
-        {/* Sidebar Filter */}
-        <aside className="w-full md:w-80 lg:w-96 bg-gradient-to-br from-green-50 to-green-100 border-r relative z-0">
-          <div className="h-full overflow-y-auto px-5 md:px-6 py-8">
-            {/* Area Selection */}
-            <section className="mb-8">
-              <h3 className="text-base font-semibold text-gray-900 mb-3">地域</h3>
-              <div className="relative" ref={areaDropdownRef}>
+  return (
+    <div
+      className="flex overflow-y-none"
+      style={{ height: "calc(100vh - 89px)" }}
+    >
+      <div className="w-[21%] flex flex-col gap-8 py-4 px-4 bg-green-50 border mt-[57px] border-b-0 border-t-0">
+        <div className="relative" ref={areaDropdownRef}>
+          <button
+            className="flex w-[70%] border items-center bg-white"
+            onClick={() => setShowAreaDropdown(!showAreaDropdown)}
+          >
+            <span className="flex-1 text-left pl-1">{selectedArea}</span>
+            <FaCaretDown className="border-l w-[1.5rem] h-[1.5rem]" />
+          </button>
+
+          {showAreaDropdown && (
+            <div className="flex flex-col border w-[70%] absolute top-7 left-0 z-10 bg-white h-[200px] overflow-y-auto">
+              {areas.map((item, index) => (
                 <button
                   className="flex w-full items-center bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                   onClick={() => setShowAreaDropdown(!showAreaDropdown)}
