@@ -16,12 +16,7 @@ const PlaygroundResults = ({
       className="p-4 bg-gray-50 flex flex-col"
       style={{ height: "calc(100vh - 130px)" }} // Đồng bộ chiều cao
     >
-      {/* Breadcrumb */}
-      <div className="mb-4">
-        <Breadcrumb path={["ホーム", "遊び場リスト"]} />
-      </div>
-
-      {/* Nội dung chính */}
+          {/* Nội dung chính */}
       <div className="bg-white p-4 rounded-lg shadow-md flex flex-col flex-grow">
         <h2 className="text-xl font-bold text-green-600 mb-4">
           おすすめの遊び場
