@@ -1,144 +1,143 @@
-import React, { useState } from "react";
-import { faker } from '@faker-js/faker';
+// src/pages/User/ProfilePage.jsx
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Edit2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import defaultAvatar from '../../assets/park.jpg';
+import ProfileBanner from './ProfileBanner';
+import ProfileBreadcrumb from './ProfileBreadcrumb';
+import ProfileForm from './ProfileForm';
+import ProfileActions from './ProfileActions';
+import EditDialog from './EditDialog';
 
 const ProfilePage = () => {
-  const [editMode, setEditMode] = useState(false);
-  const backgroundImageUrl = faker.image.url();
+  const navigate = useNavigate();
+  const [editingName, setEditingName] = useState(false);
+  const [bannerImage, setBannerImage] = useState(defaultAvatar);
+  const [avatarImage, setAvatarImage] = useState(defaultAvatar);
+  const bannerInputRef = useRef(null);
+  const avatarInputRef = useRef(null);
+
+  const [userData, setUserData] = useState({
+    name: 'ユーザー名',
+    email: 'user@example.com',
+    address: '東京都渋谷区',
+    birthday: '1990-01-01',
+    phone: '090-1234-5678',
+    gender: '男性'
+  });
+
+  const handleImageUpload = (event, type) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (type === 'banner') {
+          setBannerImage(reader.result);
+        } else {
+          setAvatarImage(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveField = (field, value) => {
+    setUserData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
-    <div className="min-h-screen bg-green-100 p-8">
-      {/* Background image */}
-      <div
-        className="w-full h-40 bg-gray-300 rounded-lg mb-6"
-        style={{ backgroundImage: `url(${backgroundImageUrl})`, backgroundSize: 'cover' }}
-      ></div>
+    <div className="min-h-screen bg-gray-50/80 pt-[57px]">
+      <div className="relative">
+        <input
+          type="file"
+          ref={bannerInputRef}
+          className="hidden"
+          accept="image/*"
+          onChange={(e) => handleImageUpload(e, 'banner')}
+        />
+        <input
+          type="file"
+          ref={avatarInputRef}
+          className="hidden"
+          accept="image/*"
+          onChange={(e) => handleImageUpload(e, 'avatar')}
+        />
 
-      {/* Profile card */}
-      <div className="bg-white shadow-md rounded-lg p-6 bg-green-50">
-        {/* Breadcrumb */}
-        <div className="text-sm text-gray-500 mb-4">
-          <span>ホームページ</span> &gt; <span>プロフィール</span>
+        <ProfileBanner 
+          image={bannerImage} 
+          onUpdateImage={() => bannerInputRef.current?.click()} 
+        />
+        
+        <div className="relative max-w-5xl mx-auto px-6">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden my-8">
+            <div className="p-8">
+              <ProfileBreadcrumb onNavigate={navigate} />
+              
+              <div className="mt-6 space-y-8">
+                <div className="flex items-center gap-6">
+                  <div className="relative group">
+                    <img
+                      src={avatarImage}
+                      alt="Profile"
+                      className="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover"
+                    />
+                    <div 
+                      className="absolute inset-0 flex items-center justify-center rounded-full bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                      onClick={() => avatarInputRef.current?.click()}
+                    >
+                      <motion.button
+                        className="p-2 bg-white/90 rounded-full hover:bg-white transition-colors"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Edit2 className="w-5 h-5 text-gray-700" />
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-2xl font-bold text-gray-900">
+                      {userData.name}
+                    </h1>
+                    <div>
+                      <motion.button
+                        onClick={() => setEditingName(true)}
+                        className="p-2 text-gray-400 hover:text-green-600 rounded-full hover:bg-green-50 transition-colors"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Edit2 className="w-5 h-5" />
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+
+                <ProfileForm 
+                  data={userData}
+                  onEdit={handleSaveField}
+                />
+
+                <ProfileActions
+                  onSave={() => console.log('Saving profile...')}
+                  onLogout={() => navigate('/auth/sign-in')}
+                />
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* User Info */}
-        <div className="flex items-center mb-6">
-          {/* Avatar */}
-          <div className="w-16 h-16 bg-gray-300 rounded-full flex-shrink-0"></div>
-
-          {/* User name */}
-          <div className="ml-4 flex items-center">
-            <span className="text-xl font-bold">ユーザーの名前</span>
-            <button
-              className="ml-2 p-1 text-gray-600 hover:text-gray-800"
-              onClick={() => setEditMode(!editMode)}
-            >
-              <i className="fas fa-pen"></i>
-            </button>
-          </div>
-        </div>
-
-        {/* User Details Form */}
-        <form className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              住所
-            </label>
-            <input
-              type="text"
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              disabled={!editMode}
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              メールアドレス
-            </label>
-            <input
-              type="email"
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-              disabled={!editMode}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                生年月日
-              </label>
-              <input
-                type="date"
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                disabled={!editMode}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                電話番号
-              </label>
-              <input
-                type="tel"
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                disabled={!editMode}
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              性別
-            </label>
-            <div className="flex items-center space-x-4 mt-2">
-              <label>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="男性"
-                  disabled={!editMode}
-                />
-                <span className="ml-2">男性</span>
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="女性"
-                  disabled={!editMode}
-                />
-                <span className="ml-2">女性</span>
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="gender"
-                  value="その他"
-                  disabled={!editMode}
-                />
-                <span className="ml-2">その他</span>
-              </label>
-            </div>
-          </div>
-        </form>
-
-        {/* Save Button */}
-        {editMode && (
-          <button
-            className="mt-6 bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
-            onClick={() => setEditMode(false)}
-          >
-            変更の保存
-          </button>
-        )}
-
-        {/* Logout Button */}
-        <button
-          className="mt-6 text-red-600 hover:underline"
-          onClick={() => window.location.href = "/auth/sign-in"}
-        >
-          ログアウト
-        </button>
       </div>
+
+      <EditDialog
+        isOpen={editingName}
+        onClose={() => setEditingName(false)}
+        onSave={(value) => {
+          handleSaveField('name', value);
+          setEditingName(false);
+        }}
+        title="名前"
+        currentValue={userData.name}
+      />
     </div>
   );
 };
