@@ -2,7 +2,7 @@ import React from "react";
 import { BookOpen, Sparkles } from "lucide-react";
 
 const TabDetails = ({ data }) => {
-  // Sample attractions data - should be replaced with actual data
+  // Sample attractions data, cần cập nhật dữ liệu thật từ API
   const attractions = [
     "ウォータースライダー",
     "プール",

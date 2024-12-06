@@ -2,62 +2,50 @@ import React, { useState } from "react";
 import { Star } from "lucide-react";
 
 const ReviewFilters = () => {
- const [selectedRating, setSelectedRating] = useState(null);
- const [selectedFilter, setSelectedFilter] = useState("すべて");
+  const [selectedFilter, setSelectedFilter] = useState("すべて");
 
- const filters = [
-   "すべて",
-   "1つ星",
-   "2つ星", 
-   "3つ星",
-   "4つ星",
-   "5つ星"
- ];
+  const filters = [
+    { value: "すべて", label: "すべて" },
+    { value: "1", label: "1つ星" },
+    { value: "2", label: "2つ星" },
+    { value: "3", label: "3つ星" },
+    { value: "4", label: "4つ星" },
+    { value: "5", label: "5つ星" }
+  ];
 
- return (
-   <div className="p-4 bg-green-50/50 rounded-xl hover:shadow-md transition-all">
-     <div className="flex items-center justify-between">
-       {/* Star Rating Buttons */}
-       <div className="flex gap-2">
-         {[1, 2, 3, 4, 5].map((rating) => (
-           <button
-             key={rating}
-             onClick={() => setSelectedRating(rating === selectedRating ? null : rating)}
-             className={`w-12 h-12 rounded-xl flex items-center justify-center gap-1 transition-all
-               ${rating === selectedRating
-                 ? "bg-green-600 text-white border-2 border-green-600"
-                 : "border-2 border-gray-200 text-gray-600 hover:border-green-600 hover:text-green-600 hover:bg-green-50"
-               }`}
-           >
-             {rating}
-             <Star 
-               className={`w-4 h-4 ${
-                 rating === selectedRating ? "fill-white" : "group-hover:fill-current"
-               }`}
-             />
-           </button>
-         ))}
-       </div>
-
-       {/* Filter Buttons */}
-       <div className="flex gap-2">
-         {filters.map((filter) => (
-           <button
-             key={filter}
-             onClick={() => setSelectedFilter(filter)}
-             className={`px-4 py-2 rounded-lg transition-all text-sm
-               ${filter === selectedFilter
-                 ? "bg-green-600 text-white"
-                 : "text-gray-600 hover:bg-green-50 hover:text-green-600"
-               }`}
-           >
-             {filter}
-           </button>
-         ))}
-       </div>
-     </div>
-   </div>
- );
+  return (
+    <div className="bg-green-50 border border-green-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow duration-300">
+      <div className="flex justify-end gap-2">
+        {filters.map((filter) => (
+          <button
+            key={filter.value}
+            onClick={() => setSelectedFilter(filter.value)}
+            className={`relative px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 overflow-hidden
+              ${filter.value === selectedFilter
+                ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg scale-105"
+                : "bg-white text-gray-600 hover:bg-green-50 hover:text-green-600 hover:scale-105"
+              }
+              before:absolute before:inset-0 before:bg-white before:opacity-0 hover:before:opacity-20 
+              before:transition-opacity before:duration-300
+              border border-transparent hover:border-green-200`}
+          >
+            {filter.value !== "すべて" && (
+              <div className="flex items-center gap-0.5">
+                <Star 
+                  className={`w-4 h-4 transition-transform duration-300 ${
+                    filter.value === selectedFilter 
+                      ? "fill-white scale-110" 
+                      : "fill-gray-400"
+                  }`}
+                />
+              </div>
+            )}
+            <span className="text-sm font-medium relative z-10">{filter.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default ReviewFilters;
