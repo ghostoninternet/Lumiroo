@@ -83,10 +83,10 @@ const PlaygroundDetail = () => {
                     selectedRating={selectedRating}
                     onRatingChange={setSelectedRating}
                   />
-                  <ReviewForm />
                   <ReviewList 
                     selectedRating={selectedRating}
                   />
+                  <ReviewForm />
                 </div>
               )}
             </div>
