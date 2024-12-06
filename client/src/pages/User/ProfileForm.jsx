@@ -18,7 +18,7 @@ const ProfileForm = ({ data, onEdit }) => {
   const renderEditableField = (label, value, icon, field, fieldType = 'text') => {
     return (
       <div className="group">
-        <label className="text-base font-bold text-green-800 mb-2">
+        <label className="text-base font-bold text-[#16a34a] mb-2 transition-colors duration-300">
           {label}
         </label>
         <div className="relative">
@@ -27,12 +27,12 @@ const ProfileForm = ({ data, onEdit }) => {
             type="text"
             readOnly
             value={value}
-            className="w-full pl-10 pr-12 py-3 bg-white border-2 border-gray-100 rounded-lg cursor-pointer group-hover:border-green-200 transition-colors"
+            className="w-full pl-10 pr-12 py-3 bg-white border-2 border-gray-100 rounded-lg cursor-pointer group-hover:border-green-200 transition-colors duration-300"
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2">
             <motion.button
               onClick={() => handleEdit(field, fieldType)}
-              className="p-2 text-gray-400 hover:text-green-600 rounded-full hover:bg-green-50 transition-colors"
+              className="p-2 text-gray-400 hover:text-green-600 rounded-full hover:bg-green-50 transition-colors duration-300"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
             >
@@ -45,18 +45,23 @@ const ProfileForm = ({ data, onEdit }) => {
   };
 
   return (
-    <div className="space-y-8">
+    <motion.div 
+      className="space-y-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+    >
       {renderEditableField('住所', data.address, 
-        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />, 
+        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500 transition-colors duration-300" />, 
         'address'
       )}
       
       <div>
-        <label className="text-base font-bold text-green-800 mb-2">
+        <label className="text-base font-bold text-[#16a34a] mb-2 transition-colors duration-300">
           メールアドレス
         </label>
         <div className="relative">
-          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 transition-colors duration-300" />
           <input
             type="email"
             value={data.email}
@@ -68,24 +73,24 @@ const ProfileForm = ({ data, onEdit }) => {
 
       <div className="grid grid-cols-2 gap-8">
         {renderEditableField('生年月日', data.birthday, 
-          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />, 
+          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500 transition-colors duration-300" />, 
           'birthday', 
           'date'
         )}
         {renderEditableField('電話番号', data.phone, 
-          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />, 
+          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500 transition-colors duration-300" />, 
           'phone', 
           'tel'
         )}
       </div>
 
       <div>
-        <label className="text-base font-bold text-green-800 mb-2">
+        <label className="text-base font-bold text-[#16a34a] mb-2 transition-colors duration-300">
           性別
         </label>
         <div className="relative">
           <div className="flex items-center gap-8 py-3 pl-10">
-            <User2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500" />
+            <User2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500 transition-colors duration-300" />
             {['男性', '女性', 'その他'].map((option) => (
               <label key={option} className="flex items-center gap-2 cursor-default">
                 <input
@@ -94,7 +99,7 @@ const ProfileForm = ({ data, onEdit }) => {
                   value={option}
                   checked={data.gender === option}
                   readOnly
-                  className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+                  className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500 transition duration-300"
                 />
                 <span className="text-sm text-gray-700">
                   {option}
@@ -104,7 +109,7 @@ const ProfileForm = ({ data, onEdit }) => {
             <div className="absolute right-2 top-1/2 -translate-y-1/2">
               <motion.button
                 onClick={() => handleEdit('gender', 'gender')}
-                className="p-2 text-gray-400 hover:text-green-600 rounded-full hover:bg-green-50 transition-colors"
+                className="p-2 text-gray-400 hover:text-green-600 rounded-full hover:bg-green-50 transition-colors duration-300"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -123,7 +128,7 @@ const ProfileForm = ({ data, onEdit }) => {
         currentValue={editField ? data[editField.field] : ''}
         fieldType={editField?.type}
       />
-    </div>
+    </motion.div>
   );
 };
 

@@ -69,8 +69,8 @@ const ProfilePage = () => {
           onUpdateImage={() => bannerInputRef.current?.click()} 
         />
         
-        <div className="relative max-w-5xl mx-auto px-6">
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden my-8">
+        <div className="relative max-w-5xl mx-auto px-6 -mt-48">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
             <div className="p-8">
               <ProfileBreadcrumb onNavigate={navigate} />
               
@@ -116,6 +116,7 @@ const ProfilePage = () => {
                 <ProfileForm 
                   data={userData}
                   onEdit={handleSaveField}
+                  titleClass="text-[#16a34a]"
                 />
 
                 <ProfileActions
