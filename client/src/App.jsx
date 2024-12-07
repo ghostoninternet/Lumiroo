@@ -1,5 +1,6 @@
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import MainLayout from "./layouts/MainLayout/MainLayout";
@@ -12,6 +13,18 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import FavoritePage from "./pages/Favorite/FavoritePage";
 import HomePage from "./pages/Home/HomePage";
 import MapPage from "./pages/Map/MapPage";
+import L from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Fix cho marker icon
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 function App() {
   const location = useLocation();
