@@ -1,89 +1,192 @@
-
-import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import RoutingMachine from "./RoutingMachine";
-import OpenCage from "opencage-api-client"
-const apiKey = import.meta.env.REACT_APP_OPENCAGE_API_KEY;
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import 'leaflet-control-geocoder';
+import SearchBox from '../../components/Map/SearchBox';
+import MapContainer from '../../components/Map/MapContainer';
 
 const MapPage = () => {
-    const [startPoint, setStartPoint] = useState("Đại học Bách Khoa Hà Nội");
-  const [endPoint, setEndPoint] = useState("Đại Học Hà Nội");
-  const [startCoords, setStartCoords] = useState([21.0056, 105.8435]); // Tọa độ mặc định
-  const [endCoords, setEndCoords] = useState([20.9808, 105.7960]); // Tọa độ mặc định
+  const location = useLocation();
+  const destinationAddress = location.state?.destination || '';
+  const playgroundName = location.state?.playgroundName || '';
+  
+  const [origin, setOrigin] = useState('');
+  const [destination] = useState(destinationAddress);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRouteVisible, setIsRouteVisible] = useState(false);
+  const [routeInfo, setRouteInfo] = useState(null);
+  const [clickedLocation, setClickedLocation] = useState(null);
+  const [map, setMap] = useState(null);
 
-  const geocodeAddress = async (address, setCoords) => {
+  const handleMapClick = (event) => {
+    const { lat, lng } = event.latlng;
+    setClickedLocation({ lat, lng });
+    
+    const geocoder = L.Control.Geocoder.nominatim();
+    geocoder.reverse({ lat, lng }, map?.getZoom() || 13, results => {
+      if (results.length > 0) {
+        setOrigin(results[0].name);
+      }
+    });
+  };
+
+  const handleSearch = async () => {
+    if (!origin) return;
+    
+    setIsLoading(true);
     try {
-      const geocoder = new OpenCage({ apiKey }); // Thay bằng API key
-      const response = await geocoder.geocode({ q: address });
-      if (response && response.results.length > 0) {
-        const { lat, lng } = response.results[0].geometry;
-        setCoords([lat, lng]); // Cập nhật tọa độ
-      } else {
-        alert("Không thể tìm thấy địa chỉ!");
+      const geocoder = L.Control.Geocoder.nominatim();
+      
+      const originResults = await new Promise((resolve) => {
+        if (typeof origin === 'string') {
+          geocoder.geocode(origin, results => resolve(results));
+        } else {
+          resolve([{ center: origin }]);
+        }
+      });
+
+      const destResults = await new Promise((resolve) => {
+        geocoder.geocode(destination, results => resolve(results));
+      });
+
+      if (originResults.length > 0 && destResults.length > 0) {
+        const originCoords = originResults[0].center;
+        const destCoords = destResults[0].center;
+        
+        if (map) {
+          const bounds = L.latLngBounds([originCoords, destCoords]);
+          map.fitBounds(bounds, { padding: [50, 50] });
+        }
+
+        setIsRouteVisible(true);
+        setRouteInfo({
+          duration: '15 分',
+          distance: '2.7 km'
+        });
       }
     } catch (error) {
-      console.error("Geocoding error:", error);
+      console.error('Route calculation failed:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleFindRoute = async () => {
-    await geocodeAddress(startPoint, setStartCoords);
-    await geocodeAddress(endPoint, setEndCoords);
+  const handleGetCurrentLocation = () => {
+    setIsLoading(true);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const currentPos = { lat: latitude, lng: longitude };
+          setCurrentLocation(currentPos);
+          setClickedLocation(currentPos);
+          
+          const geocoder = L.Control.Geocoder.nominatim();
+          geocoder.reverse(currentPos, map?.getZoom() || 13, results => {
+            if (results.length > 0) {
+              setOrigin(results[0].name);
+            }
+          });
+          
+          if (map) {
+            map.setView([latitude, longitude], 15);
+          }
+          
+          setIsLoading(false);
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+          setIsLoading(false);
+        }
+      );
+    }
   };
 
-  const MapWithRouting = () => {
-    const map = useMap();
-    return <RoutingMachine map={map} start={startCoords} end={endCoords} />;
-  };
+  useEffect(() => {
+    if (destination && map) {
+      const geocoder = L.Control.Geocoder.nominatim();
+      geocoder.geocode(destination, results => {
+        if (results.length > 0) {
+          const { lat, lng } = results[0].center;
+          map.setView([lat, lng], 13);
+        }
+      });
+    }
+  }, [destination, map]);
 
   return (
-    <div className="min-h-screen flex">
-      {/* Sidebar */}
-      <div className="w-1/4 bg-white shadow-lg p-6 mt-16">
-        <h2 className="text-xl font-bold mb-4">経路検索</h2>
-        <div className="mb-4">
-          <label className="block font-medium text-gray-700 mb-1">出発地</label>
-          <input
-            type="text"
-            value={startPoint}
-            onChange={(e) => setStartPoint(e.target.value)}
-            placeholder="例: Đại học Bách Khoa Hà Nội"
-            className="w-full p-2 border rounded-md shadow-sm focus:ring focus:ring-indigo-300"
+    <div className="h-full flex flex-col" style={{ height: 'calc(100vh - 64px)', marginTop: '64px' }}>
+      <div className="relative flex-1">
+        <div className="relative h-full">
+          <SearchBox
+            origin={origin}
+            setOrigin={setOrigin}
+            destination={destination}
+            onSearch={handleSearch}
+            isLoading={isLoading}
+            onGetCurrentLocation={handleGetCurrentLocation}
           />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium text-gray-700 mb-1">目的地</label>
-          <input
-            type="text"
-            value={endPoint}
-            onChange={(e) => setEndPoint(e.target.value)}
-            placeholder="例: Đại Học Hà Nội"
-            className="w-full p-2 border rounded-md shadow-sm focus:ring focus:ring-indigo-300"
+          
+          <MapContainer
+            origin={currentLocation || origin}
+            destination={destination}
+            isRouteVisible={isRouteVisible}
+            onRouteCalculated={(routeData) => setRouteInfo(routeData)}
+            onMapClick={handleMapClick}
+            onMapLoad={setMap}
+            clickedLocation={clickedLocation}
+            playgroundName={playgroundName}
           />
-        </div>
-        <button
-          onClick={handleFindRoute}
-          className="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
-        >
-          見つける
-        </button>
-      </div>
+          
+          {/* Route Info Panel */}
+          <AnimatePresence>
+            {isRouteVisible && routeInfo && (
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 50 }}
+                transition={{ duration: 0.3 }}
+                className="absolute bottom-6 right-6 bg-white rounded-xl shadow-lg p-4"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full" />
+                    <span className="text-sm text-gray-600">
+                      所要時間: {routeInfo.duration}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full" />
+                    <span className="text-sm text-gray-600">
+                      距離: {routeInfo.distance}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-      {/* Map */}
-      <div className="flex-1 mt-16">
-        <MapContainer center={startCoords} zoom={13} className="h-full">
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          <MapWithRouting />
-        </MapContainer>
+          {/* Loading Overlay */}
+          {isLoading && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50"
+            >
+              <div className="bg-white rounded-xl p-6 shadow-lg">
+                <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            </motion.div>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
 export default MapPage;
-
-

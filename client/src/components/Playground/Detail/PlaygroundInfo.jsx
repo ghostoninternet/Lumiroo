@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Heart, MapPin, Star, DollarSign } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const PlaygroundInfo = ({ data }) => {
   const [isFavorite, setIsFavorite] = useState(false);
+  const navigate = useNavigate();
 
   const getRatingColor = (rating) => {
     if (rating >= 4.5) return "text-green-600";
@@ -47,6 +49,15 @@ const PlaygroundInfo = ({ data }) => {
       }
     }
     return stars;
+  };
+
+  const handleRouteClick = () => {
+    navigate('/map', { 
+      state: { 
+        destination: data.address,
+        playgroundName: data.name
+      } 
+    });
   };
 
   return (
@@ -104,7 +115,7 @@ const PlaygroundInfo = ({ data }) => {
           </button>
           
           <button 
-            onClick={() => window.open(`https://www.google.com/maps/search/${encodeURIComponent(data.address)}`, '_blank')}
+            onClick={handleRouteClick}
             className="h-12 px-8 bg-green-600 text-white rounded-lg font-medium
               hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-2"
           >
