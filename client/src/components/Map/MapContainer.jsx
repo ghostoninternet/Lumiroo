@@ -1,6 +1,8 @@
 import React from 'react';
 import { MapContainer as LeafletMapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import L from 'leaflet';
 import RoutingMachine from '../../pages/Map/RoutingMachine';
+import PropTypes from 'prop-types';
 
 const MapContainer = ({ 
   origin, 
@@ -8,26 +10,27 @@ const MapContainer = ({
   isRouteVisible, 
   onMapClick,
   onMapLoad,
-  clickedLocation 
+  clickedLocation,
+  onRouteCalculated 
 }) => {
   const handleMapCreated = (map) => {
-    // Explicitly remove the default zoom control
     if (map.zoomControl) {
       map.zoomControl.remove();
     }
-    // Call the original onMapLoad prop
+    map.attributionControl.setPosition('bottomright');
     onMapLoad?.(map);
   };
 
   return (
     <LeafletMapContainer
-      center={[21.0285, 105.8542]}
+      center={[21.0285, 105.8542]} 
       zoom={13}
       className="h-full w-full"
       style={{ height: '100%', width: '100%' }}
       whenCreated={handleMapCreated}
       onClick={onMapClick}
       zoomControl={false}
+      attributionControl={true}
     >
       <ZoomControl position="bottomright" />
       <TileLayer
@@ -39,10 +42,43 @@ const MapContainer = ({
           origin={origin}
           destination={destination}
           isRouteVisible={isRouteVisible}
+          onRouteCalculated={onRouteCalculated}
         />
       )}
     </LeafletMapContainer>
   );
+};
+
+MapContainer.propTypes = {
+  origin: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      lat: PropTypes.number,
+      lng: PropTypes.number
+    })
+  ]),
+  destination: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.shape({
+      lat: PropTypes.number,
+      lng: PropTypes.number
+    })
+  ]),
+  isRouteVisible: PropTypes.bool,
+  onMapClick: PropTypes.func,
+  onMapLoad: PropTypes.func,
+  clickedLocation: PropTypes.shape({
+    lat: PropTypes.number,
+    lng: PropTypes.number
+  }),
+  onRouteCalculated: PropTypes.func
+};
+
+MapContainer.defaultProps = {
+  isRouteVisible: false,
+  onMapClick: () => {},
+  onMapLoad: () => {},
+  onRouteCalculated: () => {}
 };
 
 export default MapContainer;
