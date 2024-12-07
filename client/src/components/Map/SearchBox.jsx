@@ -16,7 +16,7 @@ const SearchBox = ({
   const breadcrumbItems = [
     { label: 'ホームページ', path: '/' },
     { label: '遊び場検索', path: '/playground-recommendation' },
-    { label: playgroundName || 'ディズニーランド', path: '/playground-detail' },
+    { label: playgroundName || 'ディズニーランド', path: '/playground/2' },
     { label: '道順', path: null }
   ];
 
