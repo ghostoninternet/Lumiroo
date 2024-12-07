@@ -10,8 +10,7 @@ import MapContainer from '../../components/Map/MapContainer';
 
 const MapPage = () => {
   const location = useLocation();
-  // Trong MapPage, thay đổi địa chỉ đích:
-const destinationAddress = location.state?.destination || '24146 Dong Vy Grove, Ha Tinh, Vietnam';
+  const destinationAddress = location.state?.destination || '24146 Dong Vy Grove, Ha Tinh, Vietnam';
   const playgroundName = location.state?.playgroundName || '';
   
   const [origin, setOrigin] = useState('');
@@ -170,32 +169,39 @@ const destinationAddress = location.state?.destination || '24146 Dong Vy Grove, 
   return (
     <div className="flex flex-col" style={{ height: 'calc(100vh - 128px)', marginTop: '64px' }}>
       <div className="relative flex-1">
-        <SearchBox
-          origin={origin}
-          setOrigin={setOrigin}
-          destination={destination}
-          onSearch={handleSearch}
-          isLoading={isLoading}
-          onGetCurrentLocation={handleGetCurrentLocation}
-          playgroundName={playgroundName}
-        />
+        {/* Map Container with lower z-index */}
+        <div className="absolute inset-0 z-0">
+          <MapContainer
+            origin={currentLocation || origin}
+            destination={destination}
+            isRouteVisible={isRouteVisible}
+            onRouteCalculated={(routeData) => {
+              console.log('Route calculated:', routeData);
+              setRouteInfo(routeData);
+            }}
+            onMapClick={handleMapClick}
+            onMapLoad={(mapInstance) => {
+              console.log('Map loaded');
+              setMap(mapInstance);
+            }}
+            clickedLocation={clickedLocation}
+          />
+        </div>
+
+        {/* Search Box with higher z-index */}
+        <div className="relative z-10">
+          <SearchBox
+            origin={origin}
+            setOrigin={setOrigin}
+            destination={destination}
+            onSearch={handleSearch}
+            isLoading={isLoading}
+            onGetCurrentLocation={handleGetCurrentLocation}
+            playgroundName={playgroundName}
+          />
+        </div>
         
-        <MapContainer
-          origin={currentLocation || origin}
-          destination={destination}
-          isRouteVisible={isRouteVisible}
-          onRouteCalculated={(routeData) => {
-            console.log('Route calculated:', routeData);
-            setRouteInfo(routeData);
-          }}
-          onMapClick={handleMapClick}
-          onMapLoad={(mapInstance) => {
-            console.log('Map loaded');
-            setMap(mapInstance);
-          }}
-          clickedLocation={clickedLocation}
-        />
-        
+        {/* Route Info overlay */}
         <AnimatePresence>
           {isRouteVisible && routeInfo && (
             <motion.div
@@ -203,7 +209,7 @@ const destinationAddress = location.state?.destination || '24146 Dong Vy Grove, 
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.3 }}
-              className="absolute bottom-6 right-6 bg-white rounded-xl shadow-lg p-4"
+              className="absolute bottom-6 right-6 bg-white rounded-xl shadow-lg p-4 z-10"
             >
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
@@ -223,12 +229,13 @@ const destinationAddress = location.state?.destination || '24146 Dong Vy Grove, 
           )}
         </AnimatePresence>
 
+        {/* Loading overlay */}
         {isLoading && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50"
+            className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-20"
           >
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
