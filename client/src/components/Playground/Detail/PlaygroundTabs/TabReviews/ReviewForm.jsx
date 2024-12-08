@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Star, Send } from "lucide-react";
+import {postReview} from "../../../../../apis/playground"
 
-const ReviewForm = () => {
+const ReviewForm = ({playgroundId,onReviewSubmit}) => {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [content, setContent] = useState("");
@@ -14,7 +15,7 @@ const ReviewForm = () => {
     5: "非常に満足"
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!rating) {
       alert("評価を選択してください。");
       return;
@@ -22,6 +23,16 @@ const ReviewForm = () => {
     if (!content.trim()) {
       alert("レビュー内容を入力してください。");
       return;
+    }
+    console.log({ rating, content });
+    const reviewData = { rating, content };
+    const result = await postReview(playgroundId, reviewData);
+    if (result) {
+      alert("レビューが投稿されました。");
+      setRating(0);
+      setContent("");
+      // Refresh reviews
+      onReviewSubmit();
     }
     // Handle submission logic here
   };
