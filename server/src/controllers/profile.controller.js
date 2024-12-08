@@ -8,7 +8,6 @@ const filterUserFields = (user) => ({
     role: user.role,
   });
 const getProfile = async (req, res) => {
-    console.log('req.session.user', req.session.user);
     const result = await usersService.getProfileService(req.session.user.id);
     res.status(200).json({
         result,

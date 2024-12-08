@@ -10,14 +10,16 @@ import ReviewForm from "../../components/Playground/Detail/PlaygroundTabs/TabRev
 import { Square, MessageSquare } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import {getReviews} from "../../apis/playground";
+import {getReviews,getPlaygroundDetails} from "../../apis/playground";
 import formatReviewData from "../../utils/formattedReviewsData";
+import formattedPlaygroundData from "../../utils/playgrounDataforDetail";
 
 const PlaygroundDetail = () => {
   const [activeTab, setActiveTab] = useState("details");
   const [selectedRating, setSelectedRating] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState(reviews); // Trạng thái cho reviews đã lọc
+  const [playgroundData, setPlaygroundData] = useState({});
   const { id } = useParams();
   console.log(id);
   
@@ -27,22 +29,26 @@ const PlaygroundDetail = () => {
     if (result) {
       const reviewsRaw = result.data;
       setReviews(formatReviewData(reviewsRaw)); 
-      console.error("Failed to fetch reviews");
     }
   };
-
-  useEffect(() => {
-    fetchReviews();
-  }, [id]); 
-  const playgroundData = {
-    id: id,
-    name: "ディズニーランド",
-    openTime: "午前8時から午後8時まで",
-    address: "24146 Đông Vy Grove, ハティン, ベトナム",
-    price: "220,000 VND",
-    description: "遊び場の詳細情報がここに表示されます。",
+  const fetchPlayground = async () => {
+    console.log("Fetching playground...");
+    const result = await getPlaygroundDetails(id);   
+      if (result) {
+        const playgroundRaw = result.data;
+        console.log("Playground raw: ", playgroundRaw);
+        setPlaygroundData(formattedPlaygroundData(playgroundRaw));
+      }
   };
-
+  const fetchAll = () =>{
+    
+    fetchReviews();
+    fetchPlayground();
+    
+  }
+  useEffect(() => {
+    fetchAll();
+  }, [id]); 
   return (
     <div className="absolute inset-x-0 top-16 bottom-0 bg-green-50/30">
       <div className="h-full overflow-y-auto">
@@ -52,7 +58,7 @@ const PlaygroundDetail = () => {
           {/* Main content card */}
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border border-green-100">
             <div className="grid grid-cols-12 gap-8 p-6">
-              <PlaygroundImage />
+              <PlaygroundImage imageUrl ={playgroundData.image}/>
               <PlaygroundInfo data={playgroundData} />
             </div>
           </div>
@@ -100,7 +106,9 @@ const PlaygroundDetail = () => {
               ) : (
                 <div className="space-y-8">
                   <ReviewOverview 
-                  reviews={reviews} />
+                  reviews={reviews} 
+                  init_rating={playgroundData.rating}
+                  />
                   <ReviewFilters 
                     selectedRating={selectedRating}
                     onRatingChange={setSelectedRating}
@@ -112,7 +120,7 @@ const PlaygroundDetail = () => {
                   />
                   <ReviewForm 
                     playgroundId={playgroundData.id}
-                    onReviewSubmit={fetchReviews}
+                    onReviewSubmit={fetchAll}
                   />
                 </div>
               )}
