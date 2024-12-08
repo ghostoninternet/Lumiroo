@@ -37,17 +37,21 @@ const EditDialog = ({ isOpen, onClose, onSave, title, currentValue, fieldType = 
     if (fieldType === 'gender') {
       return (
         <div className="flex flex-col gap-4">
-          {['男性', '女性', 'その他'].map((option) => (
-            <label key={option} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-300">
-              <input
-                type="radio"
-                name="gender"
-                value={option}
-                defaultChecked={currentValue === option}
-                className="w-5 h-5 text-green-600 border-gray-300 focus:ring-green-500 transition duration-300"
-              />
-              <span className="text-base text-gray-700">{option}</span>
-            </label>
+          {[
+          { value: 'male', label: '男性' },
+          { value: 'female', label: '女性' },
+          { value: 'other', label: 'その他' }
+        ].map((option) => (
+        <label key={option.value} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-300">
+          <input
+            type="radio"
+            name="gender"
+            value={option.value}
+            defaultChecked={currentValue === option.value}
+            className="w-5 h-5 text-green-600 border-gray-300 focus:ring-green-500 transition duration-300"
+          />
+          <span className="text-base text-gray-700">{option.label}</span>
+        </label>
           ))}
         </div>
       );
