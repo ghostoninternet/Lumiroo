@@ -1,5 +1,6 @@
 const playgroundDaos = require('../daos/playground.daos')
 const userDaos = require('../daos/user.daos');
+const { NotFoundError } = require('../errors/customError');
 const mongoose = require('mongoose')
 
 const getPlayground = async({limit, page}) => {
@@ -73,7 +74,7 @@ const filterPlayground = async (filterParams) => {
 const getPlaygroundDetails = async (id) => {
   const playground = await playgroundDaos.getPlaygroundById(id);
   if (!playground) {
-    throw new Error('Playground not found');
+    throw new NotFoundError("Playground not found");
   }
   return playground;
 };
@@ -81,40 +82,32 @@ const getPlaygroundDetails = async (id) => {
 const addToFavorites = async (userId, playgroundId) => {
   const playgroundExists = await playgroundDaos.getPlaygroundById(playgroundId);
   if (!playgroundExists) {
-    throw new Error('Playground not found');
+    throw new NotFoundError("Playground not found");
   }
 
   const user = await userDaos.findUserById(userId);
   if (!user) {
-    throw new Error('User not found');
+    throw new NotFoundError("User not found");
   }
 
-  if (!user.favoritePlayground.includes(playgroundId)) {
-    user.favoritePlayground.push(playgroundId);
-    await user.save();
-  }
-
-  return user.favoritePlayground;
+  const updatedUser = await userDaos.addFavoritePlayground(userId, playgroundId);
+  return updatedUser.favoritePlayground;
 };
 
 const removeFromFavorites = async (userId, playgroundId) => {
   const user = await userDaos.findUserById(userId);
   if (!user) {
-    throw new Error('User not found');
+    throw new NotFoundError("User not found");
   }
 
-  user.favoritePlayground = user.favoritePlayground.filter(
-    (id) => id.toString() !== playgroundId
-  );
-  await user.save();
-
-  return user.favoritePlayground;
+  const updatedUser = await userDaos.removeFavoritePlayground(userId, playgroundId);
+  return updatedUser.favoritePlayground;
 };
 
 const getFavorites = async (userId) => {
   const user = await userDaos.findUserById(userId).populate('favoritePlayground');
   if (!user) {
-    throw new Error('User not found');
+    throw new NotFoundError("User not found");
   }
 
   return user.favoritePlayground;

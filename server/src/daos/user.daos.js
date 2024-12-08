@@ -25,6 +25,23 @@ const deleteUser = async (id) => {
   return usersModel.findByIdAndDelete(id);
 };
 
+// Thêm các hàm cập nhật favorites
+const addFavoritePlayground = async (userId, playgroundId) => {
+  return usersModel.findByIdAndUpdate(
+    userId,
+    { $addToSet: { favoritePlayground: playgroundId } },
+    { new: true }
+  );
+};
+
+const removeFavoritePlayground = async (userId, playgroundId) => {
+  return usersModel.findByIdAndUpdate(
+    userId,
+    { $pull: { favoritePlayground: playgroundId } },
+    { new: true }
+  );
+};
+
 module.exports = {
   findUserByEmail,
   findUserById,
@@ -32,4 +49,6 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  addFavoritePlayground,
+  removeFavoritePlayground,
 };
