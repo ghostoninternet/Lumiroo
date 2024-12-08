@@ -31,6 +31,7 @@ export const postReview = async (playgroundId, reviewData) => {
   })
   return response
 }
+
 export const getPlaygroundDetails = async (id) => {
   const response = await axiosInstance.get(`/playgrounds/${id}`);
   return response;
