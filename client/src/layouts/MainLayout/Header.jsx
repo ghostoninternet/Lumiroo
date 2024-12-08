@@ -126,7 +126,7 @@ function Header({ role }) {
                 onClick={toggleMenu}
               >
                 <img
-                  src="https://avatars.dicebear.com/api/bottts/johndoe.svg"
+                  src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Adrian"
                   alt="User Avatar"
                   className={`w-8 h-8 rounded-full border-2 transition-all duration-300 ${
                     isMenuOpen 
