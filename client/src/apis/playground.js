@@ -37,17 +37,17 @@ export const getPlaygroundDetails = async (id) => {
   return response;
 };
 
-export const addToFavorites = async (userId, playgroundId) => {
+export const addToFavorites = async (playgroundId) => {
   const response = await axiosInstance.post('/playgrounds/favorites', { userId, playgroundId });
   return response;
 };
 
-export const removeFromFavorites = async (userId, playgroundId) => {
+export const removeFromFavorites = async (playgroundId) => {
   const response = await axiosInstance.delete(`/playgrounds/favorites/${playgroundId}`, { data: { userId } });
   return response;
 };
 
-export const getFavorites = async (userId) => {
+export const getFavorites = async () => {
   const response = await axiosInstance.get('/playgrounds/favorites', { params: { userId } });
   return response;
 };
