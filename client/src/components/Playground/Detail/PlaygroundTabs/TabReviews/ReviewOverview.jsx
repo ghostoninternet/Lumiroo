@@ -4,14 +4,50 @@ import { Star } from "lucide-react";
 import calculateRatings from "../../../../../utils/ratings";
 import { useEffect } from "react";
 
-const ReviewOverview = ({reviews}) => {
+
+
+const ReviewOverview = ({reviews,init_rating}) => {
   const totalStars = 5; // Tổng số sao
-  const [averageRating, setAverageRating] = React.useState(0);
-  const [fullStars, setFullStars] = React.useState(0);
-  const [halfStar, setHalfStar] = React.useState(0);
-  const [emptyStars, setEmptyStars] = React.useState(0);
+  const [averageRating, setAverageRating] = React.useState(init_rating);
   const [totalReviews, setTotalReviews] = React.useState(0);
   const [ratings, setRatings] = React.useState([]);
+
+  const renderStars = (rating) => {
+    const fullStars = Math.floor(rating);
+    const partialStar = rating - fullStars;
+    const stars = [];
+
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(
+          <Star
+            key={i}
+            className="w-8 h-8 fill-yellow-400 text-yellow-400"
+          />
+        );
+      } else if (i === fullStars && partialStar > 0) {
+        stars.push(
+          <div key={i} className="relative">
+            <Star className="w-8 h-8 fill-gray-200 text-gray-200" />
+            <div 
+              className="absolute top-0 left-0 overflow-hidden"
+              style={{ width: `${partialStar * 100}%` }}
+            >
+              <Star className="w-8 h-8 fill-yellow-400 text-yellow-400" />
+            </div>
+          </div>
+        );
+      } else {
+        stars.push(
+          <Star
+            key={i}
+            className="w-8 h-8 fill-gray-200 text-gray-200"
+          />
+        );
+      }
+    }
+    return stars;
+  };
   
   useEffect(() => {
     const ratings = calculateRatings(reviews).reverse();
@@ -19,15 +55,13 @@ const ReviewOverview = ({reviews}) => {
     setRatings(ratings);
     const totalReviews = reviews.length;
     setTotalReviews(totalReviews);
+    if (totalReviews === 0) {
+      setAverageRating(0);
+      return;
+    }
     const averageRating = (ratings.reduce((acc, { stars, count }) => acc + stars * count, 0) / totalReviews).toFixed(1);
     setAverageRating(averageRating);
-    const fullStars = Math.floor(averageRating); // Số sao đầy đủ
-    setFullStars(fullStars);
-    const halfStar = averageRating % 1 >= 0.5 ? 1 : 0; // Kiểm tra nửa sao
-    setHalfStar(halfStar);
-    const emptyStars = totalStars - fullStars - halfStar; // Số sao rỗng
-    setEmptyStars(emptyStars);
-    console.log(averageRating, fullStars, halfStar, emptyStars );
+ 
   }, [reviews]);
   return (
     <div className="p-6 bg-green-50/50 rounded-xl hover:shadow-md transition-shadow">
@@ -36,37 +70,11 @@ const ReviewOverview = ({reviews}) => {
         <div className="col-span-4 flex flex-col items-center justify-center border-r border-green-100 py-4">
           <div className="text-4xl font-bold text-green-600 mb-2">{averageRating}</div>
           <div className="flex items-center justify-center gap-1">
-          {[...Array(totalStars)].map((_, index) => {
-          if (index < fullStars) {
-            // Hiển thị sao đầy đủ
-            return (
-              <Star
-                key={index}
-                size={20}
-                className="fill-yellow-400 text-yellow-400"
-              />
-            );
-          } else if (index === fullStars && halfStar > 0) {
-            // Hiển thị sao nửa
-            return (
-              <Star
-                key={index}
-                size={20}
-                className="fill-yellow-400 text-yellow-400"
-                style={{ clipPath: 'inset(0 50% 0 0)' }} // Hiển thị nửa sao
-              />
-            );
-          } else {
-            // Hiển thị sao rỗng
-            return (
-              <Star
-                key={index}
-                size={20}
-                className="fill-gray-400 text-gray-400"
-              />
-            );
-          }
-        })}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center">
+              {renderStars(averageRating|| 4.8)}
+            </div>
+          </div>
           </div>
           <p className="text-gray-600 text-center text-sm whitespace-nowrap">
             {totalReviews} 件のレビューに基づく
