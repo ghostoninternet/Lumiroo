@@ -13,3 +13,9 @@ export const signUp = async (authData) => {
   const response = await axiosInstance.post('/auth/sign-up', authData)
   return response
 }
+
+// http://localhost:8000/api/auth/logout
+export const logout = async () => {
+  const response = await axiosInstance.post('/auth/logout')
+  return response
+}

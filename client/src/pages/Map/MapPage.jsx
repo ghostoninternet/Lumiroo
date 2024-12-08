@@ -210,7 +210,6 @@ const MapPage = () => {
       <div className="relative flex-1">
         {memoizedSearchBox}
         {memoizedMapContainer}
-
         <AnimatePresence>
           {isRouteVisible && routeInfo && (
             <motion.div
@@ -218,7 +217,7 @@ const MapPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.3 }}
-              className="absolute bottom-6 right-6 bg-white rounded-xl shadow-lg p-4"
+              className="absolute bottom-6 right-6 bg-white rounded-xl shadow-lg p-4 z-10"
             >
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
@@ -238,6 +237,7 @@ const MapPage = () => {
           )}
         </AnimatePresence>
 
+        {/* Loading overlay */}
         {isLoading && (
           <motion.div 
             initial={{ opacity: 0 }}
