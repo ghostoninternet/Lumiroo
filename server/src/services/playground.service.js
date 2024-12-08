@@ -1,4 +1,5 @@
 const playgroundDaos = require('../daos/playground.daos')
+const favoritesDaos = require('../daos/favorites.daos');
 const mongoose = require('mongoose')
 
 const getPlayground = async({limit, page}) => {
@@ -69,7 +70,31 @@ const filterPlayground = async (filterParams) => {
   }
 }
 
+const getPlaygroundDetails = async (id) => {
+  const playground = await playgroundDaos.getPlaygroundById(id);
+  if (!playground) {
+    throw new Error('Playground not found');
+  }
+  return playground;
+};
+
+const addToFavorites = async (userId, playgroundId) => {
+  return await favoritesDaos.addToFavorites(userId, playgroundId);
+};
+
+const removeFromFavorites = async (userId, playgroundId) => {
+  return await favoritesDaos.removeFromFavorites(userId, playgroundId);
+};
+
+const getFavorites = async (userId) => {
+  return await favoritesDaos.getUserFavorites(userId);
+};
+
 module.exports = {
   getPlayground,
   filterPlayground,
+  getPlaygroundDetails,
+  addToFavorites,
+  removeFromFavorites,
+  getFavorites,
 }

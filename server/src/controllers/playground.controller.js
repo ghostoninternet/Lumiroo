@@ -21,9 +21,40 @@ const filterPlayground = async (req, res, next) => {
   res.status(200).json(playgrounds)
 }
 
+const getPlaygroundDetails = async (req, res) => {
+  const playground = await playgroundService.getPlaygroundDetails(req.params.id);
+  res.status(200).json(playground);
+};
+
+const addToFavorites = async (req, res) => {
+  const { userId } = req.body; // Assuming userId is included in the body
+  const { playgroundId } = req.body;
+
+  const favorite = await playgroundService.addToFavorites(userId, playgroundId);
+  res.status(200).json({ message: 'Playground added to favorites', favorite });
+};
+
+const removeFromFavorites = async (req, res) => {
+  const { userId } = req.body; // Assuming userId is included in the body
+  const { id: playgroundId } = req.params;
+
+  const favorite = await playgroundService.removeFromFavorites(userId, playgroundId);
+  res.status(200).json({ message: 'Playground removed from favorites', favorite });
+};
+
+const getFavorites = async (req, res) => {
+  const { userId } = req.query; // Assuming userId is included in the query
+  const favorites = await playgroundService.getFavorites(userId);
+  res.status(200).json(favorites);
+};
+
 module.exports = {
   getPlayground,
   filterPlayground,
   getAttractions,
   getAllAreas,
+  getPlaygroundDetails,
+  addToFavorites,
+  removeFromFavorites,
+  getFavorites,
 }

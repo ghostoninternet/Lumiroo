@@ -11,4 +11,12 @@ router.get('/areas', asyncHandler(playgroundController.getAllAreas))
 router.get('/', validation.validationQuery(playgroundValidationSchema.getPlaygrounds), asyncHandler(playgroundController.getPlayground))
 router.get('/filter', validation.validationQuery(playgroundValidationSchema.filterPlayground), asyncHandler(playgroundController.filterPlayground))
 
+// API lấy thông tin chi tiết sân chơi
+router.get('/:id', asyncHandler(playgroundController.getPlaygroundDetails));
+
+// API quản lý danh sách yêu thích
+router.post('/favorites', asyncHandler(playgroundController.addToFavorites));
+router.delete('/favorites/:id', asyncHandler(playgroundController.removeFromFavorites));
+router.get('/favorites', asyncHandler(playgroundController.getFavorites));
+
 module.exports = router
