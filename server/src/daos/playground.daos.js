@@ -30,9 +30,14 @@ const getPlaygrounds = async (condition, limit=8, page=1) => {
   return playgrounds
 }
 
+const getPlaygroundById = async (id) => {
+  return await playgroundsModel.findById(id).populate('attractions reviews');
+};
+
 module.exports = {
   countTotalPlaygrounds,
   getPlaygrounds,
   getAllAttractions,
   getAllAreas,
+  getPlaygroundById,
 }
