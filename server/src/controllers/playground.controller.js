@@ -22,7 +22,7 @@ const filterPlayground = async (req, res, next) => {
 }
 
 const getPlaygroundDetails = async (req, res) => {
-  const playground = await playgroundService.getPlaygroundDetails(req.params.id);
+  const playground = await playgroundsService.getPlaygroundDetails(req.params.id);
   res.status(200).json(playground);
 };
 
@@ -30,7 +30,7 @@ const addToFavorites = async (req, res) => {
   const { userId } = req.body; // Assuming userId is included in the body
   const { playgroundId } = req.body;
 
-  const favorite = await playgroundService.addToFavorites(userId, playgroundId);
+  const favorite = await playgroundsService.addToFavorites(userId, playgroundId);
   res.status(200).json({ message: 'Playground added to favorites', favorite });
 };
 
@@ -38,13 +38,13 @@ const removeFromFavorites = async (req, res) => {
   const { userId } = req.body; // Assuming userId is included in the body
   const { id: playgroundId } = req.params;
 
-  const favorite = await playgroundService.removeFromFavorites(userId, playgroundId);
+  const favorite = await playgroundsService.removeFromFavorites(userId, playgroundId);
   res.status(200).json({ message: 'Playground removed from favorites', favorite });
 };
 
 const getFavorites = async (req, res) => {
   const { userId } = req.query; // Assuming userId is included in the query
-  const favorites = await playgroundService.getFavorites(userId);
+  const favorites = await playgroundsService.getFavorites(userId);
   res.status(200).json(favorites);
 };
 
