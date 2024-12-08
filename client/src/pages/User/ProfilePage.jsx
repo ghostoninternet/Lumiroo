@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Edit2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import defaultAvatar from '../../assets/park.jpg';
+import defaultAvatar from '../../assets/cr7.jpg';
 import ProfileBanner from './ProfileBanner';
 import ProfileBreadcrumb from './ProfileBreadcrumb';
 import ProfileForm from './ProfileForm';
