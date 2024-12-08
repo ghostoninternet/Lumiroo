@@ -1,5 +1,5 @@
 // src/pages/User/ProfilePage.jsx
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Edit2 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -9,6 +9,8 @@ import ProfileBreadcrumb from './ProfileBreadcrumb';
 import ProfileForm from './ProfileForm';
 import ProfileActions from './ProfileActions';
 import EditDialog from './EditDialog';
+import { getUserInfo ,updateProfile} from '../../apis/user';
+import { uploadImage } from "../../apis/upload";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -18,8 +20,10 @@ const ProfilePage = () => {
   const bannerInputRef = useRef(null);
   const avatarInputRef = useRef(null);
 
+
   const [userData, setUserData] = useState({
     name: 'ユーザー名',
+    avatarUrl: null,
     email: 'user@example.com',
     address: '東京都渋谷区',
     birthday: '1990-01-01',
@@ -27,6 +31,40 @@ const ProfilePage = () => {
     gender: '男性'
   });
 
+  // Cập nhật thông tin người dùng khi load trang
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const infor = await getUserInfo();
+      setUserData(infor.data.result);
+      
+      if (infor.data.result.avatarUrl != null ){ 
+        console.log('avatar:', infor.data.result.avatarUrl);
+        setAvatarImage(infor.data.result.avatarUrl);}
+    };
+    console.log('Fetching user data...');
+    fetchUserData();
+    console.log('User data fetched');
+  }, []); // Chạy 1 lần khi component được mount
+
+
+  const handleAvatarChange = async (e) => {
+    if (e.target.files) {
+      try {
+        const formDataAvatar = new FormData();
+        formDataAvatar.append('image', e.target.files[0]);
+        const response = await uploadImage(formDataAvatar);
+        if (response && response.data && response.data.data) {
+          const avatarUrl = response.data.data;
+          setUserData(prev => ({ ...prev, avatarUrl }));
+          console.log('Avatar uploaded:', avatarUrl);
+        } else {
+          console.error('Failed to upload avatar');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   const handleImageUpload = (event, type) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -35,6 +73,7 @@ const ProfilePage = () => {
         if (type === 'banner') {
           setBannerImage(reader.result);
         } else {
+          handleAvatarChange(event);
           setAvatarImage(reader.result);
         }
       };
@@ -42,10 +81,28 @@ const ProfilePage = () => {
     }
   };
 
-  const handleSaveField = (field, value) => {
+  const handleSaveField = async (field, value) => {
     setUserData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleSaveProfile = async () => {
+    try {
+     const data = {
+        username: userData.name,
+        avatarUrl: userData.avatarUrl,
+        address: userData.address,
+        dob: userData.birthday,
+        phoneNumber: userData.phone,
+        gender: userData.gender
+      }
+      console.log('Profile data:', data);
+      const response = await updateProfile(data);
+      console.log('Profile updated:', response.data);
+    } catch (error) {
+      console.error('Update profile error:', error
+      );
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-50/80 pt-[57px]">
       <div className="relative">
@@ -120,7 +177,7 @@ const ProfilePage = () => {
                 />
 
                 <ProfileActions
-                  onSave={() => console.log('Saving profile...')}
+                  onSave={handleSaveProfile}
                   onLogout={() => navigate('/auth/sign-in')}
                 />
               </div>

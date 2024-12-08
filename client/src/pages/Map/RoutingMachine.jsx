@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect,useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet-routing-machine';
 import { useMap } from 'react-leaflet';
@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const RoutingMachine = ({ origin, destination, isRouteVisible, onRouteCalculated }) => {
   const map = useMap();
-  
+  const routingControlRef = useRef(null);  // Tham chiếu bảng chỉ đường để tránh tạo lại mỗi lần render
   useEffect(() => {
     console.log('RoutingMachine mounted/updated:', {
       origin,
@@ -26,10 +26,17 @@ const RoutingMachine = ({ origin, destination, isRouteVisible, onRouteCalculated
 
     let routingControl = null;
     let markers = [];
-
     const clearMarkers = () => {
-      markers.forEach(marker => map.removeLayer(marker));
-      markers = [];
+      if (routingControlRef.current) {
+        routingControlRef.current.getWaypoints().forEach((waypoint) => {
+          if (waypoint) { // Kiểm tra marker có tồn tại không
+            map.removeLayer(waypoint);  // Xoá marker của bảng chỉ đường
+          }
+
+          console.log('Waypoint:', waypoint);
+        });
+        routingControlRef.current = null; // Xoá bảng chỉ đường
+      }
     };
 
     const addMarker = (latLng, isStart = true) => {
@@ -90,9 +97,9 @@ const RoutingMachine = ({ origin, destination, isRouteVisible, onRouteCalculated
       endPoint = destCoords;
       addMarker([endPoint.lat, endPoint.lng], false);
 
-      // Create routing control
-      if (routingControl) {
-        map.removeControl(routingControl);
+      // Nếu bảng chỉ đường đã tồn tại, loại bỏ trước khi tạo mới
+      if (routingControlRef.current) {
+        map.removeControl(routingControlRef.current);
       }
 
       routingControl = L.Routing.control({
@@ -105,7 +112,6 @@ const RoutingMachine = ({ origin, destination, isRouteVisible, onRouteCalculated
         draggableWaypoints: false,
         fitSelectedRoutes: true,
         showAlternatives: false,
-        language: 'vi', // Use Vietnamese language
         lineOptions: {
           styles: [
             { color: '#22c55e', opacity: 0.8, weight: 6 }
@@ -113,10 +119,11 @@ const RoutingMachine = ({ origin, destination, isRouteVisible, onRouteCalculated
         },
         router: L.Routing.osrmv1({
           serviceUrl: 'https://router.project-osrm.org/route/v1',
-          language: 'vi'
         }),
         createMarker: () => null // Disable default markers
       }).addTo(map);
+      // Lưu lại bảng chỉ đường để có thể xoá sau này
+      routingControlRef.current = routingControl;
 
       routingControl.on('routesfound', (e) => {
         const routes = e.routes;

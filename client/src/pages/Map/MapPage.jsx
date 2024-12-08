@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import L from 'leaflet';
@@ -10,11 +10,12 @@ import MapContainer from '../../components/Map/MapContainer';
 
 const MapPage = () => {
   const location = useLocation();
-  const destinationAddress = location.state?.destination || '24146 Dong Vy Grove, Ha Tinh, Vietnam';
+  const destinationAddress = "Tây Mỗ, Nam Từ Liêm, Hà Nội"
+  // location.state?.destinationAddress || '';
   const playgroundName = location.state?.playgroundName || '';
-  
-  const [origin, setOrigin] = useState('');
-  const [destination] = useState(destinationAddress);
+
+  const [origin, setOrigin] = useState(null);
+  const [destination, setDestination] = useState(destinationAddress);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isRouteVisible, setIsRouteVisible] = useState(false);
@@ -23,48 +24,43 @@ const MapPage = () => {
   const [map, setMap] = useState(null);
 
   useEffect(() => {
-    console.log('MapPage mounted with:', {
-      destinationAddress,
-      playgroundName
-    });
+    console.log('MapPage mounted with:', { destinationAddress, playgroundName });
   }, []);
 
-  const handleMapClick = (event) => {
+  // Handle map click with geocoding
+  const handleMapClick = useCallback((event) => {
     console.log('Map clicked:', event.latlng);
     const { lat, lng } = event.latlng;
     setClickedLocation({ lat, lng });
-    
+
     const geocoder = L.Control.Geocoder.nominatim({
-      geocodingQueryParams: {
-        countrycodes: 'vn'
-      }
+      geocodingQueryParams: { countrycodes: 'vn' }
     });
-    geocoder.reverse({ lat, lng }, map?.getZoom() || 13, results => {
+    geocoder.reverse({ lat, lng }, map?.getZoom() || 13, (results) => {
       if (results.length > 0) {
         console.log('Reverse geocoding result:', results[0]);
         setOrigin(results[0].name);
       }
     });
-  };
+  }, [map]);
 
-  const handleSearch = async () => {
+  // Handle search to geocode origin and destination
+  const handleSearch = useCallback(async () => {
     console.log('Search triggered with:', { origin, destination });
     if (!origin) {
       console.log('No origin provided');
       return;
     }
-    
+
     setIsLoading(true);
     try {
       const geocoder = L.Control.Geocoder.nominatim({
-        geocodingQueryParams: {
-          countrycodes: 'vn'
-        }
+        geocodingQueryParams: { countrycodes: 'vn' }
       });
-      
+
       const originResults = await new Promise((resolve) => {
         if (typeof origin === 'string') {
-          geocoder.geocode(origin, results => {
+          geocoder.geocode(origin, (results) => {
             console.log('Origin geocoding results:', results);
             resolve(results);
           });
@@ -74,7 +70,7 @@ const MapPage = () => {
       });
 
       const destResults = await new Promise((resolve) => {
-        geocoder.geocode(destination, results => {
+        geocoder.geocode(destination, (results) => {
           console.log('Destination geocoding results:', results);
           resolve(results);
         });
@@ -83,9 +79,9 @@ const MapPage = () => {
       if (originResults.length > 0 && destResults.length > 0) {
         const originCoords = originResults[0].center;
         const destCoords = destResults[0].center;
-        
+
         console.log('Coordinates found:', { originCoords, destCoords });
-        
+
         if (map) {
           const bounds = L.latLngBounds([originCoords, destCoords]);
           map.fitBounds(bounds, { padding: [50, 50] });
@@ -98,9 +94,10 @@ const MapPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [origin, destination, map]);
 
-  const handleGetCurrentLocation = () => {
+  // Get current location using geolocation
+  const handleGetCurrentLocation = useCallback(() => {
     setIsLoading(true);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -110,24 +107,22 @@ const MapPage = () => {
           const currentPos = { lat: latitude, lng: longitude };
           setCurrentLocation(currentPos);
           setClickedLocation(currentPos);
-          
+
           const geocoder = L.Control.Geocoder.nominatim({
-            geocodingQueryParams: {
-              countrycodes: 'vn'
-            }
+            geocodingQueryParams: { countrycodes: 'vn' }
           });
-          
-          geocoder.reverse(currentPos, map?.getZoom() || 13, results => {
+
+          geocoder.reverse(currentPos, map?.getZoom() || 13, (results) => {
             if (results.length > 0) {
               console.log('Current location address:', results[0]);
               setOrigin(results[0].name);
             }
           });
-          
+
           if (map) {
             map.setView([latitude, longitude], 15);
           }
-          
+
           setIsLoading(false);
         },
         (error) => {
@@ -136,18 +131,30 @@ const MapPage = () => {
         }
       );
     }
-  };
+  }, [map]);
 
+
+  useEffect(() => {
+    handleGetCurrentLocation(); // Gọi hàm lấy vị trí hiện tại khi trang load
+  }, []);
+  
+  // Cập nhật origin khi có currentLocation
+  useEffect(() => {
+    console.log('Current location updated:', currentLocation);
+    if (currentLocation && origin === null) {
+      setOrigin(currentLocation);  // Cập nhật origin bằng currentLocation lần đầu
+    }
+    handleSearch(); // Gọi hàm tìm đường khi có origin và destination
+  }, [currentLocation, origin]);
+  // Set map view when destination changes
   useEffect(() => {
     if (destination && map) {
       console.log('Setting initial destination view');
       const geocoder = L.Control.Geocoder.nominatim({
-        geocodingQueryParams: {
-          countrycodes: 'vn'
-        }
+        geocodingQueryParams: { countrycodes: 'vn' }
       });
-      
-      geocoder.geocode(destination, results => {
+
+      geocoder.geocode(destination, (results) => {
         if (results.length > 0) {
           console.log('Initial destination coordinates:', results[0].center);
           const { lat, lng } = results[0].center;
@@ -166,42 +173,43 @@ const MapPage = () => {
     hasMap: !!map
   });
 
+  // Memoize SearchBox and MapContainer to prevent unnecessary renders
+  const memoizedSearchBox = useMemo(() => (
+    <SearchBox
+      origin={origin|| currentLocation}
+      setOrigin={setOrigin}
+      destination={destination}
+      setDestination={setDestination}
+      onSearch={handleSearch}
+      isLoading={isLoading}
+      onGetCurrentLocation={handleGetCurrentLocation}
+      playgroundName={playgroundName}
+    />
+  ), [origin, destination, isLoading, handleSearch, handleGetCurrentLocation, playgroundName]);
+
+  const memoizedMapContainer = useMemo(() => (
+    <MapContainer
+      origin={currentLocation || origin}
+      destination={destination}
+      isRouteVisible={isRouteVisible}
+      onRouteCalculated={(routeData) => {
+        console.log('Route calculated:', routeData);
+        setRouteInfo(routeData);
+      }}
+      onMapClick={handleMapClick}
+      onMapLoad={(mapInstance) => {
+        console.log('Map loaded');
+        setMap(mapInstance);
+      }}
+      clickedLocation={clickedLocation}
+    />
+  ), [currentLocation, origin, destination, isRouteVisible, clickedLocation, handleMapClick]);
+
   return (
     <div className="flex flex-col" style={{ height: 'calc(100vh - 128px)', marginTop: '64px' }}>
       <div className="relative flex-1">
-        {/* Map Container with lower z-index */}
-        <div className="absolute inset-0 z-0">
-          <MapContainer
-            origin={currentLocation || origin}
-            destination={destination}
-            isRouteVisible={isRouteVisible}
-            onRouteCalculated={(routeData) => {
-              console.log('Route calculated:', routeData);
-              setRouteInfo(routeData);
-            }}
-            onMapClick={handleMapClick}
-            onMapLoad={(mapInstance) => {
-              console.log('Map loaded');
-              setMap(mapInstance);
-            }}
-            clickedLocation={clickedLocation}
-          />
-        </div>
-
-        {/* Search Box with higher z-index */}
-        <div className="relative z-10">
-          <SearchBox
-            origin={origin}
-            setOrigin={setOrigin}
-            destination={destination}
-            onSearch={handleSearch}
-            isLoading={isLoading}
-            onGetCurrentLocation={handleGetCurrentLocation}
-            playgroundName={playgroundName}
-          />
-        </div>
-        
-        {/* Route Info overlay */}
+        {memoizedSearchBox}
+        {memoizedMapContainer}
         <AnimatePresence>
           {isRouteVisible && routeInfo && (
             <motion.div
@@ -235,7 +243,8 @@ const MapPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-20"
+
+            className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50"
           >
             <div className="bg-white rounded-xl p-6 shadow-lg">
               <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />

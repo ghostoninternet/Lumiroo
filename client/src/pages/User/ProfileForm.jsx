@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Edit2, Phone, MapPin, Mail, Calendar, User2 } from 'lucide-react';
 import EditDialog from './EditDialog';
 import { motion } from 'framer-motion';
+import  formattedDate  from '../../utils/formattedDate';
 
 const ProfileForm = ({ data, onEdit }) => {
   const [editField, setEditField] = useState(null);
@@ -72,7 +73,7 @@ const ProfileForm = ({ data, onEdit }) => {
       </div>
 
       <div className="grid grid-cols-2 gap-8">
-        {renderEditableField('生年月日', data.birthday, 
+        {renderEditableField('生年月日', formattedDate(data.birthday), 
           <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500 transition-colors duration-300" />, 
           'birthday', 
           'date'
@@ -91,18 +92,22 @@ const ProfileForm = ({ data, onEdit }) => {
         <div className="relative">
           <div className="flex items-center gap-8 py-3 pl-10">
             <User2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-green-500 transition-colors duration-300" />
-            {['男性', '女性', 'その他'].map((option) => (
-              <label key={option} className="flex items-center gap-2 cursor-default">
+            {[
+              { value: 'male', label: '男性' },
+              { value: 'female', label: '女性' },
+              { value: 'other', label: 'その他' }
+            ].map((option) => (
+              <label key={option.value} className="flex items-center gap-2 cursor-default">
                 <input
                   type="radio"
                   name="gender"
-                  value={option}
-                  checked={data.gender === option}
+                  value={option.value}
+                  checked={data.gender === option.value}
                   readOnly
                   className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500 transition duration-300"
                 />
                 <span className="text-sm text-gray-700">
-                  {option}
+                  {option.label}
                 </span>
               </label>
             ))}
