@@ -8,13 +8,34 @@ import ReviewFilters from "../../components/Playground/Detail/PlaygroundTabs/Tab
 import ReviewList from "../../components/Playground/Detail/PlaygroundTabs/TabReviews/ReviewList";
 import ReviewForm from "../../components/Playground/Detail/PlaygroundTabs/TabReviews/ReviewForm";
 import { Square, MessageSquare } from "lucide-react";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import {getReviews} from "../../apis/playground";
+import formatReviewData from "../../utils/formattedReviewsData";
 
 const PlaygroundDetail = () => {
   const [activeTab, setActiveTab] = useState("details");
   const [selectedRating, setSelectedRating] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [filteredReviews, setFilteredReviews] = useState(reviews); // Trạng thái cho reviews đã lọc
+  const { id } = useParams();
+  console.log(id);
+  
+  const fetchReviews = async () => {
+    console.log("Fetching reviews...");
+    const result = await getReviews(id);
+    if (result) {
+      const reviewsRaw = result.data;
+      setReviews(formatReviewData(reviewsRaw)); 
+      console.error("Failed to fetch reviews");
+    }
+  };
 
-  // Mock data for the playground
+  useEffect(() => {
+    fetchReviews();
+  }, [id]); 
   const playgroundData = {
+    id: id,
     name: "ディズニーランド",
     openTime: "午前8時から午後8時まで",
     address: "24146 Đông Vy Grove, ハティン, ベトナム",
@@ -78,15 +99,21 @@ const PlaygroundDetail = () => {
                 <TabDetails data={playgroundData} />
               ) : (
                 <div className="space-y-8">
-                  <ReviewOverview />
+                  <ReviewOverview 
+                  reviews={reviews} />
                   <ReviewFilters 
                     selectedRating={selectedRating}
                     onRatingChange={setSelectedRating}
+                    reviews={reviews}
+                    setFilteredReviews={setFilteredReviews}
                   />
                   <ReviewList 
-                    selectedRating={selectedRating}
+                    reviews={filteredReviews}
                   />
-                  <ReviewForm />
+                  <ReviewForm 
+                    playgroundId={playgroundData.id}
+                    onReviewSubmit={fetchReviews}
+                  />
                 </div>
               )}
             </div>

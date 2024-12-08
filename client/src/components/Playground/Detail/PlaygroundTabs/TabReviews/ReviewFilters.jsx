@@ -1,9 +1,19 @@
 import React, { useState } from "react";
 import { Star } from "lucide-react";
+import { useEffect } from "react";
 
-const ReviewFilters = () => {
-  const [selectedFilter, setSelectedFilter] = useState("すべて");
+const ReviewFilters = ({reviews,setFilteredReviews}) => {
+  const [selectedFilter, setSelectedFilter] = useState("すべて"); // Trạng thái cho filter
 
+  useEffect(() => {
+    if (selectedFilter === "すべて") {
+      setFilteredReviews(reviews); // Nếu chọn "すべて", hiển thị tất cả các reviews
+    } else {
+      setFilteredReviews(
+        reviews.filter(review => review.rating === parseInt(selectedFilter))
+      ); 
+    }
+  }, [selectedFilter, reviews]); 
   const filters = [
     { value: "すべて", label: "すべて" },
     { value: "1", label: "1つ星" },

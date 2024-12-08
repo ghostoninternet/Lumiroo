@@ -20,10 +20,21 @@ const filterPlayground = async (req, res, next) => {
   const playgrounds = await playgroundsService.filterPlayground(req.query)
   res.status(200).json(playgrounds)
 }
-
+const getReviews = async (req, res, next) => {
+  const reviews = await playgroundsDaos.getReviews(req.params.id)
+  res.status(200).json(reviews) 
+}
+const postReview = async (req, res, next) => {
+  console.log(req.session.user)
+  req.body.userId = req.session.user.id
+  const review = await playgroundsDaos.postReview(req.params.id, req.body)
+  res.status(200).json(review)
+}
 module.exports = {
   getPlayground,
   filterPlayground,
   getAttractions,
   getAllAreas,
+  getReviews,
+  postReview
 }

@@ -2,6 +2,7 @@ const { DatabaseError } = require('../errors/customError')
 const playgroundsModel = require('../models/playgrounds.model')
 const attractionsModel = require('../models/attractions.model')
 const areasModel = require('../models/areas.model')
+const reviewsModel = require('../models/reviews.model')
 
 const countTotalPlaygrounds = async (condition) => {
   const totalPlaygrounds = await playgroundsModel.countDocuments(condition)
@@ -11,6 +12,18 @@ const countTotalPlaygrounds = async (condition) => {
 const getAllAttractions = async () => {
   const attractions = await attractionsModel.find()
   return attractions
+}
+// lấy review của playground theo id
+const getReviews = async (playgroundId) => {
+  const reviews = await reviewsModel.find({ playgroundId })
+    .populate('userId', 'id username avatarUrl')
+    .then(data => data)
+    .catch(err => {
+      console.error(err)
+      throw new DatabaseError('Something went wrong at getReviews')
+    })
+    console.log(reviews)
+  return reviews
 }
 
 const getAllAreas = async () => {
@@ -30,9 +43,20 @@ const getPlaygrounds = async (condition, limit=8, page=1) => {
   return playgrounds
 }
 
+const postReview = async (playgroundId, reviewData) => {
+  const playground = await playgroundsModel.findById(playgroundId)
+  const review = await reviewsModel.create({ ...reviewData, playgroundId })
+  playground.reviews.push(review._id)
+  console.log(playground)
+  console.log(review)
+  return review
+}
+
 module.exports = {
   countTotalPlaygrounds,
   getPlaygrounds,
   getAllAttractions,
   getAllAreas,
+  getReviews,
+  postReview
 }

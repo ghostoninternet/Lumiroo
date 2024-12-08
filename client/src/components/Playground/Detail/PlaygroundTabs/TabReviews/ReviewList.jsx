@@ -1,51 +1,15 @@
 import React, { useState } from "react";
 import { Star, ThumbsUp } from "lucide-react";
 import Pagination from "../../../../PlaygroundList/Pagination";
+import { useEffect } from "react";
+import {getReviews} from "../../../../../apis/playground"
+import formatReviewData from "../../../../../utils/formattedReviewsData";
 
-const ReviewList = () => {
+const ReviewList = ({reviews}) => {
   const [helpfulReviews, setHelpfulReviews] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 3;
-
-  const initialReviews = [
-    {
-      id: 1,
-      userName: "田中 太郎",
-      avatar: "TT",
-      rating: 5,
-      timeAgo: "2日前",
-      content: "とても素晴らしい遊び場でした。子供たちがとても楽しんでいました。スタッフの対応も丁寧で、施設も清潔でよく管理されています。特に教育的な要素と遊びを組み合わせたアクティビティが印象的でした。",
-      helpfulCount: 24
-    },
-    {
-      id: 2,
-      userName: "鈴木 花子",
-      avatar: "SH",
-      rating: 4,
-      timeAgo: "1週間前",
-      content: "施設は近代的で、楽しい遊び場が多くあります。料金は少し高めですが、体験する価値は十分にあります。スタッフの方々も親切で安心して子供を遊ばせることができました。",
-      helpfulCount: 15
-    },
-    {
-      id: 3,
-      userName: "佐藤 健",
-      avatar: "SK",
-      rating: 5,
-      timeAgo: "2週間前",
-      content: "子供が大喜びでした。特に新しく導入された遊具が素晴らしく、安全面にも配慮が行き届いています。休憩スペースも充実していて、長時間の滞在でも快適に過ごせました。",
-      helpfulCount: 32
-    },
-    {
-      id: 4,
-      userName: "山田 美咲",
-      avatar: "YM",
-      rating: 4,
-      timeAgo: "3週間前",
-      content: "定期的に利用していますが、毎回清潔に保たれていて好印象です。季節ごとのイベントも楽しく、子供の成長に良い影響を与えてくれています。",
-      helpfulCount: 18
-    }
-  ];
-
+  console.log(reviews);
   const handleHelpfulClick = (reviewId) => {
     setHelpfulReviews(prev => {
       const newSet = new Set(prev);
@@ -60,8 +24,8 @@ const ReviewList = () => {
 
   const indexOfLastReview = currentPage * reviewsPerPage;
   const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = initialReviews.slice(indexOfFirstReview, indexOfLastReview);
-  const totalPages = Math.ceil(initialReviews.length / reviewsPerPage);
+  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
 
   return (
     <div className="space-y-8">
@@ -73,7 +37,11 @@ const ReviewList = () => {
           >
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center text-white font-medium text-lg">
-                {review.avatar}
+                {/* set avatar từ link ảnh? */}
+                <img
+                      src={review.avatar}
+                      className="w-12 h-12 rounded-full border-4 border-white shadow-lg object-cover"
+                    />
               </div>
 
               <div className="flex-1">
