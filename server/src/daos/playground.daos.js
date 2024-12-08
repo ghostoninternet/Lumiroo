@@ -51,6 +51,9 @@ const postReview = async (playgroundId, reviewData) => {
   console.log(review)
   return review
 }
+const getPlaygroundById = async (id) => {
+  return await playgroundsModel.findById(id).populate('attractions reviews');
+};
 
 module.exports = {
   countTotalPlaygrounds,
@@ -58,5 +61,6 @@ module.exports = {
   getAllAttractions,
   getAllAreas,
   getReviews,
-  postReview
+  postReview,
+  getPlaygroundById,
 }
