@@ -14,6 +14,7 @@ const filterUserFields = (user) => ({
   email: user.email,
   username: user.username,
   role: user.role,
+  avatarUrl: user.avatarUrl,
 });
 
 const signin = async ({ email, password }) => {
