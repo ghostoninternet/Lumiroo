@@ -49,7 +49,6 @@ const postReview = async (playgroundId, reviewData) => {
   const totalRating = reviews.reduce((total, review) => total + review.rating, 0)
   playground.ratingAvg = (totalRating / reviews.length).toFixed(1)
   await playground.save()
-  console.log("dsfdaf",playground)
   return review
 }
 const getPlaygroundById = async (id) => {

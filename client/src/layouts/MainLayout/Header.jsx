@@ -26,7 +26,6 @@ function Header({ role }) {
 
   const navigate = useNavigate();
   const menuRef = useRef(null);
-  console.log("userData",userData.avatarUrl, avatarUrl);
 
   const isActive = (path) => location.pathname === path;
 
