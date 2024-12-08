@@ -15,8 +15,19 @@ const filterPlayground = Joi.object({
   limit: Joi.number().min(1).required(),
   page: Joi.number().min(1).required(),
 })
+const getReviews = Joi.object({
+  // limit: Joi.number().min(1).required(),
+  // page: Joi.number().min(1).required(),
+})
+const postReview = Joi.object(
+  {
+  rating: Joi.number().min(1).max(5).required(),
+  content: Joi.string().required(),
+})
 
 module.exports = {
   getPlaygrounds,
   filterPlayground,
+  getReviews,
+  postReview,
 }

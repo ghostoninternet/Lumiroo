@@ -10,6 +10,8 @@ router.get('/attractions', asyncHandler(playgroundController.getAttractions))
 router.get('/areas', asyncHandler(playgroundController.getAllAreas))
 router.get('/', validation.validationQuery(playgroundValidationSchema.getPlaygrounds), asyncHandler(playgroundController.getPlayground))
 router.get('/filter', validation.validationQuery(playgroundValidationSchema.filterPlayground), asyncHandler(playgroundController.filterPlayground))
+router.get('/:id/reviews', validation.validationQuery(playgroundValidationSchema.getReviews), asyncHandler(playgroundController.getReviews))
+router.post('/:id/reviews', validation.validationBody(playgroundValidationSchema.postReview), asyncHandler(playgroundController.postReview))
 
 // API lấy thông tin chi tiết sân chơi
 router.get('/:id', asyncHandler(playgroundController.getPlaygroundDetails));
