@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import L from 'leaflet';
 
-const SearchBox = ({ 
-  origin, 
-  setOrigin, 
-  destination, 
-  onSearch, 
-  isLoading, 
+const SearchBox = ({
+  origin,
+  setOrigin,
+  destination,
+  setDestination,
+  onSearch,
+  isLoading,
   onGetCurrentLocation,
   playgroundName,
   onLocationSelect
@@ -44,7 +45,7 @@ const SearchBox = ({
       setSearchResults([]);
       return;
     }
-  
+
     setIsSearching(true);
     try {
       const geocoder = L.Control.Geocoder.nominatim({
@@ -55,7 +56,7 @@ const SearchBox = ({
           bounded: 1
         }
       });
-  
+
       geocoder.geocode(searchText, (results) => {
         setSearchResults(results);
         setIsSearching(false);
@@ -77,7 +78,7 @@ const SearchBox = ({
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -167,7 +168,7 @@ const SearchBox = ({
               <input
                 type="text"
                 value={destination}
-                readOnly
+                onChange={(e) => setDestination(e.target.value)}
                 className="w-full px-4 py-2.5 pl-9 text-sm border border-gray-200 rounded-lg bg-gray-50 transition-all duration-200 
                   group-hover/input:border-green-300 
                   focus:outline-none
