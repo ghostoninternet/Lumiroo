@@ -18,15 +18,19 @@ const PORT = ENV.PORT || 8000
 
 app.use(
   session({
-    secret: ENV.SESSION_SECRET, // Secret từ biến môi trường
+    secret: ENV.SESSION_SECRET, // Cung cấp giá trị mặc định nếu biến môi trường bị thiếu
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: ENV.MONGO_URI, // URL MongoDB từ file .env
-      dbName: ENV.DB_NAME, // Tên cơ sở dữ liệu từ file .env
-      ttl: 14 * 24 * 60 * 60, // Session tồn tại 14 ngày
+      mongoUrl: ENV.MONGO_URI, // URL MongoDB
+      dbName: ENV.DB_NAME, // Tên cơ sở dữ liệu
+      ttl: 14 * 24 * 60 * 60, // Session tồn tại 14 ngày (mức hợp lý hơn)
     }),
-    cookie: { secure: false },  // True if https
+    cookie: {
+      secure: process.env.NODE_ENV === 'production', // Bật "secure" nếu môi trường là production
+      httpOnly: true, // Ngăn truy cập cookie từ JavaScript (tăng bảo mật)
+      maxAge: 14 * 24 * 60 * 60 * 1000, // Thời gian sống của cookie (14 ngày)
+    },
   })
 );
 
