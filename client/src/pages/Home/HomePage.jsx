@@ -1,10 +1,7 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import Slider from "./Slider";
 import { useEffect } from "react";
-import {
-  getPlayground,
-} from "../../apis/playground";
+import { getPlayground } from "../../apis/playground";
 
 const isFake = 1;
 const isReal = 0;
@@ -15,12 +12,14 @@ const HomePage = () => {
     { name: "ウォーターパーク", icon: "🌊" },
     { name: "博物館", icon: "🏛️" },
     { name: "映画館", icon: "🎥" },
-
   ];
+
+  const sliderRefs = useRef([]);
   const [playgrounds, setPlaygrounds] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const limitPerPage = 10;
+
   const fetchPlaygrounds = async () => {
     try {
       const queryParams = new URLSearchParams();
@@ -38,8 +37,17 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchPlaygrounds()
+    fetchPlaygrounds();
   }, []);
+
+  const scrollToSlider = (index) => {
+    if (sliderRefs.current[index]) {
+      sliderRefs.current[index-1].scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen pt-14">
@@ -65,7 +73,8 @@ const HomePage = () => {
             {categories.map((category, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center bg-gray-50 p-4 rounded-md shadow-md"
+                className="flex flex-col items-center bg-gray-50 p-4 rounded-md shadow-md cursor-pointer"
+                onClick={() => scrollToSlider(index)}
               >
                 <div className="text-5xl">{category.icon}</div>
                 <p className="mt-2 text-lg font-medium">{category.name}</p>
@@ -78,41 +87,12 @@ const HomePage = () => {
       {/* Slider Section */}
       <section className="bg-gray-200 py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="mb-10">
-            <h3 className="text-lg font-bold mb-4">🐟 水族館</h3>
-            <Slider 
-              playgroundsData={playgrounds}
-              is_faker = {isReal}
-            />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-4">🐘 動物園</h3>
-            <Slider
-              playgroundsData={playgrounds}
-              is_faker = {isFake}
-             />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-4">🌊 ウォーターパーク</h3>
-            <Slider
-              playgroundsData={playgrounds}
-              is_faker = {isFake}
-             />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-4">🏛️ 博物館</h3>
-            <Slider  
-              playgroundsData={playgrounds}
-              is_faker = {isFake}
-            />
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-4">🎥 映画館</h3>
-            <Slider 
-              playgroundsData={playgrounds}
-              is_faker = {isFake}
-            />
-          </div>
+          {categories.map((category, index) => (
+            <div key={index} ref={(el) => (sliderRefs.current[index] = el)}  className = "mb-10">
+              <h3 className="text-lg font-bold">{category.icon} {category.name}</h3>
+              <Slider playgroundsData={playgrounds} is_faker={index % 2 === 0 ? isReal : isFake} />
+            </div>
+          ))}
         </div>
       </section>
 

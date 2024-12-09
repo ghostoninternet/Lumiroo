@@ -25,7 +25,7 @@ const playgrounds = playgroundsData ? playgroundsData.map((playground) => {
     };
 }) : [];
 return (
-    <div className="py-6">
+    <div >
         <Swiper
             onSwiper={setSwiperRef}
             slidesPerView={3}
@@ -35,7 +35,7 @@ return (
                 type: 'fraction',
             }}
             modules={[Pagination, Navigation]}
-            className="w-full h-[300px] py-4"
+            className="w-full h-[300px] py-2"
         >
             {/* Loop through the playground data and render slides */}
             {playgrounds.map((playground) => (
