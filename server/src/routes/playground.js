@@ -20,6 +20,6 @@ router.get('/:id', asyncHandler(playgroundController.getPlaygroundDetails));
 // API quản lý danh sách yêu thích
 router.post('/favorites', authMiddleware, asyncHandler(playgroundController.addToFavorites));
 router.delete('/favorites/:id', authMiddleware, asyncHandler(playgroundController.removeFromFavorites));
-router.get('/favorites', authMiddleware, asyncHandler(playgroundController.getFavorites));
+router.get('/favorites', authMiddleware, validation.validationQuery(playgroundValidationSchema.getPlaygrounds), asyncHandler(playgroundController.getFavorites));
 
 module.exports = router
