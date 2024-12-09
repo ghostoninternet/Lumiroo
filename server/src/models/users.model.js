@@ -49,6 +49,9 @@ const usersModel = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     default: [],
     ref: 'reviews',
+  },  
+  address: {
+    type: String
   },
 }, {
   timestamps: true

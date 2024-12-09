@@ -22,7 +22,6 @@ const getReviews = async (playgroundId) => {
       console.error(err)
       throw new DatabaseError('Something went wrong at getReviews')
     })
-    console.log(reviews)
   return reviews
 }
 
@@ -46,9 +45,10 @@ const getPlaygrounds = async (condition, limit=8, page=1) => {
 const postReview = async (playgroundId, reviewData) => {
   const playground = await playgroundsModel.findById(playgroundId)
   const review = await reviewsModel.create({ ...reviewData, playgroundId })
-  playground.reviews.push(review._id)
-  console.log(playground)
-  console.log(review)
+  const reviews = await reviewsModel.find({ playgroundId })
+  const totalRating = reviews.reduce((total, review) => total + review.rating, 0)
+  playground.ratingAvg = (totalRating / reviews.length).toFixed(1)
+  await playground.save()
   return review
 }
 const getPlaygroundById = async (id) => {

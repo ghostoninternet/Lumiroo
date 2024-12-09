@@ -1,5 +1,6 @@
 const playgroundDaos = require('../daos/playground.daos')
-const favoritesDaos = require('../daos/favorites.daos');
+const userDaos = require('../daos/user.daos');
+const { NotFoundError } = require('../errors/customError');
 const mongoose = require('mongoose')
 
 const getPlayground = async({limit, page}) => {
@@ -73,21 +74,43 @@ const filterPlayground = async (filterParams) => {
 const getPlaygroundDetails = async (id) => {
   const playground = await playgroundDaos.getPlaygroundById(id);
   if (!playground) {
-    throw new Error('Playground not found');
+    throw new NotFoundError("Playground not found");
   }
   return playground;
 };
 
 const addToFavorites = async (userId, playgroundId) => {
-  return await favoritesDaos.addToFavorites(userId, playgroundId);
+  const playgroundExists = await playgroundDaos.getPlaygroundById(playgroundId);
+  if (!playgroundExists) {
+    throw new NotFoundError("Playground not found");
+  }
+
+  const user = await userDaos.findUserById(userId);
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  const updatedUser = await userDaos.addFavoritePlayground(userId, playgroundId);
+  return updatedUser.favoritePlayground;
 };
 
 const removeFromFavorites = async (userId, playgroundId) => {
-  return await favoritesDaos.removeFromFavorites(userId, playgroundId);
+  const user = await userDaos.findUserById(userId);
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  const updatedUser = await userDaos.removeFavoritePlayground(userId, playgroundId);
+  return updatedUser.favoritePlayground;
 };
 
 const getFavorites = async (userId) => {
-  return await favoritesDaos.getUserFavorites(userId);
+  const user = await userDaos.findUserById(userId).populate('favoritePlayground');
+  if (!user) {
+    throw new NotFoundError("User not found");
+  }
+
+  return user.favoritePlayground;
 };
 
 module.exports = {

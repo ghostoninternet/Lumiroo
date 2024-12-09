@@ -35,6 +35,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       const infor = await getUserInfo();
+      console.log('User data:', infor.data.result);
       setUserData(infor.data.result);
       
       if (infor.data.result.avatarUrl != null ){ 

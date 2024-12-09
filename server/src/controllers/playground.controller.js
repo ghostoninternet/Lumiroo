@@ -25,8 +25,8 @@ const getReviews = async (req, res, next) => {
   res.status(200).json(reviews) 
 }
 const postReview = async (req, res, next) => {
-  console.log(req.session.user)
   req.body.userId = req.session.user.id
+  console.log("req.body", req.body)
   const review = await playgroundsDaos.postReview(req.params.id, req.body)
   res.status(200).json(review)
 }
@@ -37,25 +37,35 @@ const getPlaygroundDetails = async (req, res) => {
 };
 
 const addToFavorites = async (req, res) => {
-  const { userId } = req.body; // Assuming userId is included in the body
-  const { playgroundId } = req.body;
-
-  const favorite = await playgroundsService.addToFavorites(userId, playgroundId);
-  res.status(200).json({ message: 'Playground added to favorites', favorite });
+  try {
+    const userId = req.session.user.id;
+    const { playgroundId } = req.body;
+    const result = await playgroundsService.addToFavorites(userId, playgroundId);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const removeFromFavorites = async (req, res) => {
-  const { userId } = req.body; // Assuming userId is included in the body
-  const { id: playgroundId } = req.params;
-
-  const favorite = await playgroundsService.removeFromFavorites(userId, playgroundId);
-  res.status(200).json({ message: 'Playground removed from favorites', favorite });
+  try {
+    const userId = req.session.user.id;
+    const { playgroundId } = req.params;
+    const result = await playgroundsService.removeFromFavorites(userId, playgroundId);
+    res.status(200).json(result);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const getFavorites = async (req, res) => {
-  const { userId } = req.query; // Assuming userId is included in the query
-  const favorites = await playgroundsService.getFavorites(userId);
-  res.status(200).json(favorites);
+  try {
+    const userId = req.session.user.id;
+    const favorites = await playgroundsService.getFavorites(userId)
+    res.status(200).json(favorites);
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {

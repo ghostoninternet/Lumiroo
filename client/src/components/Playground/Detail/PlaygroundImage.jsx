@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import parkImage from "../../../assets/park.jpg";
 import { Maximize2, ChevronLeft, ChevronRight } from "lucide-react";
 
-const PlaygroundImage = () => {
+const PlaygroundImage = ({imageUrl}) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Mock multiple images
   const images = [
-    parkImage,
+    imageUrl,parkImage,
     "/api/placeholder/400/300",
     "/api/placeholder/400/300",
   ];

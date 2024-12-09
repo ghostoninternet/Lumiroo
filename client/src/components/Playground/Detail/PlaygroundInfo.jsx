@@ -55,7 +55,9 @@ const PlaygroundInfo = ({ data }) => {
     navigate('/map', { 
       state: { 
         destination: data.address,
-        playgroundName: data.name
+        playgroundName: data.name,
+        playgroundId: data.id
+        
       } 
     });
   };
@@ -113,7 +115,7 @@ const PlaygroundInfo = ({ data }) => {
             <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
             {isFavorite ? "お気に入り追加済み" : "お気に入りに追加"}
           </button>
-          
+             
           <button 
             onClick={handleRouteClick}
             className="h-12 px-8 bg-green-600 text-white rounded-lg font-medium

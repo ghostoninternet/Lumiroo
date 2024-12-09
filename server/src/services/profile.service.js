@@ -9,7 +9,7 @@ const filterUserFields = (user) => ({
 const getProfileService = async (userId) => {
     const user = await usersDao.getUser(userId);
     const result = {
-    name: user.username,
+      name: user.username,
       email: user.email,
       avatarUrl: user.avatarUrl,
       address: user.address,
@@ -17,6 +17,7 @@ const getProfileService = async (userId) => {
       phone: user.phoneNumber,
       gender: user.gender
     }
+    console.log('User data:', result);
     return result;
 }
 const updateProfileService = async (userId, data) => {
