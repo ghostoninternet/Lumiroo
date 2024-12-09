@@ -24,12 +24,12 @@ app.use(
     store: MongoStore.create({
       mongoUrl: ENV.MONGO_URI, // URL MongoDB
       dbName: ENV.DB_NAME, // Tên cơ sở dữ liệu
-      ttl: 14 * 24 * 60 * 60, // Session tồn tại 14 ngày (mức hợp lý hơn)
+      ttl: 42 * 24 * 60 * 60, // Session tồn tại 42 ngày (mức hợp lý hơn)
     }),
     cookie: {
       secure: process.env.NODE_ENV === 'production', // Bật "secure" nếu môi trường là production
       httpOnly: true, // Ngăn truy cập cookie từ JavaScript (tăng bảo mật)
-      maxAge: 14 * 24 * 60 * 60 * 1000, // Thời gian sống của cookie (14 ngày)
+      maxAge: 42 * 24 * 60 * 60 * 1000, // Thời gian sống của cookie (42 ngày)
     },
   })
 );
