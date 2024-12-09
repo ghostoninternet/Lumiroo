@@ -1,6 +1,13 @@
 import React from "react";
+import { useState } from "react";
 import Slider from "./Slider";
+import { useEffect } from "react";
+import {
+  getPlayground,
+} from "../../apis/playground";
 
+const isFake = 1;
+const isReal = 0;
 const HomePage = () => {
   const categories = [
     { name: "水族館", icon: "🐟" },
@@ -8,10 +15,34 @@ const HomePage = () => {
     { name: "ウォーターパーク", icon: "🌊" },
     { name: "博物館", icon: "🏛️" },
     { name: "映画館", icon: "🎥" },
+
   ];
+  const [playgrounds, setPlaygrounds] = useState([]);
+  const [totalPage, setTotalPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const limitPerPage = 10;
+  const fetchPlaygrounds = async () => {
+    try {
+      const queryParams = new URLSearchParams();
+      queryParams.append("limit", limitPerPage);
+      queryParams.append("page", currentPage);
+      const response = await getPlayground(queryParams);
+      const responseData = response.data;
+      setPlaygrounds(responseData.data);
+      setTotalPage(responseData.pagination.totalPage);
+      setCurrentPage(Number.parseInt(responseData.pagination.currentPage));
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlaygrounds()
+  }, []);
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="bg-gray-100 min-h-screen pt-14">
       {/* Header Section */}
       <header className="bg-green-500 text-white py-6 text-center">
         <h1 className="text-3xl font-bold">
@@ -48,12 +79,39 @@ const HomePage = () => {
       <section className="bg-gray-200 py-8">
         <div className="max-w-7xl mx-auto px-4">
           <div className="mb-10">
-            <h3 className="text-lg font-bold mb-4">水族館</h3>
-            <Slider />
+            <h3 className="text-lg font-bold mb-4">🐟 水族館</h3>
+            <Slider 
+              playgroundsData={playgrounds}
+              is_faker = {isReal}
+            />
           </div>
           <div>
-            <h3 className="text-lg font-bold mb-4">動物園</h3>
-            <Slider />
+            <h3 className="text-lg font-bold mb-4">🐘 動物園</h3>
+            <Slider
+              playgroundsData={playgrounds}
+              is_faker = {isFake}
+             />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold mb-4">🌊 ウォーターパーク</h3>
+            <Slider
+              playgroundsData={playgrounds}
+              is_faker = {isFake}
+             />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold mb-4">🏛️ 博物館</h3>
+            <Slider  
+              playgroundsData={playgrounds}
+              is_faker = {isFake}
+            />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold mb-4">🎥 映画館</h3>
+            <Slider 
+              playgroundsData={playgrounds}
+              is_faker = {isFake}
+            />
           </div>
         </div>
       </section>
