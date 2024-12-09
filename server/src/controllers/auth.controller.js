@@ -38,6 +38,12 @@ const logout = async (req, res) => {
     if (err) {
       return res.status(500).json({ message: 'Logout failed' });
     }
+    // Xóa cookie chứa session ID trên trình duyệt
+    res.clearCookie('connect.sid', {
+      path: '/', // Đảm bảo đúng đường dẫn
+      httpOnly: true, // Tăng bảo mật
+      secure: process.env.NODE_ENV === 'production', // Chỉ sử dụng HTTPS nếu ở môi trường production
+    });
     res.status(200).json({ message: 'Logout successful' });
   });
 };
