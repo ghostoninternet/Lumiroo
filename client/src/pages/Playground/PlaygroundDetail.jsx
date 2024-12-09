@@ -50,7 +50,7 @@ const PlaygroundDetail = () => {
     fetchAll();
   }, [id]); 
   return (
-    <div className="absolute inset-x-0 top-16 bottom-0 bg-green-50/30">
+    <div className="inset-x-0 top-16 bottom-0 bg-green-50/30">
       <div className="h-full overflow-y-auto">
         <PlaygroundHeader />
 
