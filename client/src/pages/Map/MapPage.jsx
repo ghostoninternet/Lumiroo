@@ -184,6 +184,7 @@ const MapPage = () => {
       isLoading={isLoading}
       onGetCurrentLocation={handleGetCurrentLocation}
       playgroundName={playgroundName}
+      playgroundId={location.state?.playgroundId}
     />
   ), [origin, destination, isLoading, handleSearch, handleGetCurrentLocation, playgroundName]);
 
