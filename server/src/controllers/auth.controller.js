@@ -5,6 +5,7 @@ const signin = async (req, res) => {
 
   const user = await authService.signin({ email, password });
   req.session.user = user;
+  console.log(req.session);
   res.status(200).json({
     message: 'Login successful',
     user

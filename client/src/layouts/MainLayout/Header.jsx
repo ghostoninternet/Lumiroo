@@ -17,6 +17,13 @@ function Header({ role }) {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isLoggedOut, setLoggedOut] = useState(false);
   const location = useLocation();
+  const userData = localStorage.getItem("user");
+  //read user data from local storage
+  const user = JSON.parse(userData);
+  let avatarUrl = user ? user.avatarUrl : null;
+  avatarUrl = avatarUrl || "https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Adrian";
+
+
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
@@ -126,7 +133,7 @@ function Header({ role }) {
                 onClick={toggleMenu}
               >
                 <img
-                  src="https://api.dicebear.com/9.x/adventurer-neutral/svg?seed=Adrian"
+                  src={avatarUrl}
                   alt="User Avatar"
                   className={`w-8 h-8 rounded-full border-2 transition-all duration-300 ${
                     isMenuOpen 

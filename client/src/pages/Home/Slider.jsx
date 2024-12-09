@@ -8,25 +8,22 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import PlaygroundInfoCard from '../../components/Card/PlaygroundInfoCard';
 import {faker} from '@faker-js/faker';
-
 // Import required modules
 import { Pagination, Navigation } from 'swiper/modules';
 
-const Slider = () => {
+const Slider = ({playgroundsData,is_faker}) => {
   const [swiperRef, setSwiperRef] = useState(null);
 
   // Sample data for playgrounds (replace with real data)
-const playgrounds = [
-    { id: 1, name: '佐藤保険名会社', address: '156 Phùng Flats, フンイエン, ベトナム', admissionFee: 215000, imageUrl: faker.image.url() },
-    { id: 2, name: '有限会社田中通信', address: '3245 Dan Quế Canyon, ハザン, ベトナム', admissionFee: 90000, imageUrl: faker.image.url() },
-    { id: 3, name: '合同会社井上鉄業', address: '1792 Đào Lake, クアンニン, ベトナム', admissionFee: 365000, imageUrl: faker.image.url() },
-    { id: 4, name: '合同会社加藤水産', address: '5637 Nguyễn Spur, タイビン, ベトナム', admissionFee: 345000, imageUrl: faker.image.url() },
-    { id: 5, name: '株式会社木村情報', address: '2743 Phùng Shoal, タインホア, ベトナム', admissionFee: 285000, imageUrl: faker.image.url() },
-    { id: 6, name: '株式会社山本通信', address: '3245 Dan Quế Canyon, ハザン, ベトナム', admissionFee: 90000, imageUrl: faker.image.url() },
-    { id: 7, name: '株式会社山本通信', address: '3245 Dan Quế Canyon, ハザン, ベトナム', admissionFee: 90000, imageUrl: faker.image.url() },
-];
-console.log(playgrounds);
-
+const playgrounds = playgroundsData ? playgroundsData.map((playground) => {
+    return {
+        _id: playground._id,
+        name: playground.name.length > 20 ? playground.name.substring(0, 20) + '...' : playground.name,
+        address: playground.address > 15 ? playground.address.substring(0, 15) + '...' : playground.address,
+        admissionFee: playground.admissionFee,
+        imageUrl: is_faker==1 ? faker.image.url() : playground.imageUrl,
+    };
+}) : [];
 return (
     <div className="py-6">
         <Swiper
