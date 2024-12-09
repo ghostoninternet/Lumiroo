@@ -13,7 +13,7 @@ const PlaygroundResults = ({
 }) => {
   return (
     <div
-      className="p-4 bg-gray-50 flex flex-col"
+      className="p-4 bg-gray-50/80 flex flex-col"
       style={{ height: "calc(100vh - 130px)" }} // Đồng bộ chiều cao
     >
           {/* Nội dung chính */}

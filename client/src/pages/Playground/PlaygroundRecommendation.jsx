@@ -184,7 +184,7 @@ function PlaygroundRecommendation() {
   useClickOutside(areaDropdownRef, () => setShowAreaDropdown(false));
 
   return (
-    <div className="absolute inset-x-0 top-16 bottom-0 flex bg-white">
+    <div className="absolute inset-x-0 top-16 bottom-0 flex bg-gray-50">
       {/* Sidebar Filter */}
       <aside className="w-full md:w-80 lg:w-96 bg-gradient-to-br from-green-50 to-green-100 border-r relative z-0">
         <div className="h-full overflow-y-auto px-5 md:px-6 py-8">

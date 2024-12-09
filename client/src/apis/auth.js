@@ -16,6 +16,7 @@ export const signUp = async (authData) => {
 
 // http://localhost:8000/api/auth/logout
 export const logout = async () => {
+  localStorage.removeItem("user");
   const response = await axiosInstance.post('/auth/logout')
   return response
 }
