@@ -2,7 +2,6 @@ const userDaos = require('../daos/user.daos');
 
 module.exports = async (req, res, next) => {
   try {
-    console.log('Session:', req.session);
     if (!req.session.user) {
       return res.status(401).json({ message: 'Unauthorized: No session found' });
     }
