@@ -42,7 +42,7 @@ function Header({ role }) {
     // Implement logout logic here
     await logout();
     // tạm thời cho tới page signin
-    navigate(/auth/sign-in);
+    navigate('/auth/sign-in')
   };
 
   useEffect(() => {
