@@ -1,25 +1,41 @@
 const userDaos = require('../daos/user.daos');
+const sessionsDaos = require('../daos/session.daos')
+const { UnauthorizedError } = require('../errors/customError');
+
+const filterUserFields = (user) => ({
+  id: user._id,
+  email: user.email,
+  username: user.username,
+  role: user.role,
+  avatarUrl: user.avatarUrl,
+});
 
 module.exports = async (req, res, next) => {
   try {
-    if (!req.session.user) {
-      return res.status(401).json({ message: 'Unauthorized: No session found' });
+    const sessionId = req.cookies.session;    
+    if (!sessionId) {
+      throw new UnauthorizedError('No session found!');
     }
 
-    const user = await userDaos.findUserById(req.session.user.id);
-    
-    if (!user) {
-      req.session.destroy((err) => {
-        if (err) {
-          return res.status(500).json({ message: 'Session destruction failed' });
-        }
-        return res.status(401).json({ message: 'Unauthorized: User no longer exists' });
-      });
+    const foundSession = await sessionsDaos.findOneSession(sessionId);
+    if (!foundSession) {
+      throw new UnauthorizedError('Session is not valid!');
+    }
+
+    const foundUser = await userDaos.findUserById(foundSession.userId);
+    if (!foundUser) {
+      throw new UnauthorizedError('No user found!');
+    }
+
+    req.session = {
+      sessionId,
+      user: {
+        ...filterUserFields(foundUser),
+      }
     }
 
     next();
   } catch (error) {
-    console.error('Authentication error:', error);
-    res.status(500).json({ message: 'Server error while authenticating' });
+    next(error);
   }
 };
