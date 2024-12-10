@@ -96,10 +96,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-green-500 text-white py-4 text-center">
-        <p>&copy; 2024 Lumiroo - 楽しい遊び場を探しましょう！</p>
-      </footer>
     </div>
   );
 };

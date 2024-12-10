@@ -1,60 +1,129 @@
-import React from "react";
+import { motion } from "framer-motion";
+import { 
+  Facebook, 
+  Twitter, 
+  Instagram,
+  FileText,
+  HeadphonesIcon,
+  Sparkles
+} from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-green-100 border-t border-gray-300 py-6 pt-6">
-    <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center text-gray-600">
-      {/* Left Section */}
-      <div className="text-center sm:text-left">
-        <p className="text-sm">&copy; 2024 Lumiroo. All Rights Reserved.</p>
-        <p className="text-sm">楽しい遊び場を探しましょう！</p>
-      </div>
+    <footer className="bg-green-600">
+      <div className="max-w-[1400px] mx-auto px-6 py-4">
+        <div className="flex flex-wrap items-start justify-between gap-8">
+          {/* Brand Section */}
+          <div className="bg-green-700/30 backdrop-blur-sm rounded-lg p-3">
+            <motion.h3 
+              className="text-xl font-bold text-white mb-1"
+              whileHover={{ scale: 1.02 }}
+            >
+              Lumiroo
+            </motion.h3>
+            <p className="text-green-50 text-sm mb-3">
+              楽しい遊び場を探しましょう！
+            </p>
+            <div className="flex gap-2">
+              {[
+                { icon: Facebook, href: 'https://facebook.com' },
+                { icon: Twitter, href: 'https://twitter.com' },
+                { icon: Instagram, href: 'https://instagram.com' }
+              ].map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white text-green-600 hover:bg-green-50 transition-colors"
+                  whileHover={{ y: -2 }}
+                >
+                  <social.icon className="w-4 h-4" />
+                </motion.a>
+              ))}
+            </div>
+          </div>
 
-      {/* Center Section: Links */}
-      <div className="flex space-x-6 mt-4 sm:mt-0">
-        <a
-          href="/terms"
-          className="text-sm text-gray-500 hover:text-gray-800"
-        >
-          利用規約
-        </a>
-        <a
-          href="/privacy"
-          className="text-sm text-gray-500 hover:text-gray-800"
-        >
-          プライバシーポリシー
-        </a>
-        <a
-          href="/contact"
-          className="text-sm text-gray-500 hover:text-gray-800"
-        >
-          お問い合わせ
-        </a>
-      </div>
+          {/* Links Section */}
+          <div className="flex flex-wrap items-start gap-12">
+            {/* Legal Info */}
+            <div>
+              <div className="flex items-center gap-2 mb-3 text-white">
+                <FileText className="w-4 h-4" />
+                <h4 className="font-semibold">法的情報</h4>
+              </div>
+              <nav className="space-y-2">
+                <motion.a
+                  href="#"
+                  className="block text-sm text-green-100 hover:text-white"
+                  whileHover={{ x: 3 }}
+                >
+                  利用規約
+                </motion.a>
+                <motion.a
+                  href="#"
+                  className="block text-sm text-green-100 hover:text-white"
+                  whileHover={{ x: 3 }}
+                >
+                  プライバシーポリシー
+                </motion.a>
+              </nav>
+            </div>
 
-      {/* Right Section: Social Icons */}
-      <div className="flex space-x-4 mt-4 sm:mt-0">
-        <a
-          href="https://facebook.com"
-          className="text-gray-500 hover:text-blue-600"
-        >
-          <i className="fab fa-facebook-f"></i>
-        </a>
-        <a
-          href="https://twitter.com"
-          className="text-gray-500 hover:text-blue-400"
-        >
-          <i className="fab fa-twitter"></i>
-        </a>
-        <a
-          href="https://instagram.com"
-          className="text-gray-500 hover:text-pink-500"
-        >
-          <i className="fab fa-instagram"></i>
-        </a>
+            {/* Support */}
+            <div>
+              <div className="flex items-center gap-2 mb-3 text-white">
+                <HeadphonesIcon className="w-4 h-4" />
+                <h4 className="font-semibold">サポート</h4>
+              </div>
+              <nav className="space-y-2">
+                <motion.a
+                  href="#"
+                  className="block text-sm text-green-100 hover:text-white"
+                  whileHover={{ x: 3 }}
+                >
+                  お問い合わせ
+                </motion.a>
+                <motion.a
+                  href="#"
+                  className="block text-sm text-green-100 hover:text-white"
+                  whileHover={{ x: 3 }}
+                >
+                  よくある質問
+                </motion.a>
+              </nav>
+            </div>
+
+            {/* Other Section */}
+            <div>
+              <div className="flex items-center gap-2 mb-3 text-white">
+                <Sparkles className="w-4 h-4" />
+                <h4 className="font-semibold">その他</h4>
+              </div>
+              <motion.div
+                className="bg-green-700/30 backdrop-blur-sm rounded-lg p-3"
+                whileHover={{ scale: 1.02 }}
+              >
+                <p className="text-sm text-white mb-2">
+                  新機能をお試しください!
+                </p>
+                <motion.button
+                  className="text-xs bg-white text-green-600 px-4 py-1.5 rounded-md hover:bg-green-50 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  詳細を見る
+                </motion.button>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="mt-4 pt-3 border-t border-green-500/30">
+          <p className="text-xs text-center text-green-100">
+            &copy; {new Date().getFullYear()} Lumiroo. All Rights Reserved.
+          </p>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
   );
 };
 

@@ -189,21 +189,23 @@ const MapPage = () => {
   ), [origin, destination, isLoading, handleSearch, handleGetCurrentLocation, playgroundName]);
 
   const memoizedMapContainer = useMemo(() => (
-    <MapContainer
-      origin={currentLocation || origin}
-      destination={destination}
-      isRouteVisible={isRouteVisible}
-      onRouteCalculated={(routeData) => {
-        console.log('Route calculated:', routeData);
-        setRouteInfo(routeData);
-      }}
-      onMapClick={handleMapClick}
-      onMapLoad={(mapInstance) => {
-        console.log('Map loaded');
-        setMap(mapInstance);
-      }}
-      clickedLocation={clickedLocation}
-    />
+    <div className="absolute inset-0" style={{ zIndex: 1 }}>
+      <MapContainer
+        origin={currentLocation || origin}
+        destination={destination}
+        isRouteVisible={isRouteVisible}
+        onRouteCalculated={(routeData) => {
+          console.log('Route calculated:', routeData);
+          setRouteInfo(routeData);
+        }}
+        onMapClick={handleMapClick}
+        onMapLoad={(mapInstance) => {
+          console.log('Map loaded');
+          setMap(mapInstance);
+        }}
+        clickedLocation={clickedLocation}
+      />
+    </div>
   ), [currentLocation, origin, destination, isRouteVisible, clickedLocation, handleMapClick]);
 
   return (
@@ -218,7 +220,8 @@ const MapPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.3 }}
-              className="absolute bottom-6 right-6 bg-white rounded-xl shadow-lg p-4 z-10"
+              className="absolute bottom-6 right-16 bg-white rounded-xl shadow-lg p-4"
+              style={{ zIndex: 999 }}
             >
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
@@ -244,7 +247,6 @@ const MapPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-
             className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50"
           >
             <div className="bg-white rounded-xl p-6 shadow-lg">
