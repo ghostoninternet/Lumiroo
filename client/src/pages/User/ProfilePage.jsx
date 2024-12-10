@@ -11,6 +11,7 @@ import ProfileActions from './ProfileActions';
 import EditDialog from './EditDialog';
 import { getUserInfo ,updateProfile} from '../../apis/user';
 import { uploadImage } from "../../apis/upload";
+import { logout } from '../../apis/auth';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -47,6 +48,11 @@ const ProfilePage = () => {
     console.log('User data fetched');
   }, []); // Chạy 1 lần khi component được mount
 
+  const handleLogout = async () => {
+    // Implement logout logic here
+    await logout();
+    navigate('/auth/sign-in')
+  };
 
   const handleAvatarChange = async (e) => {
     if (e.target.files) {
@@ -96,9 +102,10 @@ const ProfilePage = () => {
         phoneNumber: userData.phone,
         gender: userData.gender
       }
-      console.log('Profile data:', data);
       const response = await updateProfile(data);
-      console.log('Profile updated:', response.data);
+      //updata avatarUrl to local storage
+      localStorage.getItem("user").avatarUrl = userData.avatarUrl;
+      
     } catch (error) {
       console.error('Update profile error:', error
       );
@@ -127,13 +134,13 @@ const ProfilePage = () => {
           onUpdateImage={() => bannerInputRef.current?.click()} 
         />
         
-        <div className="relative max-w-5xl mx-auto px-6 -mt-48">
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-            <div className="p-8">
+        <div className="relative max-w-5xl mx-auto px-6 -mt-48 ">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+            <div className="p-8 ">
               <ProfileBreadcrumb onNavigate={navigate} />
               
               <div className="mt-6 space-y-8">
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-6 ">
                   <div className="relative group">
                     <img
                       src={avatarImage}
@@ -179,7 +186,7 @@ const ProfilePage = () => {
 
                 <ProfileActions
                   onSave={handleSaveProfile}
-                  onLogout={() => navigate('/auth/sign-in')}
+                  onLogout={handleLogout}
                 />
               </div>
             </div>

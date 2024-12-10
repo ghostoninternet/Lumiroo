@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Logo from "../../components/Logo/Logo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {logout} from "../../apis/auth";
 import { 
   faHome, 
   faSearch, 
@@ -26,7 +27,6 @@ function Header({ role }) {
 
   const navigate = useNavigate();
   const menuRef = useRef(null);
-  console.log("userData",userData.avatarUrl, avatarUrl);
 
   const isActive = (path) => location.pathname === path;
 
@@ -34,11 +34,15 @@ function Header({ role }) {
     e.stopPropagation();
     setMenuOpen(!isMenuOpen);
   };
+  
 
-  const handleLogout = () => {
-    setLoggedOut(true);
-    setMenuOpen(false);
+  const handleLogout =  async () => {
+    //setLoggedOut(true);
+    //setMenuOpen(false);
     // Implement logout logic here
+    await logout();
+    // tạm thời cho tới page signin
+    navigate('/auth/sign-in')
   };
 
   useEffect(() => {

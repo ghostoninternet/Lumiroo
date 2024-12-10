@@ -11,7 +11,7 @@ function MainLayout() {
       </header>
 
       {/* Main content */}
-      <main className="flex-grow bg-gray-100">
+      <main className="flex-grow bg-gray-50/80">
         <Outlet />
       </main>
 

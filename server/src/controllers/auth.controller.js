@@ -1,21 +1,25 @@
+const { EXPIRES_IN } = require('../constants/model');
 const authService = require('../services/auth.service');
 
 const signin = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await authService.signin({ email, password });
-  req.session.user = user;
-  console.log(req.session);
+  const authData = await authService.signin({ email, password });
+  res.cookie('session', authData.session, {
+    httpOnly: true,
+    expires: new Date(Date.now() + EXPIRES_IN),
+    path: '/',
+  })
   res.status(200).json({
     message: 'Login successful',
-    user
+    user: authData.user,
   });
 };
 
 const signup = async (req, res) => {
   const { username, email, password, gender, phoneNumber, dob, avatarUrl } = req.body;
 
-  const newUser = await authService.signup({
+  const authData = await authService.signup({
     username,
     email,
     password,
@@ -25,21 +29,21 @@ const signup = async (req, res) => {
     avatarUrl,
   });
 
-  req.session.user = newUser;
-
-  res.status(201).json({
+  res.cookie('session', authData.session, {
+    httpOnly: true,
+    expires: new Date(Date.now() + EXPIRES_IN),
+    path: '/',
+  })
+  res.status(200).json({
     message: 'User registered successfully',
-    user: newUser,
+    user: authData.user,
   });
 };
 
 const logout = async (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).json({ message: 'Logout failed' });
-    }
-    res.status(200).json({ message: 'Logout successful' });
-  });
+  const logoutData = await authService.logout(req.session.sessionId)
+  res.clearCookie('session')
+  res.status(200).json(logoutData);
 };
 
 module.exports = {
