@@ -20,6 +20,7 @@ const playgroundsModel = new mongoose.Schema({
   attractions: {
     type: [mongoose.Schema.Types.ObjectId],
     required: true,
+    ref: 'attractions',
   },
   openingTime: {
     type: Number,

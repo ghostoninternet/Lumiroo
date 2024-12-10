@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import PlaygroundHeader from "../../components/Playground/Detail/PlaygroundHeader";
 import PlaygroundImage from "../../components/Playground/Detail/PlaygroundImage";
 import PlaygroundInfo from "../../components/Playground/Detail/PlaygroundInfo";
