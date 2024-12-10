@@ -12,9 +12,11 @@ import EditDialog from './EditDialog';
 import { getUserInfo ,updateProfile} from '../../apis/user';
 import { uploadImage } from "../../apis/upload";
 import { logout } from '../../apis/auth';
+import { ClipLoader } from 'react-spinners';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const [isLoading,setIsLoading] = useState(false);
   const [editingName, setEditingName] = useState(false);
   const [bannerImage, setBannerImage] = useState(defaultAvatar);
   const [avatarImage, setAvatarImage] = useState(defaultAvatar);
@@ -57,6 +59,7 @@ const ProfilePage = () => {
   const handleAvatarChange = async (e) => {
     if (e.target.files) {
       try {
+        setIsLoading(true)
         const formDataAvatar = new FormData();
         formDataAvatar.append('image', e.target.files[0]);
         const response = await uploadImage(formDataAvatar);
@@ -64,6 +67,7 @@ const ProfilePage = () => {
           const avatarUrl = response.data.data;
           setUserData(prev => ({ ...prev, avatarUrl }));
           console.log('Avatar uploaded:', avatarUrl);
+          setIsLoading(false); // Kết thúc tải
         } else {
           console.error('Failed to upload avatar');
         }
@@ -104,7 +108,9 @@ const ProfilePage = () => {
       }
       const response = await updateProfile(data);
       //updata avatarUrl to local storage
-      localStorage.getItem("user").avatarUrl = userData.avatarUrl;
+      let user = JSON.parse(localStorage.getItem("user"));
+      user.avatarUrl = userData.avatarUrl;
+      localStorage.setItem("user", JSON.stringify(user));
       
     } catch (error) {
       console.error('Update profile error:', error
@@ -112,7 +118,12 @@ const ProfilePage = () => {
     }
   }
   return (
-    <div className="min-h-screen bg-gray-50/80 pt-[57px]">
+    <div className="min-h-screen bg-gray-50/80 pt-[57px]"  style={{ pointerEvents: isLoading ? 'none' : 'auto', opacity: isLoading ? 0.5 : 1 }}>
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-50/80 z-50">
+          <ClipLoader size={50} color={"#123abc"} loading={isLoading} />
+        </div>
+      )}
       <div className="relative">
         <input
           type="file"
@@ -204,6 +215,7 @@ const ProfilePage = () => {
         title="名前"
         currentValue={userData.name}
       />
+      
     </div>
   );
 };
