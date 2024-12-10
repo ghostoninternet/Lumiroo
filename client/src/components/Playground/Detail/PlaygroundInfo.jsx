@@ -54,7 +54,7 @@ const PlaygroundInfo = ({ data }) => {
   const handleRouteClick = () => {
     navigate('/map', { 
       state: { 
-        destination: data.address,
+        address: data.address,
         playgroundName: data.name,
         playgroundId: data.id
         

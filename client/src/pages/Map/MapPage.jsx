@@ -8,9 +8,9 @@ import 'leaflet-control-geocoder';
 import SearchBox from '../../components/Map/SearchBox';
 import MapContainer from '../../components/Map/MapContainer';
 
-const MapPage = () => {
+const MapPage = ({}) => {
   const location = useLocation();
-  const destinationAddress = "Tây Mỗ, Nam Từ Liêm, Hà Nội"
+  const destinationAddress = location.state?.address||"Tây Mỗ, Nam Từ Liêm, Hà Nội";
   // location.state?.destinationAddress || '';
   const playgroundName = location.state?.playgroundName || '';
 
