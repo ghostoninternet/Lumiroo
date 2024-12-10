@@ -37,10 +37,12 @@ function Header({ role }) {
   
 
   const handleLogout =  async () => {
-    setLoggedOut(true);
-    setMenuOpen(false);
+    //setLoggedOut(true);
+    //setMenuOpen(false);
     // Implement logout logic here
     await logout();
+    // tạm thời cho tới page signin
+    navigate(/auth/sign-in);
   };
 
   useEffect(() => {
