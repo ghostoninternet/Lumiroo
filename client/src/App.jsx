@@ -13,6 +13,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import FavoritePage from "./pages/Favorite/FavoritePage";
 import HomePage from "./pages/Home/HomePage";
 import MapPage from "./pages/Map/MapPage";
+import Landing from "./pages/Landing/Landing";
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -32,28 +33,27 @@ function App() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* Authentication Routes */}
+        {/* Public Routes */}
+        <Route path="/" element={<Landing />} />
         <Route path="/auth/sign-in" element={<SignIn />} />
         <Route path="/auth/sign-up" element={<SignUp />} />
         
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          {/* Main Layout */}
-          <Route path="/" element={<MainLayout />}>
+          <Route element={<MainLayout />}>
             {/* Home Routes */}
-            <Route index element={<HomePage />} />
-            <Route path="home" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
             
             {/* Playground Routes */}
-            <Route path="playground-recommendation" element={<PlaygroundRecommendation />} />
-            <Route path="playground/:id" element={<PlaygroundDetail />} />
+            <Route path="/playground-recommendation" element={<PlaygroundRecommendation />} />
+            <Route path="/playground/:id" element={<PlaygroundDetail />} />
             
             {/* User Routes */}
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="favorites" element={<FavoritePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/favorites" element={<FavoritePage />} />
             
             {/* Map Route */}
-            <Route path="map" element={<MapPage />} />
+            <Route path="/map" element={<MapPage />} />
           </Route>
         </Route>
       </Routes>
