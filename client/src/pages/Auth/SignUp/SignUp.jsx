@@ -9,10 +9,14 @@ import { GENDER } from "../../../constants";
 import { signUp } from "../../../apis/auth";
 import SignUpRight from "../../../components/Auth/SignUpRight";
 import SignUpForm from "../../../components/Auth/SignUpForm";
+import NotificationDialog from "../../../components/ui/NotificationDialog";
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [errorConfirmPassword, setErrorConfirmPassword] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState('');
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -55,6 +59,14 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.password !== formData.confirmPassword) {
+      setNotificationTitle('エラー');
+      setNotificationMessage('パスワードが一致しません。');
+      setShowNotification(true);
+      return;
+    }
+
     const signUpData = {
       username: formData.firstName + " " + formData.lastName,
       email: formData.email,
@@ -64,11 +76,15 @@ const SignUp = () => {
       dob: formData.birthDate,
       avatarUrl: formData.avatarUrl,
     };
+
     try {
       await signUp(signUpData);
       navigate('/playground-recommendation');
     } catch (error) {
       console.log(error);
+      setNotificationTitle('エラー');
+      setNotificationMessage('サインアップに失敗しました。もう一度お試しください。');
+      setShowNotification(true);
     }
   };
 
@@ -97,6 +113,12 @@ const SignUp = () => {
 
         <SignUpRight animation={amusementParkAnimation} />
       </div>
+      <NotificationDialog
+        isOpen={showNotification}
+        onClose={() => setShowNotification(false)}
+        title={notificationTitle}
+        message={notificationMessage}
+      />
     </TransitionWrapper>
   );
 };
