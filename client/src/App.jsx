@@ -19,6 +19,7 @@ import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import LoadingScreen from "./components/LoadingScreen";
+import AuthRoute from './components/Auth/AuthRoute';
 
 // Fix cho marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -36,8 +37,10 @@ function App() {
       <Routes location={location} key={location.pathname}>
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
-        <Route path="/auth/sign-in" element={<SignIn />} />
-        <Route path="/auth/sign-up" element={<SignUp />} />
+        <Route element={<AuthRoute />}>
+          <Route path="/auth/sign-in" element={<SignIn />} />
+          <Route path="/auth/sign-up" element={<SignUp />} />
+        </Route>
         
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>

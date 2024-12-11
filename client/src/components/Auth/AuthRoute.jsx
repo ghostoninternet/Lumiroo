@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
-import LoadingScreen from "./LoadingScreen";
+import LoadingScreen from "../LoadingScreen";
 
-function ProtectedRoute() {
+function AuthRoute() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const user = localStorage.getItem('user')
-    if (!user) {
-      navigate('/auth/sign-in', { replace: true });
+    if (user) {
+      navigate('/home', { replace: true });
     } else {
       setIsLoading(false);
     }
@@ -28,4 +28,4 @@ function ProtectedRoute() {
   )
 }
 
-export default ProtectedRoute;
+export default AuthRoute
