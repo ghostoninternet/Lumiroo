@@ -39,7 +39,7 @@ function App() {
         <Route path="/auth/sign-up" element={<SignUp />} />
         
         {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
+        <Route path='/' element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             {/* Home Routes */}
             <Route path="/home" element={<HomePage />} />

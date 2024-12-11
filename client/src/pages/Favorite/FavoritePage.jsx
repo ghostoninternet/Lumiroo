@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import FavoriteResults from './FavoriteResults';
 import SearchBar from './SearchBar';
-
+import { getFavorites } from './../../apis/playground';
 const FavoritePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +22,9 @@ const FavoritePage = () => {
     }
   ]);
 
+  // useEffect(async () =>{
+  //   await getFavorites();
+  // },[]);
   const handleRemoveFavorite = (id) => {
     setFavorites(favorites.filter(favorite => favorite.id !== id));
   };

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Heart, MapPin, Star, DollarSign } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { add } from "date-fns";
+import { addToFavorites, removeFromFavorites } from "../../../apis/playground";
 
 const PlaygroundInfo = ({ data }) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -12,6 +14,20 @@ const PlaygroundInfo = ({ data }) => {
     if (rating >= 3.0) return "text-yellow-600";
     if (rating >= 2.0) return "text-orange-600";
     return "text-red-600";
+  };
+
+  const handleSetFavorite = () => {
+    setIsFavorite(!isFavorite);
+    if (!isFavorite) {
+      // Add to favorites
+      addToFavorites(data.id);
+      console.log("Added to favorites");
+    } else {
+      // Remove from favorites
+      removeFromFavorites(data.id);
+      console.log("Removed from favorites");
+    }
+
   };
 
   const renderStars = (rating) => {
@@ -104,7 +120,7 @@ const PlaygroundInfo = ({ data }) => {
 
         <div className="flex gap-4 mt-8">
           <button
-            onClick={() => setIsFavorite(!isFavorite)}
+            onClick={handleSetFavorite}
             className={`flex-1 h-12 rounded-lg font-medium transition-all duration-300 
               flex items-center justify-center gap-2 
               ${isFavorite 
