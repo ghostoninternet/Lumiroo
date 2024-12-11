@@ -28,7 +28,6 @@ const ReviewForm = ({playgroundId,onReviewSubmit}) => {
     const reviewData = { rating, content };
     const result = await postReview(playgroundId, reviewData);
     if (result) {
-      alert("レビューが投稿されました。");
       setRating(0);
       setContent("");
       // Refresh reviews

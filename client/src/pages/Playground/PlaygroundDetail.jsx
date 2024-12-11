@@ -13,10 +13,12 @@ import { useEffect } from "react";
 import {getReviews,getPlaygroundDetails} from "../../apis/playground";
 import formatReviewData from "../../utils/formattedReviewsData";
 import formattedPlaygroundData from "../../utils/playgrounDataforDetail";
+import { ClipLoader } from 'react-spinners';
 
 const PlaygroundDetail = () => {
   const [activeTab, setActiveTab] = useState("details");
   const [selectedRating, setSelectedRating] = useState(null);
+  const [isLoading,setIsLoading] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [filteredReviews, setFilteredReviews] = useState(reviews); // Trạng thái cho reviews đã lọc
   const [playgroundData, setPlaygroundData] = useState({});
@@ -24,12 +26,14 @@ const PlaygroundDetail = () => {
   console.log(id);
   
   const fetchReviews = async () => {
+    setIsLoading(true)
     console.log("Fetching reviews...");
     const result = await getReviews(id);
     if (result) {
       const reviewsRaw = result.data;
       setReviews(formatReviewData(reviewsRaw)); 
     }
+    setIsLoading(false)
   };
   const fetchPlayground = async () => {
     console.log("Fetching playground...");
@@ -50,7 +54,12 @@ const PlaygroundDetail = () => {
     fetchAll();
   }, [id]); 
   return (
-    <div className="inset-x-0 top-16 bottom-0 bg-green-50/30">
+    <div className="inset-x-0 top-16 bottom-0 bg-green-50/30" style={{ pointerEvents: isLoading ? 'none' : 'auto', opacity: isLoading ? 0.5 : 1 }}>
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-50/80 z-50">
+          <ClipLoader size={50} color={"#123abc"} loading={isLoading} />
+        </div>
+      )}
       <div className="h-full overflow-y-auto">
         <PlaygroundHeader />
 
