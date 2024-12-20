@@ -23,6 +23,9 @@ import LoadingScreen from "./components/LoadingScreen";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 
+import AuthRoute from './components/Auth/AuthRoute';
+
+
 // Fix cho marker icon
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -42,6 +45,8 @@ function App() {
         <Route path="/auth/sign-in" element={<SignIn />} />
         <Route path="/auth/sign-up" element={<SignUp />} />
         <Route path="/auth/reset-password" element={<ResetPassword />} /> 
+
+
         
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
