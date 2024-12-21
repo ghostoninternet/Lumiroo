@@ -3,3 +3,8 @@ export const GENDER = {
   女性: 'female',
   その他: 'other',
 }
+
+export const ROLE = {
+  ADMIN: 'admin',
+  USER: 'user',
+}
