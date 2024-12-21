@@ -9,7 +9,7 @@ import SignUp from "./pages/Auth/SignUp/SignUp";
 import PlaygroundRecommendation from "./pages/Playground/PlaygroundRecommendation";
 import PlaygroundDetail from "./pages/Playground/PlaygroundDetail";
 import ProfilePage from "./pages/User/ProfilePage";
-import ResetPassword from "./pages/Auth/ResetPassword/ResetPassword.jsx"; 
+import ResetPassword from "./pages/Auth/ResetPassword/ResetPassword.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import FavoritePage from "./pages/Favorite/FavoritePage";
 import HomePage from "./pages/Home/HomePage";
@@ -26,6 +26,8 @@ import PlaygroundManagement from "./pages/Admin/PlaygroundManagement/PlaygroundM
 import PlaygroundAdd from './pages/Admin/PlaygroundManagement/components/PlaygroundAdd/index';
 import AuthRoute from './components/Auth/AuthRoute';
 import PlaygroundEdit from './pages/Admin/PlaygroundManagement/components/PlaygroundDetail/index';
+import RoleRoute from './components/RoleRoute';
+import { ROLE } from './constants';
 
 // Fix cho marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -47,44 +49,44 @@ function App() {
           <Route path="/auth/sign-in" element={<SignIn />} />
           <Route path="/auth/sign-up" element={<SignUp />} />
         </Route>
-        <Route path="/auth/reset-password" element={<ResetPassword />} /> 
-        
+        <Route path="/auth/reset-password" element={<ResetPassword />} />
+
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           {/* Main Layout Routes */}
           <Route element={<MainLayout />}>
             {/* Home Routes */}
             <Route path="/home" element={<HomePage />} />
-            
+
             {/* Playground Routes */}
             <Route path="/playground-recommendation" element={<PlaygroundRecommendation />} />
             <Route path="/playground/:id" element={<PlaygroundDetail />} />
-            
+
             {/* User Routes */}
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/favorites" element={<FavoritePage />} />
-            
+
             {/* Map Route */}
             <Route path="/map" element={<MapPage />} />
           </Route>
 
           {/* Admin Layout Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            
-            {/* Playground Management Routes */}
-            <Route path="playgrounds">
-              <Route index element={<PlaygroundManagement />} />
-              <Route path="add" element={<PlaygroundAdd />} />
-              <Route path=":id">
-                <Route index element={<PlaygroundDetail />} />
-                <Route path="edit" element={<PlaygroundEdit />} />
+          <Route element={<RoleRoute roles={[ROLE.ADMIN]} />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              {/* Playground Management Routes */}
+              <Route path="playgrounds">
+                <Route index element={<PlaygroundManagement />} />
+                <Route path="add" element={<PlaygroundAdd />} />
+                <Route path=":id">
+                  <Route index element={<PlaygroundDetail />} />
+                  <Route path="edit" element={<PlaygroundEdit />} />
                 </Route>
-          </Route>
-            
-            {/* Other Admin Routes */}
-            {/* <Route path="users" element={<UserManagement />} /> */}
-            {/* <Route path="reports" element={<ReportManagement />} /> */}
+              </Route>
+              {/* Other Admin Routes */}
+              {/* <Route path="users" element={<UserManagement />} /> */}
+              {/* <Route path="reports" element={<ReportManagement />} /> */}
+            </Route>
           </Route>
         </Route>
 
