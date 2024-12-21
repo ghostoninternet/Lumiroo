@@ -28,7 +28,9 @@ import AuthRoute from './components/Auth/AuthRoute';
 import AdminPlaygroundDetail from './pages/Admin/PlaygroundManagement/components/PlaygroundDetail/index';
 import UserManagement from './pages/Admin/Dashboard/UserManagement/UserManagement.jsx';
 import UserDetail from './pages/Admin/Dashboard/UserManagement/components/UserDetail/index.jsx';
+
 import AttractionManagement from './pages/Admin/AttractionManagement/index.jsx';
+
 
 // Fix cho marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -90,6 +92,8 @@ function App() {
               <Route path=":id" element={<UserDetail />} />
             </Route>
             <Route path="attractions" element={<AttractionManagement />} />
+
+
           </Route>
         </Route>
 
