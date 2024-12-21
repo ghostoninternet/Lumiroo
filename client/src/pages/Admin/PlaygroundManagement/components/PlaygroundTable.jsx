@@ -2,8 +2,10 @@ import React from 'react';
 import { FaEye, FaTrash } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import Pagination from '../../../../components/PlaygroundList/Pagination';
+import { useNavigate } from 'react-router-dom';  
 
 function PlaygroundTable() {
+  const navigate = useNavigate();
   const playgrounds = [
     { id: "00000001", name: "Place#1", attractions: "300000", price: "300000", hours: "8:00-16:00" },
     { id: "00000002", name: "Place#2", attractions: "300000", price: "300000", hours: "8:00-16:00" },
@@ -75,16 +77,18 @@ function PlaygroundTable() {
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex items-center justify-center space-x-3">
-                      <motion.button 
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => navigate(`/admin/playgrounds/${playground.id}`)}
-                        className="p-2 text-green-600 hover:text-white hover:bg-green-500 
-                                 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
-                        title="詳細を見る"
-                      >
-                        <FaEye className="w-4 h-4" />
-                      </motion.button>
+                    <motion.button 
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => {
+                        navigate(`/admin/playgrounds/${playground.id}`); // Đường dẫn cho admin view
+                      }}  // Đảm bảo đường dẫn này đúng
+                      className="p-2 text-green-600 hover:text-green-500 hover:bg-green-50 
+                                rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+                      title="詳細を見る"
+                    >
+                      <FaEye className="w-4 h-4" />
+                    </motion.button>
                       <motion.button 
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
