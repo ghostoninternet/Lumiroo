@@ -13,7 +13,7 @@ function UserDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -21,8 +21,8 @@ function UserDetail() {
       >
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">ユーザー情報</h1>
-          <p className="text-base text-gray-600">ユーザーの詳細情報を確認できます。</p>
+          <h1 className="text-2xl font-bold text-green-600">ユーザー情報</h1>
+          <p className="text-sm text-gray-500">ユーザーの詳細情報を確認できます。</p>
         </div>
 
         {/* User Information */}
