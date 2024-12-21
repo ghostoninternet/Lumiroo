@@ -18,8 +18,11 @@ function AdminLayout() {
           <Header role="admin" />
         </div>
         
+        {/* Spacer */}
+        <div className="h-14"></div>
+
         {/* Main Content */}
-        <main className="flex-grow px-8 py-16">
+        <main className="flex-grow px-8 py-8">
           <Outlet />
         </main>
 

@@ -22,7 +22,10 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import LoadingScreen from "./components/LoadingScreen";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
+import PlaygroundManagement from "./pages/Admin/PlaygroundManagement/PlaygroundManagement";
+import PlaygroundAdd from './pages/Admin/PlaygroundManagement/components/PlaygroundAdd/index';
 import AuthRoute from './components/Auth/AuthRoute';
+import PlaygroundEdit from './pages/Admin/PlaygroundManagement/components/PlaygroundDetail/index';
 
 // Fix cho marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -48,6 +51,7 @@ function App() {
         
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
+          {/* Main Layout Routes */}
           <Route element={<MainLayout />}>
             {/* Home Routes */}
             <Route path="/home" element={<HomePage />} />
@@ -63,19 +67,29 @@ function App() {
             {/* Map Route */}
             <Route path="/map" element={<MapPage />} />
           </Route>
-        </Route>
 
-        {/* Temporary Route for LoadingScreen */}
-        <Route path="/loading" element={<LoadingScreen />} />
-        <Route element={<ProtectedRoute />}>
+          {/* Admin Layout Routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
-            {/* Các routes khác của admin sẽ thêm sau */}
-            {/* <Route path="users" element={<UserManagement />} />
-            <Route path="playgrounds" element={<PlaygroundManagement />} />
-            <Route path="reports" element={<ReportManagement />} /> */}
+            
+            {/* Playground Management Routes */}
+            <Route path="playgrounds">
+              <Route index element={<PlaygroundManagement />} />
+              <Route path="add" element={<PlaygroundAdd />} />
+              <Route path=":id">
+                <Route index element={<PlaygroundDetail />} />
+                <Route path="edit" element={<PlaygroundEdit />} />
+                </Route>
+          </Route>
+            
+            {/* Other Admin Routes */}
+            {/* <Route path="users" element={<UserManagement />} /> */}
+            {/* <Route path="reports" element={<ReportManagement />} /> */}
           </Route>
         </Route>
+
+        {/* Utility Routes */}
+        <Route path="/loading" element={<LoadingScreen />} />
       </Routes>
     </AnimatePresence>
   );

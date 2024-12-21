@@ -1,0 +1,79 @@
+import React, { useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { Upload, Image as ImageIcon, X, Camera } from 'lucide-react';
+
+function ImageUpload({ image, onChange }) {
+  const handleImageChange = useCallback((e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      onChange(file);
+    }
+  }, [onChange]);
+
+  const handleRemoveImage = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onChange(null);
+  }, [onChange]);
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center space-x-2 mb-2">
+        <Camera className="w-5 h-5 text-green-600" />
+        <label className="text-sm font-bold text-green-600">
+          画像アップロード
+        </label>
+      </div>
+      <motion.div
+        whileHover={{ scale: 1.01 }}
+        className="relative w-full aspect-video bg-gray-50 rounded-xl border-2 border-dashed 
+                 border-gray-300 hover:border-green-500 transition-colors cursor-pointer 
+                 overflow-hidden group"
+      >
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+        />
+        
+        {!image ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
+            <Upload className="w-8 h-8 text-gray-400 mb-2 group-hover:text-green-500 transition-colors" />
+            <div className="text-center">
+              <p className="text-sm font-medium text-gray-600 group-hover:text-green-600 transition-colors">
+                クリックして画像をアップロード
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                または、ここにドラッグ＆ドロップ
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="relative w-full h-full">
+            <img
+              src={URL.createObjectURL(image)}
+              alt="Preview"
+              className="w-full h-full object-cover"
+            />
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleRemoveImage}
+              className="absolute top-2 right-2 p-2 bg-white rounded-lg shadow-md 
+                       hover:shadow-lg transition-all duration-200 group z-20"
+            >
+              <X className="w-4 h-4 text-gray-500 group-hover:text-red-500 transition-colors" />
+            </motion.button>
+            <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity" />
+          </div>
+        )}
+      </motion.div>
+      <p className="text-xs text-gray-500 mt-1">
+        推奨: JPG, PNG形式 (最大5MB)
+      </p>
+    </div>
+  );
+}
+
+export default ImageUpload;
