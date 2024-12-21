@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Sparkles } from 'lucide-react'; // Thêm icon Sparkles
+import { Search, Plus, Sparkles } from 'lucide-react';
 
 function AttractionSelect({ 
   attractions,
@@ -45,7 +45,8 @@ function AttractionSelect({
           {attractions.slice(0, 8).map((attraction, index) => (
             <label
               key={index}
-              className="flex items-center space-x-2 text-sm"
+              className="flex items-center space-x-2 text-sm hover:text-green-600 
+                       transition-colors cursor-pointer group"
             >
               <input
                 type="checkbox"
@@ -56,9 +57,11 @@ function AttractionSelect({
                   setCheckedAttractions(newState);
                 }}
                 className="rounded border-gray-300 text-green-600 
-                         focus:ring-green-500"
+                         focus:ring-green-500 cursor-pointer"
               />
-              <span>{attraction}</span>
+              <span className="group-hover:text-green-600 transition-colors">
+                {attraction}
+              </span>
             </label>
           ))}
         </div>
@@ -94,7 +97,6 @@ function AttractionSelect({
               className="bg-white rounded-xl shadow-xl w-full max-w-2xl mx-4"
             >
               <div className="p-6">
-                {/* Modal Header */}
                 <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center space-x-2">
                     <Sparkles className="w-5 h-5 text-green-600" />
@@ -110,19 +112,20 @@ function AttractionSelect({
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="検索"
                       className="w-full pl-10 pr-4 py-2 text-sm border-2 border-gray-200 
-                             rounded-xl focus:ring-0 focus:border-green-500
-                             hover:border-green-400 transition-all duration-200"
+                             rounded-xl outline-none focus:ring-2 focus:ring-green-500/20 
+                             focus:border-green-500 hover:border-green-400 
+                             transition-all duration-200"
                     />
                   </div>
                 </div>
 
-                {/* Checkboxes Grid */}
                 <div className="border-2 border-gray-200 rounded-xl p-4 bg-white max-h-[60vh] overflow-y-auto">
                   <div className="grid grid-cols-3 gap-4">
                     {filteredAttractions.map((attraction, index) => (
                       <label
                         key={index}
-                        className="flex items-center space-x-2 text-sm"
+                        className="flex items-center space-x-2 text-sm hover:text-green-600 
+                                 transition-colors cursor-pointer group"
                       >
                         <input
                           type="checkbox"
@@ -132,15 +135,17 @@ function AttractionSelect({
                             newState[index] = e.target.checked;
                             setCheckedAttractions(newState);
                           }}
-                          className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                          className="rounded border-gray-300 text-green-600 
+                                   focus:ring-green-500 cursor-pointer"
                         />
-                        <span>{attraction}</span>
+                        <span className="group-hover:text-green-600 transition-colors">
+                          {attraction}
+                        </span>
                       </label>
                     ))}
                   </div>
                 </div>
 
-                {/* Modal Footer */}
                 <div className="mt-4 flex justify-end gap-3">
                   <button
                     onClick={handleCancel}

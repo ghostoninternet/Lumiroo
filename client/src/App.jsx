@@ -25,8 +25,9 @@ import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import PlaygroundManagement from "./pages/Admin/PlaygroundManagement/PlaygroundManagement";
 import PlaygroundAdd from './pages/Admin/PlaygroundManagement/components/PlaygroundAdd/index';
 import AuthRoute from './components/Auth/AuthRoute';
-import PlaygroundEdit from './pages/Admin/PlaygroundManagement/components/PlaygroundDetail/index';
-
+import AdminPlaygroundDetail from './pages/Admin/PlaygroundManagement/components/PlaygroundDetail/index';
+import UserManagement from './pages/Admin/Dashboard/UserManagement/UserManagement.jsx';
+import UserDetail from './pages/Admin/Dashboard/UserManagement/components/UserDetail/index.jsx';
 // Fix cho marker icon
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -73,17 +74,19 @@ function App() {
             <Route index element={<Dashboard />} />
             
             {/* Playground Management Routes */}
-            <Route path="playgrounds">
-              <Route index element={<PlaygroundManagement />} />
-              <Route path="add" element={<PlaygroundAdd />} />
-              <Route path=":id">
-                <Route index element={<PlaygroundDetail />} />
-                <Route path="edit" element={<PlaygroundEdit />} />
+              <Route path="playgrounds">
+                <Route index element={<PlaygroundManagement />} />
+                <Route path="add" element={<PlaygroundAdd />} />
+                <Route path=":id">
+                  <Route index element={<AdminPlaygroundDetail />} />  {/* Sử dụng component admin */}
                 </Route>
-          </Route>
+            </Route>
             
             {/* Other Admin Routes */}
-            {/* <Route path="users" element={<UserManagement />} /> */}
+            <Route path="users">
+              <Route index element={<UserManagement />} />
+              <Route path=":id" element={<UserDetail />} />
+            </Route>
             {/* <Route path="reports" element={<ReportManagement />} /> */}
           </Route>
         </Route>

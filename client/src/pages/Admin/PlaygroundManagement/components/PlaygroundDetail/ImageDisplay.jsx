@@ -1,27 +1,47 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Upload, Image as ImageIcon, X, Camera } from 'lucide-react';
+import { Upload, Camera, X } from 'lucide-react';
 
-function ImageUpload({ image, onChange }) {
-  const handleImageChange = useCallback((e) => {
+function ImageDisplay({ image, onChange, isEditing }) {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
       onChange(file);
     }
-  }, [onChange]);
+  };
 
-  const handleRemoveImage = useCallback((e) => {
+  const handleRemoveImage = (e) => {
     e.preventDefault();
     e.stopPropagation();
     onChange(null);
-  }, [onChange]);
+  };
+
+  if (!isEditing && !image) {
+    return (
+      <div className="w-full aspect-video bg-gray-100 rounded-xl flex items-center justify-center">
+        <p className="text-sm text-gray-500">画像なし</p>
+      </div>
+    );
+  }
+
+  if (!isEditing) {
+    return (
+      <div className="w-full aspect-video rounded-xl overflow-hidden">
+        <img 
+          src={typeof image === 'string' ? image : URL.createObjectURL(image)} 
+          alt="Playground"
+          className="w-full h-full object-cover"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
       <div className="flex items-center space-x-2 mb-2">
         <Camera className="w-5 h-5 text-green-600" />
         <label className="text-sm font-bold text-green-600">
-          画像アップロード
+          画像
         </label>
       </div>
       <motion.div
@@ -52,7 +72,7 @@ function ImageUpload({ image, onChange }) {
         ) : (
           <div className="relative w-full h-full">
             <img
-              src={URL.createObjectURL(image)}
+              src={typeof image === 'string' ? image : URL.createObjectURL(image)}
               alt="Preview"
               className="w-full h-full object-cover"
             />
@@ -76,4 +96,4 @@ function ImageUpload({ image, onChange }) {
   );
 }
 
-export default ImageUpload;
+export default ImageDisplay;
