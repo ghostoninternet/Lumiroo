@@ -81,7 +81,7 @@ const userDeleteHandler = async (userId) => {
   }
 }
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -89,8 +89,8 @@ const userDeleteHandler = async (userId) => {
       >
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">ユーザー管理</h1>
-          <p className="text-base text-gray-600">ユーザーの一覧と管理が可能です。</p>
+          <h1 className="text-2xl font-bold text-green-600">ユーザー管理</h1>
+          <p className="text-sm text-gray-500">ユーザーの一覧と管理が可能です。</p>
         </div>
 
         {/* Content */}

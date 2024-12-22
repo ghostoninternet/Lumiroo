@@ -46,7 +46,7 @@ const DropdownPortal = ({ children, isOpen, targetRef }) => {
 function UserInfo({ data }) {
 
   const [roles] = useState([
-    { id: 1, name: "admin" },
+    { id: 1, name: "admin"},
     { id: 2, name: "user" },
    ]);
 
@@ -138,18 +138,28 @@ function UserInfo({ data }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white rounded-xl shadow-lg border-2 border-green-500/20 overflow-hidden"
+      transition={{ duration: 0.4 }}
+      className="bg-white rounded-xl shadow-lg border-2 border-green-500/20 overflow-visible relative"
     >
       {/* User Avatar Section */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-4">
-          <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center">
-            <User className="w-10 h-10 text-gray-400" />
-          </div>
+      <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-green-100">
+        <div className="flex items-center space-x-6">
+          <motion.div 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="w-24 h-24 rounded-full overflow-hidden shadow-lg border-4 border-white"
+          >
+            <img 
+              src={data?.avatar} 
+              alt="User Avatar" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">{data.name}</h2>
+            <h2 className="text-2xl font-bold text-green-600 mb-1">{data?.name}</h2>
+            <p className="text-sm text-gray-600">{data?.email}</p>
           </div>
         </div>
       </div>
@@ -157,26 +167,32 @@ function UserInfo({ data }) {
       {/* User Details */}
       <div className="p-6 space-y-6">
         {/* Address */}
-        <div className="space-y-2">
+        <motion.div 
+          className="space-y-2"
+          whileHover={{ scale: 1.01 }}
+        >
           <div className="flex items-center space-x-2">
             <MapPin className="w-5 h-5 text-green-600" />
             <label className="text-sm font-bold text-green-600">住所</label>
           </div>
-          <div className="px-4 py-3 bg-gray-50 rounded-xl text-sm text-gray-900">
-            {data.address}
+          <div className="px-4 py-3 bg-gray-50 rounded-xl text-sm text-gray-900 shadow-sm hover:bg-gray-100 transition-colors">
+            {data?.address}
           </div>
-        </div>
+        </motion.div>
 
         {/* Birth Date */}
-        <div className="space-y-2">
+        <motion.div 
+          className="space-y-2"
+          whileHover={{ scale: 1.01 }}
+        >
           <div className="flex items-center space-x-2">
             <Calendar className="w-5 h-5 text-green-600" />
             <label className="text-sm font-bold text-green-600">生年月日</label>
           </div>
-          <div className="px-4 py-3 bg-gray-50 rounded-xl text-sm text-gray-900">
-            {data.birthDate}
+          <div className="px-4 py-3 bg-gray-50 rounded-xl text-sm text-gray-900 shadow-sm hover:bg-gray-100 transition-colors">
+            {data?.birthDate}
           </div>
-        </div>
+        </motion.div>
 
          {/* Status */}
           <motion.div 
@@ -305,7 +321,7 @@ function UserInfo({ data }) {
       <div className="px-6 py-4 bg-gradient-to-br from-gray-50 to-gray-100 border-t border-gray-200">
         <div className="flex justify-end space-x-3">
           <motion.button
-            whileHover={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02, backgroundColor: '#f3f4f6' }}
             whileTap={{ scale: 0.98 }}
             onClick={() => window.history.back()}
             className="px-6 py-2.5 text-sm font-medium text-gray-700 bg-white 

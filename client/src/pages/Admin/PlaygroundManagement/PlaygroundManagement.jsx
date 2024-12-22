@@ -9,14 +9,14 @@ function PlaygroundManagement() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="p-6 max-w-[1400px] mx-auto"
       >
         {/* Breadcrumb */}
-        <nav className="mb-6">
+        {/* <nav className="mb-6">
           <ol className="flex items-center space-x-2">
             <li>
               <Link to="/admin" className="text-gray-500 hover:text-green-600 transition-colors">
@@ -27,7 +27,7 @@ function PlaygroundManagement() {
               <span className="text-green-600 font-medium">遊び場管理</span>
             </li>
           </ol>
-        </nav>
+        </nav> */}
 
         {/* Header Section */}
         <div className="mb-8 flex justify-between items-center">

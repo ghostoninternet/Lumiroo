@@ -112,6 +112,7 @@ const searchUsers = async (searchParams) => {
       age: user.dob ? calculateAge(user.dob) : null,
       phone: user.phoneNumber,
       area: user.address,
+      avatar: user.avatarUrl,
     }
   })
   return {
