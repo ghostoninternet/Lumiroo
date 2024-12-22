@@ -93,12 +93,13 @@ const searchUsers = async (searchParams) => {
       dob: { $lte: maxDob }
     }
   }
-  // if(area) {
-  //   condition = {
-  //     ...condition,
-  //     address: { $regex: area, $options: 'i' }
-  //   }
-  // }
+  
+  if (area && !area.includes("すべての地域")) {
+    condition = {
+      ...condition,
+      address: { $regex: area, $options: 'i' }
+    }
+  }
 
   const totalUsers = await userDaos.countTotalUsers(condition)
   const dataUsers = await userDaos.getUsers(condition)
