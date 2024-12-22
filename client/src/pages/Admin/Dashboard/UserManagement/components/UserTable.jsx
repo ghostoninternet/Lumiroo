@@ -4,16 +4,16 @@ import { motion } from 'framer-motion';
 import Pagination from '../../../../../components/PlaygroundList/Pagination';
 import { useNavigate } from 'react-router-dom';
 
-function UserTable() {
+function UserTable({
+  users,
+  currentPage,
+  setCurrentPage,
+  totalPage,
+  userDeleteHandler
+}) {
     const navigate = useNavigate();
-  const users = [
-    { id: "00000001", name: "Admin1", age: "24", phone: "0123456789" },
-    { id: "00000002", name: "Admin2", age: "24", phone: "0123456789" },
-    { id: "00000003", name: "Admin3", age: "24", phone: "0123456789" },
-    { id: "00000004", name: "Admin4", age: "24", phone: "0123456789" },
-    { id: "00000005", name: "Admin5", age: "24", phone: "0123456789" },
-  ];
-
+  
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -72,6 +72,7 @@ function UserTable() {
                       <motion.button 
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
+                        onClick={() => userDeleteHandler(user.id)}
                         className="p-2 text-red-600 hover:text-white hover:bg-red-500 
                                  rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
                         title="削除"
@@ -92,9 +93,9 @@ function UserTable() {
               表示: {users.length} 件
             </div>
             <Pagination
-              currentPage={1}
-              totalPages={5}
-              onPageChange={() => {}}
+              currentPage={currentPage}
+              totalPages={totalPage}
+              onPageChange={setCurrentPage}
             />
           </div>
         </div>
