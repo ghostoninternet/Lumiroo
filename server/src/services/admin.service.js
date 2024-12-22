@@ -148,18 +148,9 @@ const getManyPlaygrounds = async ({limit,page}) => {
   const totalPlaygrounds = await playgroundDaos.countTotalPlaygrounds({})
   const dataPlaygrounds = await playgroundDaos.getPlaygrounds({}, limit, page)
   const totalPage = Math.ceil(totalPlaygrounds / limit)
-  const playgrounds = dataPlaygrounds.map(playground => {
-    return {
-      id: playground._id,
-      name: playground.name,
-      address: playground.address,
-      status: playground.status,
-      owner: playground.owner,
-    }
-  })
 
   return {
-    data: playgrounds,
+    data: dataPlaygrounds,
     pagination: {
       totalPage: totalPage,
       limitPerPage: limit,
@@ -169,17 +160,10 @@ const getManyPlaygrounds = async ({limit,page}) => {
 }
 
 const getPlaygroundDetail = async (playgroundId) => {
-  const result = await playgroundDaos.getPlayground(playgroundId)
+  const playground = await playgroundDaos.getPlaygroundDetail(playgroundId)
   console.log(playgroundId)
   console.log(result.name)
   console.log(result)
-  const playground = {
-    id: result._id,
-    name: result.name,
-    address: result.address,
-    status: result.status,
-    owner: result.owner,
-  }
   if (!playground) {
     throw new NotFoundError('Playground not found')
   }
@@ -204,7 +188,7 @@ const deletePlayground = async (playgroundId) => {
   return playground
 }
 
-const getDashboardData = async (dashboardData) => {
+const getDashboardData = async () => {
   const totalUsers = await userDaos.countTotalUsers({})
   const totalPlaygrounds = await playgroundDaos.countTotalPlaygrounds({})
   const totalAreas = await playgroundDaos.countTotalAreas({})

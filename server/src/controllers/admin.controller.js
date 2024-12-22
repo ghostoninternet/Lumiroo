@@ -81,7 +81,7 @@ const deletePlayground = async (req, res, next) => {
 }
 
 const getDashboardData = async (req, res, next) => {
-  const data = await adminService.getDashboardData(req.query)
+  const data = await adminService.getDashboardData()
   res.status(200).json(data)
 }
 
