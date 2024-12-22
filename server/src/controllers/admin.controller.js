@@ -40,27 +40,49 @@ const deleteUser = async (req, res, next) => {
 }
 
 const getManyPlaygrounds = async (req, res, next) => {
-
+  try {
+    const playgrounds = await adminService.getManyPlaygrounds(req.query)
+    res.status(200).json(playgrounds)
+  } catch (error) {  
+    next(error)
+  }
 }
 
 const getPlaygroundDetail = async (req, res, next) => {
-
+  console.log(req.params)
+  const playground = await adminService.getPlaygroundDetail(req.params.playgroundId)
+  res.status(200).json(playground)
 }
 
 const createNewPlayground = async (req, res, next) => {
-
+  const playground = await adminService.createNewPlayground(req.body)
+  res.status(200).json({
+    message: 'Create new playground successfully',
+    playground
+  }
+  )
 }
 
 const updatePlayground = async (req, res, next) => {
-
+  const playground = await adminService.updatePlayground(req.params.playgroundId, req.body)
+  res.status(200).json({
+    message: 'Update playground successfully',
+    playground
+  }
+  )
 }
 
 const deletePlayground = async (req, res, next) => {
-
+  const playground = await adminService.deletePlayground(req.params.playgroundId)
+  res.status(200).json({
+    message: 'Delete playground successfully',
+    playground
+  })
 }
 
 const getDashboardData = async (req, res, next) => {
-
+  const data = await adminService.getDashboardData(req.query)
+  res.status(200).json(data)
 }
 
 module.exports = {

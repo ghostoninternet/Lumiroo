@@ -51,6 +51,26 @@ const postReview = async (playgroundId, reviewData) => {
   await playground.save()
   return review
 }
+
+const createPlayground = async (newPlayground) => {
+  const playground = await playgroundsModel.create(newPlayground)
+  return playground
+}
+
+const updatePlayground = async (playgroundId, updatedData) => {
+  const updatedPlayground = await playgroundsModel.findByIdAndUpdate(playgroundId, updatedData, { new: true })
+  return updatedPlayground
+}
+
+const deletePlayground = async (playgroundId) => {
+  await playgroundsModel.findByIdAndDelete(playgroundId)
+};
+
+const getPlaygroundDetail = async (playgroundId) => {
+  const playground = await playgroundsModel.findById(playgroundId)
+  return playground
+}
+
 const getPlaygroundById = async (id) => {
   return await playgroundsModel.findById(id).populate('attractions reviews');
 };
@@ -63,4 +83,8 @@ module.exports = {
   getReviews,
   postReview,
   getPlaygroundById,
+  getPlaygroundDetail,
+  createPlayground,
+  updatePlayground,
+  deletePlayground,
 }

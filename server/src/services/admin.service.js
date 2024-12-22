@@ -1,5 +1,6 @@
 const userDaos = require('../daos/user.daos');
 const sessionDaos = require('../daos/session.daos');
+const playgroundDaos = require('../daos/playground.daos');
 const { NotFoundError } = require('../errors/customError');
 const mongoose = require('mongoose')
 
@@ -20,7 +21,7 @@ const getManyUsers = async ({limit,page}) => {
   const totalUsers = await userDaos.countTotalUsers({})
   const dataUsers = await userDaos.getUsers({}, limit, page)
   const totalPage = Math.ceil(totalUsers / limit)
-   const users= dataUsers.map(user => {
+   const users = dataUsers.map(user => {
     return {
       id: user._id,
       name: user.username,
@@ -143,28 +144,79 @@ const deleteUser = async (userId) => {
 
 }
 
-const getManyPlaygrounds = async () => {
+const getManyPlaygrounds = async ({limit,page}) => {
+  const totalPlaygrounds = await playgroundDaos.countTotalPlaygrounds({})
+  const dataPlaygrounds = await playgroundDaos.getPlaygrounds({}, limit, page)
+  const totalPage = Math.ceil(totalPlaygrounds / limit)
+  const playgrounds = dataPlaygrounds.map(playground => {
+    return {
+      id: playground._id,
+      name: playground.name,
+      address: playground.address,
+      status: playground.status,
+      owner: playground.owner,
+    }
+  })
 
+  return {
+    data: playgrounds,
+    pagination: {
+      totalPage: totalPage,
+      limitPerPage: limit,
+      currentPage: page,
+    },
+  }
 }
 
-const getPlaygroundDetail = async () => {
-
+const getPlaygroundDetail = async (playgroundId) => {
+  const result = await playgroundDaos.getPlayground(playgroundId)
+  console.log(playgroundId)
+  console.log(result.name)
+  console.log(result)
+  const playground = {
+    id: result._id,
+    name: result.name,
+    address: result.address,
+    status: result.status,
+    owner: result.owner,
+  }
+  if (!playground) {
+    throw new NotFoundError('Playground not found')
+  }
+  return playground
 }
 
-const createNewPlayground = async () => {
-
+const createNewPlayground = async (newPlaygroundData) => {
+  const playground = await playgroundDaos.createPlayground(newPlaygroundData)
+  return playground
 }
 
-const updatePlayground = async () => {
-
+const updatePlayground = async (playgroundId, data) => {
+  const status = data.status
+  const isDisabled = (data.status == 'アクティブ') ? false : true
+  console.log(playgroundId,status, isDisabled)
+  const playground = await playgroundDaos.updatePlayground(playgroundId,{status,isDisabled})
+  return playground
 }
 
-const deletePlayground = async () => {
-
+const deletePlayground = async (playgroundId) => {
+  const playground = await playgroundDaos.deletePlayground(playgroundId)
+  return playground
 }
 
-const getDashboardData = async () => {
-  
+const getDashboardData = async (dashboardData) => {
+  const totalUsers = await userDaos.countTotalUsers({})
+  const totalPlaygrounds = await playgroundDaos.countTotalPlaygrounds({})
+  const totalAreas = await playgroundDaos.countTotalAreas({})
+  const totalAttractions = await playgroundDaos.countTotalAttractions({})
+  const totalReviews = await playgroundDaos.countTotalReviews({})
+  return {
+    totalUsers,
+    totalPlaygrounds,
+    totalAreas,
+    totalAttractions,
+    totalReviews,
+  }  
 }
 
 module.exports = {
