@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, MapPin, Phone, User, ChevronDown, ChevronRight } from 'lucide-react';
+import {getAreas} from "../../../../../apis/playground"
 
 
 
@@ -44,11 +45,8 @@ const UserFilter = ({setFilter,setIsFiltering,isFiltering}) => {
    maxAge: '',
  });
 
- const [areas] = useState([
+ const [areas,setAreas] = useState([
    { id: 1, name: "すべての地域" },
-   { id: 2, name: "ホーチミン" },
-   { id: 3, name: "カントー" },
-   { id: 4, name: "ダラット" },
  ]);
  
  const [selectedArea, setSelectedArea] = useState(areas[0]);
@@ -67,6 +65,23 @@ const UserFilter = ({setFilter,setIsFiltering,isFiltering}) => {
     setFilter(searchParams);
     setIsFiltering(true);
   };
+  useEffect(() => {
+    const fetchAreas = async () => {
+      try {
+        const response = await getAreas();
+        const data = response.data.map(area => ({
+          id: area.id,
+          name: area.name,
+        }));
+        setAreas((prev) => [...prev, ...data]);
+        
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAreas();
+  }, []);
+
 
  useEffect(() => {
    const handleClickOutside = (event) => {
@@ -95,6 +110,7 @@ const UserFilter = ({setFilter,setIsFiltering,isFiltering}) => {
  }, [showAreaDropdown]);
 
  return (
+  
    <motion.div
      initial={{ opacity: 0, y: -10 }}
      animate={{ opacity: 1, y: 0 }}
