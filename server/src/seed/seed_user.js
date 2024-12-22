@@ -17,24 +17,48 @@ const seedUser = async () => {
     await User.deleteMany({});
 
     const users = 
-    JSON.parse(`[
-        {
-    "_id": "676797b964ab131cfea20c24",
-    "username": "Dương Giới",
-    "email": "example@email.com",
-    "password": "$2b$10$GGYZ.qF5T8mwyj6.xl42IONfNw/ylkOwDioz/z8kuDOOGcTMOh4q.",
-    "gender": "male",
-    "phoneNumber": "0374348370",
-    "dob": "2003-02-21T00:00:00.000Z",
-    "avatarUrl": "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
-    "role": "admin",
-    "isDisabled": false,
-    "favoritePlayground": [],
-    "reviews": [],
-    "createdAt": "2024-12-22T04:38:17.504Z",
-    "updatedAt": "2024-12-22T04:38:17.504Z",
-    "__v": 0
-  },
+        JSON.parse(`[
+          {
+      "_id": "648d7eb3fc13ae4d6b000000",
+      "username": "Thuc Uyen Le",
+      "email": "example@email.com",
+      "password": "$2b$12$6Am9Xslzx.AqZbMzQrSP2uVOSV5Pk8NQpGVp4qPkRcvJLeE36OfiO",
+      "gender": "male",
+      "phoneNumber": "0123456789",
+      "dob": "1990-05-15T00:00:00.000Z",
+      "avatarUrl": "https://example.com/avatar/johndoe.png",
+      "role": "admin",
+      "isDisabled": false,
+      "favoritePlayground": [
+        "6742a19077300f01cf591b04",
+        "6742a19077300f01cf591b05"
+      ],
+      "reviews": [
+        "648d7eb3fc13ae4d6b000200",
+        "648d7eb3fc13ae4d6b000201"
+      ],
+      "__v": 0,
+      "createdAt": "2024-12-22T06:51:05.431Z",
+      "updatedAt": "2024-12-22T06:51:05.431Z"
+    },
+          
+            {
+        "_id": "676797b964ab131cfea20c24",
+        "username": "Dương Giới",
+        "email": "gioi@email.com",
+        "password": "$2b$10$GGYZ.qF5T8mwyj6.xl42IONfNw/ylkOwDioz/z8kuDOOGcTMOh4q.",
+        "gender": "male",
+        "phoneNumber": "0374348370",
+        "dob": "2003-02-21T00:00:00.000Z",
+        "avatarUrl": "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg",
+        "role": "admin",
+        "isDisabled": false,
+        "favoritePlayground": [],
+        "reviews": [],
+        "createdAt": "2024-12-22T04:38:17.504Z",
+        "updatedAt": "2024-12-22T04:38:17.504Z",
+        "__v": 0
+      },
   {
     "_id": "676797b964ab131cfea20c25",
     "username": "Nguyễn Văn An",
