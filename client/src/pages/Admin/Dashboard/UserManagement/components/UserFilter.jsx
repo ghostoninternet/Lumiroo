@@ -64,16 +64,20 @@ const UserFilter = ({setFilter,setIsFiltering,isFiltering}) => {
     };
     setFilter(searchParams);
     setIsFiltering(true);
+    console.log(areas);
   };
   useEffect(() => {
     const fetchAreas = async () => {
       try {
         const response = await getAreas();
         const data = response.data.map(area => ({
-          id: area.id,
+          id: area._id,
           name: area.name,
         }));
-        setAreas((prev) => [...prev, ...data]);
+        setAreas(
+         [ { id: 1, name: "すべての地域" },
+          ...data]
+        );
         
       } catch (error) {
         console.error(error);

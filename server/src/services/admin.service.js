@@ -44,6 +44,7 @@ const getUserDetail = async (userId) => {
   const result = await userDaos.getUser(userId)
   console.log(userId)
   console.log(result.username)
+  console.log(result)
   const user = {
     id: result._id,
     name: result.username,

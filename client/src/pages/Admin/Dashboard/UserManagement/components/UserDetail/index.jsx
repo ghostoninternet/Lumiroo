@@ -30,6 +30,8 @@ function UserDetail() {
           ...response.data, // Overwrite or add new fields
         }));
 
+        console.log(response.data)
+
       } catch (error) {
         console.log(error);
       }

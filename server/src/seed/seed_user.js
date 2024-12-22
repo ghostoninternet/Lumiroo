@@ -39,7 +39,8 @@ const seedUser = async () => {
       ],
       "__v": 0,
       "createdAt": "2024-12-22T06:51:05.431Z",
-      "updatedAt": "2024-12-22T06:51:05.431Z"
+      "updatedAt": "2024-12-22T06:51:05.431Z",
+      "address": "ホーチミン"
     },
           
             {
@@ -55,6 +56,7 @@ const seedUser = async () => {
         "isDisabled": false,
         "favoritePlayground": [],
         "reviews": [],
+        "address": "ハノイ",
         "createdAt": "2024-12-22T04:38:17.504Z",
         "updatedAt": "2024-12-22T04:38:17.504Z",
         "__v": 0
@@ -72,6 +74,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -89,6 +92,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ホーチミン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -106,6 +110,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -123,6 +128,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -140,6 +146,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ホーチミン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -157,6 +164,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -174,6 +182,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -191,6 +200,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ダナン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -208,6 +218,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -225,6 +236,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -242,6 +254,7 @@ const seedUser = async () => {
     "isDisabled": true,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -259,6 +272,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -276,6 +290,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -293,6 +308,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ダナン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -310,6 +326,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハイフォン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -327,6 +344,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハイフォン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -344,6 +362,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ホーチミン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -361,6 +380,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ホーチミン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -378,6 +398,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -395,6 +416,7 @@ const seedUser = async () => {
     "isDisabled": false,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ハノイ",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
@@ -412,6 +434,7 @@ const seedUser = async () => {
     "isDisabled": true,
     "favoritePlayground": [],
     "reviews": [],
+    "address": "ダナン",
     "createdAt": "2024-12-22T04:38:17.504Z",
     "updatedAt": "2024-12-22T04:38:17.504Z",
     "__v": 0
