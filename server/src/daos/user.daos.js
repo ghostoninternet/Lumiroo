@@ -22,6 +22,7 @@ const updateUser = async (id, updateUserData) => {
 }
 
 const deleteUser = async (id) => {
+  
   return usersModel.findByIdAndDelete(id);
 };
 
@@ -42,6 +43,22 @@ const removeFavoritePlayground = async (userId, playgroundId) => {
   );
 };
 
+const countTotalUsers = async (condition) => {
+  const totalUsers = await usersModel.countDocuments(condition);
+  return totalUsers;
+}
+
+const getUsers = async (condition, limit=5, page=1) => {
+  const users = await usersModel.find(condition)
+  .skip((page - 1) * limit)
+  .limit(limit)
+  .then(data => data)
+  .catch(err => {
+    console.error(err)
+    throw new DatabaseError('Something went wrong at user.daos.js -> getUsers')
+  })
+return users
+}
 module.exports = {
   findUserByEmail,
   findUserById,
@@ -51,4 +68,6 @@ module.exports = {
   deleteUser,
   addFavoritePlayground,
   removeFavoritePlayground,
+  countTotalUsers,
+  getUsers
 };

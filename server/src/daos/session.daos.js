@@ -29,8 +29,18 @@ const deleteOneSession = async (sessionId) => {
   })
 }
 
+const deleteSessionByUserId = async (userId) => {
+  return await sessionsModel.deleteMany({ userId })
+  .then((data) => data)
+  .catch((err) => {
+    console.log(err)
+    throw new DatabaseError()
+  })
+}
+
 module.exports = {
   findOneSession,
   createNewSession,
   deleteOneSession,
+  deleteSessionByUserId
 }

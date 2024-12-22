@@ -6,7 +6,7 @@ const roleHandler = (roles) => {
     if (roles.includes(userRole)) {
       next()
     }
-    throw new UnauthorizedError("You don't have permission to access this route!")
+    else throw new UnauthorizedError("You don't have permission to access this route!")
   }
 }
 

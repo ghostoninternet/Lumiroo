@@ -3,9 +3,10 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, MapPin, Phone, User, ChevronDown, ChevronRight } from 'lucide-react';
 
+
+
 const DropdownPortal = ({ children, isOpen, targetRef }) => {
  const [portalNode] = useState(() => document.createElement('div'));
-
  useEffect(() => {
    if (isOpen) {
      document.body.appendChild(portalNode);
@@ -26,7 +27,7 @@ const DropdownPortal = ({ children, isOpen, targetRef }) => {
        left: `${left}px`,
        top: `${top + targetRef.current.offsetHeight + 8}px`,
        width: `${width}px`,
-       zIndex: 9999,
+       zIndex: 20,
      }}
    >
      {children}
@@ -35,7 +36,7 @@ const DropdownPortal = ({ children, isOpen, targetRef }) => {
  );
 };
 
-const UserFilter = () => {
+const UserFilter = ({setFilter,setIsFiltering,isFiltering}) => {
  const [formData, setFormData] = useState({
    name: '',
    phone: '',
@@ -53,10 +54,24 @@ const UserFilter = () => {
  const [selectedArea, setSelectedArea] = useState(areas[0]);
  const [showAreaDropdown, setShowAreaDropdown] = useState(false);
  const dropdownRef = useRef(null);
+ const itemRefs = useRef([]);
+
+ const onSearch = async () => {
+    const searchParams = {
+      name: formData.name,
+      phone: formData.phone,
+      minAge: formData.minAge,
+      maxAge: formData.maxAge,
+      area: selectedArea.name,
+    };
+    setFilter(searchParams);
+    setIsFiltering(true);
+  };
 
  useEffect(() => {
    const handleClickOutside = (event) => {
-     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+     if (dropdownRef.current && !dropdownRef.current.contains(event.target)&&
+      !itemRefs.current.some((ref) => ref && ref.contains(event.target))) {
        setShowAreaDropdown(false);
      }
    };
@@ -70,6 +85,7 @@ const UserFilter = () => {
    };
  }, [showAreaDropdown]);
 
+ 
  useEffect(() => {
    if (showAreaDropdown) {
      const handleScroll = () => setShowAreaDropdown(false);
@@ -138,8 +154,9 @@ const UserFilter = () => {
                    ${showAreaDropdown ? 'rotate-180' : ''}`} />
                </div>
              </button>
-
+            
              <DropdownPortal isOpen={showAreaDropdown} targetRef={dropdownRef}>
+             
                <motion.div
                  initial={{ opacity: 0, y: -10 }}
                  animate={{ opacity: 1, y: 0 }}
@@ -147,15 +164,17 @@ const UserFilter = () => {
                  className="bg-white border-2 border-gray-200 rounded-xl shadow-xl 
                            max-h-60 overflow-y-auto"
                >
-                 {areas.map((area) => (
+                 {areas.map((area,index) => (
                    <motion.button
                      key={area.id}
-                     onClick={() => {
+                     ref={(el) => (itemRefs.current[index] = el)}  // Thêm ref cho mỗi item
+                     onClick={(e) => {
                        setSelectedArea(area);
                        setShowAreaDropdown(false);
                      }}
                      whileHover={{ backgroundColor: 'rgb(240, 253, 244)' }}
-                     className={`w-full px-4 py-3 text-sm text-left transition-colors
+                     style={{ pointerEvents: 'auto' }}
+                     className={`z-50 w-full px-4 py-3 text-sm text-left transition-colors
                        ${area.id === selectedArea.id 
                          ? 'bg-green-100 text-green-600 font-bold' 
                          : 'text-gray-700 hover:text-green-600'}`}
@@ -242,7 +261,26 @@ const UserFilter = () => {
 
      {/* Search Button */}
      <div className="px-6 py-4 bg-gradient-to-br from-gray-50 to-gray-100 border-t border-green-500/20">
-       <div className="flex justify-end">
+       <div className="flex justify-end gap-4">
+         <motion.button
+           whileHover={{ scale: 1.02, y: -1 }}
+           whileTap={{ scale: 0.98 }}
+           className="px-5 py-3 bg-gradient-to-r from-red-500 to-red-400 
+                     font-bold rounded-xl text-sm
+                    shadow-lg hover:shadow-xl hover:from-red-600 hover:to-red-400
+                    transition-all duration-200"
+            onClick={() => {setIsFiltering(false)
+                            setFormData({
+                              name: '',
+                              phone: '',
+                              minAge: '',
+                              maxAge: '',
+                            });
+                            setSelectedArea(areas[0]);
+            }}
+         >
+            リセット
+         </motion.button>
          <motion.button
            whileHover={{ scale: 1.02, y: -1 }}
            whileTap={{ scale: 0.98 }}
@@ -250,6 +288,7 @@ const UserFilter = () => {
                     text-white font-bold rounded-xl text-sm
                     shadow-lg hover:shadow-xl hover:from-green-500 hover:to-green-400
                     transition-all duration-200"
+            onClick={onSearch}
          >
            検索
          </motion.button>
