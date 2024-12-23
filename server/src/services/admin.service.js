@@ -155,15 +155,14 @@ const getManyPlaygrounds = async ({limit,page}) => {
       totalPage: totalPage,
       limitPerPage: limit,
       currentPage: page,
+      totalPlaygrounds: totalPlaygrounds,
     },
   }
 }
 
 const getPlaygroundDetail = async (playgroundId) => {
   const playground = await playgroundDaos.getPlaygroundDetail(playgroundId)
-  console.log(playgroundId)
-  console.log(result.name)
-  console.log(result)
+  console.log(playground)
   if (!playground) {
     throw new NotFoundError('Playground not found')
   }
