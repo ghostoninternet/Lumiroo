@@ -1,7 +1,7 @@
 const userDaos = require('../daos/user.daos');
 const sessionDaos = require('../daos/session.daos');
 const playgroundDaos = require('../daos/playground.daos');
-const { NotFoundError } = require('../errors/customError');
+const { NotFoundError, DatabaseError } = require('../errors/customError');
 const mongoose = require('mongoose')
 
 function calculateAge(dob) {
@@ -161,13 +161,21 @@ const getManyPlaygrounds = async ({limit,page}) => {
 }
 
 const getPlaygroundDetail = async (playgroundId) => {
-  const playground = await playgroundDaos.getPlaygroundDetail(playgroundId)
-  console.log(playground)
-  if (!playground) {
-    throw new NotFoundError('Playground not found')
+  if (!playgroundId) {
+    throw new Error('Invalid playgroundId');
   }
-  return playground
-}
+  try {
+    const playground = await playgroundDaos.getPlaygroundDetail(playgroundId);
+    if (!playground) {
+      throw new NotFoundError('Playground not found');
+    }
+
+    return playground;
+  } catch (error) {
+    throw new DatabaseError('Error fetching playground detail: ', error);
+  }
+};
+
 
 const createNewPlayground = async (newPlaygroundData) => {
   const playground = await playgroundDaos.createPlayground(newPlaygroundData)
@@ -175,16 +183,44 @@ const createNewPlayground = async (newPlaygroundData) => {
 }
 
 const updatePlayground = async (playgroundId, data) => {
+  if (!playgroundId || !data) {
+    throw new Error('Invalid input: playgroundId and data are required');
+  }
+
+  const existingPlayground = await playgroundDaos.getPlaygroundDetail(playgroundId);
+  if (!existingPlayground) {
+    throw new NotFoundError('Playground not found');
+  }
+
   const status = data.status
   const isDisabled = (data.status == 'アクティブ') ? false : true
   console.log(playgroundId,status, isDisabled)
-  const playground = await playgroundDaos.updatePlayground(playgroundId,{status,isDisabled})
-  return playground
+  
+  try {
+    const playground = await playgroundDaos.updatePlayground(playgroundId, { status, isDisabled });
+    return playground;
+  } catch (error) {
+    throw new DatabaseError('Error updating playground', error);
+  }
 }
 
 const deletePlayground = async (playgroundId) => {
-  const playground = await playgroundDaos.deletePlayground(playgroundId)
-  return playground
+  if (!playgroundId) {
+    throw new Error('Invalid input: playgroundId is required');
+  }
+
+  // Kiểm tra playground tồn tại
+  const existingPlayground = await playgroundDaos.getPlaygroundDetail(playgroundId);
+  if (!existingPlayground) {
+    throw new NotFoundError('Playground not found');
+  }
+
+  try {
+    const playground = await playgroundDaos.deletePlayground(playgroundId);
+    return playground;
+  } catch (error) {
+    throw new DatabaseError('Error deleting playground', error);
+  }
 }
 
 const getDashboardData = async () => {
