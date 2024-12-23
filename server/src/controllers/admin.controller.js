@@ -40,12 +40,8 @@ const deleteUser = async (req, res, next) => {
 }
 
 const getManyPlaygrounds = async (req, res, next) => {
-  try {
-    const playgrounds = await adminService.getManyPlaygrounds(req.query)
-    res.status(200).json(playgrounds)
-  } catch (error) {  
-    next(error)
-  }
+  const playgrounds = await adminService.getManyPlaygrounds(req.query)
+  res.status(200).json(playgrounds)
 }
 
 const getPlaygroundDetail = async (req, res, next) => {
