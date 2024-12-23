@@ -1,10 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Heart, MapPin, Star, DollarSign } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import {
+  addToFavorites,
+  removeFromFavorites,
+  getFavorites,
+} from "../../../apis/playground";
 const PlaygroundInfo = ({ data }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
+
+  const checkFavorite = async () => {
+    const response = await getFavorites();
+    const favorites = response.data.data;
+    let isLiked = false;
+    if (!data.id) return;
+    if (data.id) {
+      isLiked = favorites.some((favorite) => favorite._id === data.id);
+    }
+    setIsFavorite(isLiked);
+  };
+
+  useEffect(() => {
+    checkFavorite();
+  }, [data.id]);
 
   const getRatingColor = (rating) => {
     if (rating >= 4.5) return "text-green-600";
@@ -22,16 +41,13 @@ const PlaygroundInfo = ({ data }) => {
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(
-          <Star
-            key={i}
-            className="w-8 h-8 fill-yellow-400 text-yellow-400"
-          />
+          <Star key={i} className="w-8 h-8 fill-yellow-400 text-yellow-400" />
         );
       } else if (i === fullStars && partialStar > 0) {
         stars.push(
           <div key={i} className="relative">
             <Star className="w-8 h-8 fill-gray-200 text-gray-200" />
-            <div 
+            <div
               className="absolute top-0 left-0 overflow-hidden"
               style={{ width: `${partialStar * 100}%` }}
             >
@@ -41,10 +57,7 @@ const PlaygroundInfo = ({ data }) => {
         );
       } else {
         stars.push(
-          <Star
-            key={i}
-            className="w-8 h-8 fill-gray-200 text-gray-200"
-          />
+          <Star key={i} className="w-8 h-8 fill-gray-200 text-gray-200" />
         );
       }
     }
@@ -52,14 +65,23 @@ const PlaygroundInfo = ({ data }) => {
   };
 
   const handleRouteClick = () => {
-    navigate('/map', { 
-      state: { 
+    navigate("/map", {
+      state: {
         address: data.address,
         playgroundName: data.name,
-        playgroundId: data.id
-        
-      } 
+        playgroundId: data.id,
+      },
     });
+  };
+
+  const toggleFavouritePlayground = () => {
+    if (!isFavorite) {
+      setIsFavorite(true);
+      addToFavorites(data.id);
+      return;
+    }
+    setIsFavorite(false);
+    removeFromFavorites(data.id);
   };
 
   return (
@@ -74,7 +96,11 @@ const PlaygroundInfo = ({ data }) => {
             <div className="flex items-center">
               {renderStars(data.rating || 4.8)}
             </div>
-            <span className={`text-2xl font-bold ${getRatingColor(data.rating || 4.8)} ml-2`}>
+            <span
+              className={`text-2xl font-bold ${getRatingColor(
+                data.rating || 4.8
+              )} ml-2`}
+            >
               {data.rating || 4.8}
             </span>
           </div>
@@ -104,19 +130,20 @@ const PlaygroundInfo = ({ data }) => {
 
         <div className="flex gap-4 mt-8">
           <button
-            onClick={() => setIsFavorite(!isFavorite)}
+            onClick={() => toggleFavouritePlayground()}
             className={`flex-1 h-12 rounded-lg font-medium transition-all duration-300 
               flex items-center justify-center gap-2 
-              ${isFavorite 
-                ? "bg-green-600 hover:bg-green-700 text-white"
-                : "bg-white border-2 border-gray-200 hover:border-green-600 text-gray-700 hover:text-green-600"
+              ${
+                isFavorite
+                  ? "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-white border-2 border-gray-200 hover:border-green-600 text-gray-700 hover:text-green-600"
               }`}
           >
             <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
             {isFavorite ? "お気に入り追加済み" : "お気に入りに追加"}
           </button>
-             
-          <button 
+
+          <button
             onClick={handleRouteClick}
             className="h-12 px-8 bg-green-600 text-white rounded-lg font-medium
               hover:bg-green-700 transition-all duration-300 flex items-center justify-center gap-2"

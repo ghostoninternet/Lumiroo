@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { FaHeart } from 'react-icons/fa';
+import { useState } from "react";
+import { FaHeart } from "react-icons/fa";
 import { MdPlace, MdAttachMoney } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import defaultImage from '../../assets/park.jpg';
-import DeleteConfirmation from './DeleteConfirmation';
+import defaultImage from "../../assets/park.jpg";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 const FavoriteCard = ({ favorite, onRemove }) => {
-  const { id, name, address, price, imageUrl } = favorite;
+  const { _id, name, address, admissionFee, imageUrl } = favorite;
   const navigate = useNavigate();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const handleCardClick = (e) => {
-    if (!e.target.closest('button')) {
-      navigate(`/playground/${id}`);
+    if (!e.target.closest("button")) {
+      navigate(`/playground/${_id}`);
     }
   };
 
@@ -21,7 +21,7 @@ const FavoriteCard = ({ favorite, onRemove }) => {
   };
 
   const handleConfirmDelete = () => {
-    onRemove(id);
+    onRemove(_id);
     setShowDeleteConfirmation(false);
   };
 
@@ -45,16 +45,14 @@ const FavoriteCard = ({ favorite, onRemove }) => {
           </button>
         </div>
         <div className="p-4">
-          <h2 className="text-lg font-semibold text-green-600">
-            {name}
-          </h2>
+          <h2 className="text-lg font-semibold text-green-600">{name}</h2>
           <p className="mt-2 text-sm text-gray-600 flex items-center">
             <MdPlace className="text-green-500 mr-2" />
             {address}
           </p>
           <p className="mt-2 text-sm font-medium text-green-600 flex items-center">
-            <MdAttachMoney className="text-green-500 mr-2" />
-            ¥{parseInt(price).toLocaleString()}
+            <MdAttachMoney className="text-green-500 mr-2" />¥
+            {parseInt(admissionFee).toLocaleString()}
           </p>
         </div>
       </div>
