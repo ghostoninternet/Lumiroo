@@ -1,4 +1,4 @@
-const usersModel = require('../models/users.model');
+const usersModel = require("../models/users.model");
 
 const findUserByEmail = async (email) => {
   return usersModel.findOne({ email });
@@ -17,12 +17,10 @@ const getUser = async (id) => {
 };
 
 const updateUser = async (id, updateUserData) => {
-  return usersModel.findByIdAndUpdate
-    (id, updateUserData, { new: true });
-}
+  return usersModel.findByIdAndUpdate(id, updateUserData, { new: true });
+};
 
 const deleteUser = async (id) => {
-  
   return usersModel.findByIdAndDelete(id);
 };
 
@@ -46,19 +44,35 @@ const removeFavoritePlayground = async (userId, playgroundId) => {
 const countTotalUsers = async (condition) => {
   const totalUsers = await usersModel.countDocuments(condition);
   return totalUsers;
-}
+};
 
-const getUsers = async (condition, limit=5, page=1) => {
-  const users = await usersModel.find(condition)
-  .skip((page - 1) * limit)
-  .limit(limit)
-  .then(data => data)
-  .catch(err => {
-    console.error(err)
-    throw new DatabaseError('Something went wrong at user.daos.js -> getUsers')
-  })
-return users
-}
+const getUsers = async (condition, limit = 5, page = 1) => {
+  const users = await usersModel
+    .find(condition)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .then((data) => data)
+    .catch((err) => {
+      console.error(err);
+      throw new DatabaseError(
+        "Something went wrong at user.daos.js -> getUsers"
+      );
+    });
+  return users;
+};
+
+const populateUserFavorites = async (userId, limit, page) => {
+  return usersModel
+    .findById(userId)
+    .select("favoritePlayground")
+    .populate({
+      path: "favoritePlayground",
+      options: {
+        limit: parseInt(limit),
+        skip: (parseInt(page) - 1) * parseInt(limit),
+      },
+    });
+};
 module.exports = {
   findUserByEmail,
   findUserById,
@@ -69,5 +83,6 @@ module.exports = {
   addFavoritePlayground,
   removeFavoritePlayground,
   countTotalUsers,
-  getUsers
+  getUsers,
+  populateUserFavorites,
 };
