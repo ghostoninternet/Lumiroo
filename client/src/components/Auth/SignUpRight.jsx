@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useNavigate } from "react-router-dom";
-import Logo from "../logo/Logo";
+import Logo from "../Logo/Logo";
 
 const SignUpRight = ({ animation }) => {
   const navigate = useNavigate();
