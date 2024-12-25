@@ -33,7 +33,8 @@ import RoleRoute from './components/RoleRoute';
 import { ROLE } from './constants';
 
 import AttractionManagement from './pages/Admin/AttractionManagement/index.jsx';
-
+import { pingServer } from './apis/ping.js';
+import { useEffect } from 'react';
 
 // Fix cho marker icon
 delete L.Icon.Default.prototype._getIconUrl;
@@ -45,6 +46,15 @@ L.Icon.Default.mergeOptions({
 
 function App() {
   const location = useLocation();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const pingResult = pingServer()
+      console.log(pingResult)
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <AnimatePresence mode="wait">
