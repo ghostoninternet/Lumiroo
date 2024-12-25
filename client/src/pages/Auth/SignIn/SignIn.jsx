@@ -13,9 +13,10 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   const handleSignIn = async ({ email, password }) => {
-    await signIn({ email, password });
+    const rs= await signIn({ email, password });
+    if (rs.data.user.role === 'admin') navigate('/admin');
+    else
     navigate('/playground-recommendation');
-    console.log("ログイン成功:", { email, password });
   };
 
   return (

@@ -29,6 +29,9 @@ import AdminPlaygroundDetail from './pages/Admin/PlaygroundManagement/components
 import UserManagement from './pages/Admin/Dashboard/UserManagement/UserManagement.jsx';
 import UserDetail from './pages/Admin/Dashboard/UserManagement/components/UserDetail/index.jsx';
 
+import RoleRoute from './components/RoleRoute';
+import { ROLE } from './constants';
+
 import AttractionManagement from './pages/Admin/AttractionManagement/index.jsx';
 
 
@@ -57,6 +60,7 @@ function App() {
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
           {/* Main Layout Routes */}
+          
           <Route element={<MainLayout />}>
             {/* Home Routes */}
             <Route path="/home" element={<HomePage />} />
@@ -74,6 +78,7 @@ function App() {
           </Route>
 
           {/* Admin Layout Routes */}
+          <Route element={<RoleRoute roles={[ROLE.ADMIN]} />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             
@@ -86,6 +91,7 @@ function App() {
                 </Route>
             </Route>
             
+            
             {/* Other Admin Routes */}
             <Route path="users">
               <Route index element={<UserManagement />} />
@@ -93,7 +99,7 @@ function App() {
             </Route>
             <Route path="attractions" element={<AttractionManagement />} />
 
-
+            </Route>
           </Route>
         </Route>
 

@@ -6,6 +6,7 @@ function RoleRoute({ roles }) {
   if (!roles.includes(user.role)) {
     return <Navigate to={"/home"} />
   }
+
   return (
     <Outlet />
   )
