@@ -19,6 +19,11 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+app.get('/api/ping', (req, res, next) => {
+  res.status(200).json({
+    message: "OK"
+  })
+})
 app.use('/api', require('./routes'))
 
 app.use(errorHandler)
