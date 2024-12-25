@@ -18,14 +18,15 @@ const Slider = ({playgroundsData,is_faker}) => {
 const playgrounds = playgroundsData ? playgroundsData.map((playground) => {
     return {
         _id: playground._id,
-        name: playground.name.length > 20 ? playground.name.substring(0, 20) + '...' : playground.name,
-        address: playground.address > 15 ? playground.address.substring(0, 15) + '...' : playground.address,
+        name: playground.name.length > 29 ? playground.name.substring(0, 29) + '...' : playground.name,
+        address: playground.address.length > 30 ? playground.address.substring(0, 30) + '...' : playground.address,
         admissionFee: playground.admissionFee,
         imageUrl: is_faker==1 ? faker.image.url() : playground.imageUrl,
     };
 }) : [];
 return (
     <div >
+        
         <Swiper
             onSwiper={setSwiperRef}
             slidesPerView={3}
@@ -42,6 +43,7 @@ return (
                 <SwiperSlide key={playground.id}>
                     {/* <div className="bg-green-50 w-full h-full flex items-center justify-center "> */}
                         {/* <div className="bg-white w-11/12 h-11/12"> */}
+                        
                         <PlaygroundInfoCard data={playground} />
         
                         {/* </div> */}
