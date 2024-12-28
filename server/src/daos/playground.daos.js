@@ -30,7 +30,7 @@ const getAllAreas = async () => {
   return areas
 }
 
-const getPlaygrounds = async (condition, limit=8, page=1) => {
+const getPlaygrounds = async (condition, limit = 8, page = 1) => {
   const playgrounds = await playgroundsModel.find(condition)
     .skip((page - 1) * limit)
     .limit(limit)
@@ -58,7 +58,14 @@ const createPlayground = async (newPlayground) => {
 }
 
 const updatePlayground = async (playgroundId, updatedData) => {
-  const updatedPlayground = await playgroundsModel.findByIdAndUpdate(playgroundId, updatedData, { new: true })
+  const updatedPlayground = await playgroundsModel
+    .findByIdAndUpdate(playgroundId, updatedData, { new: true })
+    .lean()
+    .then(data => data)
+    .catch(err => {
+      console.error(err)
+      throw new DatabaseError('Something went wrong at updatePlayground')
+    })
   return updatedPlayground
 }
 
