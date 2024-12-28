@@ -8,6 +8,8 @@ const signin = async (req, res) => {
   res.cookie('session', authData.session, {
     httpOnly: true,
     expires: new Date(Date.now() + EXPIRES_IN),
+    secure: true,
+    sameSite: 'none',
     path: '/',
   })
   res.status(200).json({
@@ -32,6 +34,8 @@ const signup = async (req, res) => {
   res.cookie('session', authData.session, {
     httpOnly: true,
     expires: new Date(Date.now() + EXPIRES_IN),
+    secure: true,
+    sameSite: 'none',
     path: '/',
   })
   res.status(200).json({
