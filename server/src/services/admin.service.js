@@ -1,27 +1,28 @@
 const userDaos = require('../daos/user.daos');
 const sessionDaos = require('../daos/session.daos');
 const playgroundDaos = require('../daos/playground.daos');
-const { NotFoundError, DatabaseError } = require('../errors/customError');
-const mongoose = require('mongoose')
+const { NotFoundError, DatabaseError, BadRequestError } = require('../errors/customError');
+const mongoose = require('mongoose');
+const { sendEmail } = require('./email.service');
 
 function calculateAge(dob) {
-  const today = new Date(); 
+  const today = new Date();
   let age = today.getFullYear() - dob.getFullYear();
-  const isBeforeBirthday = 
-    today.getMonth() < dob.getMonth() || 
+  const isBeforeBirthday =
+    today.getMonth() < dob.getMonth() ||
     (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate());
 
   if (isBeforeBirthday) {
-    age--; 
+    age--;
   }
   return age;
 }
 
-const getManyUsers = async ({limit,page}) => {
+const getManyUsers = async ({ limit, page }) => {
   const totalUsers = await userDaos.countTotalUsers({})
   const dataUsers = await userDaos.getUsers({}, limit, page)
   const totalPage = Math.ceil(totalUsers / limit)
-   const users = dataUsers.map(user => {
+  const users = dataUsers.map(user => {
     return {
       id: user._id,
       name: user.username,
@@ -32,7 +33,7 @@ const getManyUsers = async ({limit,page}) => {
   })
 
   return {
-    data: users,  
+    data: users,
     pagination: {
       totalPage: totalPage,
       limitPerPage: limit,
@@ -61,41 +62,41 @@ const getUserDetail = async (userId) => {
 }
 
 const searchUsers = async (searchParams) => {
-  const {name, phone , minAge ,maxAge, area, limit, page} = searchParams
+  const { name, phone, minAge, maxAge, area, limit, page } = searchParams
   const minDob = maxAge ? new Date(new Date().setFullYear(new Date().getFullYear() - maxAge)) : null
   const maxDob = minAge ? new Date(new Date().setFullYear(new Date().getFullYear() - minAge)) : null
   console.log(minDob, maxDob)
   let condition = {}
-  if(name) {
+  if (name) {
     condition = {
       username: { $regex: name, $options: 'i' }
     }
   }
-  if(phone) {
+  if (phone) {
     condition = {
       ...condition,
       phoneNumber: { $regex: phone, $options: 'i' }
     }
   }
-  if(minDob && maxDob) {
+  if (minDob && maxDob) {
     condition = {
       ...condition,
-      dob: { $gte: minDob , $lte: maxDob }
+      dob: { $gte: minDob, $lte: maxDob }
     }
   } else
-  if(minDob) {
-    condition = {
-      ...condition,
-      dob: { $gte: minDob }
-    }
-  } else
-  if(maxDob) {
-    condition = {
-      ...condition,
-      dob: { $lte: maxDob }
-    }
-  }
-  
+    if (minDob) {
+      condition = {
+        ...condition,
+        dob: { $gte: minDob }
+      }
+    } else
+      if (maxDob) {
+        condition = {
+          ...condition,
+          dob: { $lte: maxDob }
+        }
+      }
+
   if (area && !area.includes("すべての地域")) {
     condition = {
       ...condition,
@@ -108,7 +109,7 @@ const searchUsers = async (searchParams) => {
 
   const totalPage = Math.ceil(totalUsers / limit)
 
-  const users= dataUsers.map(user => {
+  const users = dataUsers.map(user => {
     return {
       id: user._id,
       name: user.username,
@@ -126,14 +127,14 @@ const searchUsers = async (searchParams) => {
       currentPage: page,
     },
   }
-  
+
 }
 
 const updateUser = async (userId, data) => {
   const role = data.role
   const isDisabled = (data.status == 'アクティブ') ? false : true
-  console.log(userId,role, isDisabled)
-  const user = await userDaos.updateUser(userId,{role,isDisabled})
+  console.log(userId, role, isDisabled)
+  const user = await userDaos.updateUser(userId, { role, isDisabled })
   return user
 }
 
@@ -144,7 +145,7 @@ const deleteUser = async (userId) => {
 
 }
 
-const getManyPlaygrounds = async ({limit,page}) => {
+const getManyPlaygrounds = async ({ limit, page }) => {
   const totalPlaygrounds = await playgroundDaos.countTotalPlaygrounds({})
   const dataPlaygrounds = await playgroundDaos.getPlaygrounds({}, limit, page)
   const totalPage = Math.ceil(totalPlaygrounds / limit)
@@ -184,7 +185,7 @@ const createNewPlayground = async (newPlaygroundData) => {
 
 const updatePlayground = async (playgroundId, data) => {
   if (!playgroundId || !data) {
-    throw new Error('Invalid input: playgroundId and data are required');
+    throw new BadRequestError('Invalid input: playgroundId and data are required');
   }
 
   const existingPlayground = await playgroundDaos.getPlaygroundDetail(playgroundId);
@@ -192,16 +193,18 @@ const updatePlayground = async (playgroundId, data) => {
     throw new NotFoundError('Playground not found');
   }
 
-  const status = data.status
-  const isDisabled = (data.status == 'アクティブ') ? false : true
-  console.log(playgroundId,status, isDisabled)
-  
-  try {
-    const playground = await playgroundDaos.updatePlayground(playgroundId, { status, isDisabled });
-    return playground;
-  } catch (error) {
-    throw new DatabaseError('Error updating playground', error);
+  const playground = await playgroundDaos.updatePlayground(playgroundId, data);
+  const usersList = await userDaos.getManyUsers({
+    favoritePlayground: existingPlayground._id,
+  })
+  for (let i = 0; i < usersList.length; i++) {
+    sendEmail({
+      email: usersList[i].email,
+      subject: '遊び場が新しくなりました！ぜひご覧ください！',
+      text: `${playground.name} 遊び場が新しくなりました！ぜひご覧ください！`
+    })
   }
+  return playground;
 }
 
 const deletePlayground = async (playgroundId) => {
@@ -235,7 +238,7 @@ const getDashboardData = async () => {
     totalAreas,
     totalAttractions,
     totalReviews,
-  }  
+  }
 }
 
 module.exports = {

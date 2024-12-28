@@ -9,4 +9,6 @@ module.exports = {
   API_SECRET: process.env.API_SECRET,
   SESSION_SECRET: process.env.SESSION_SECRET,
   CLOUDINARY_URL: process.env.CLOUDINARY_URL,
+  APP_EMAIL: process.env.APP_EMAIL,
+  APP_PASSWORD: process.env.APP_PASSWORD,
 }

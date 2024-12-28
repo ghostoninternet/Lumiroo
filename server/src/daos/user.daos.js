@@ -61,6 +61,20 @@ const getUsers = async (condition, limit = 5, page = 1) => {
   return users;
 };
 
+const getManyUsers = async (condition) => {
+  const users = await usersModel
+    .find(condition)
+    .lean()
+    .then((data) => data)
+    .catch((err) => {
+      console.error(err);
+      throw new DatabaseError(
+        "Something went wrong at user.daos.js -> getManyUsers"
+      );
+    });
+  return users;
+}
+
 const populateUserFavorites = async (userId, limit, page) => {
   return usersModel
     .findById(userId)
@@ -84,5 +98,6 @@ module.exports = {
   removeFavoritePlayground,
   countTotalUsers,
   getUsers,
+  getManyUsers,
   populateUserFavorites,
 };
