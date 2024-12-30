@@ -1,20 +1,43 @@
-import React, { useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Upload, Image as ImageIcon, X, Camera } from 'lucide-react';
+import { useCallback, useState } from "react";
+import { motion } from "framer-motion";
+import { Upload, Image as ImageIcon, X, Camera } from "lucide-react";
+import { ClipLoader } from "react-spinners";
+import { uploadImage } from "../../../../../apis/upload";
 
 function ImageUpload({ image, onChange }) {
-  const handleImageChange = useCallback((e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      onChange(file);
-    }
-  }, [onChange]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRemoveImage = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onChange(null);
-  }, [onChange]);
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      setIsLoading(true);
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        const formData = new FormData();
+
+        formData.append("image", e.target.files[0]);
+
+        const response = await uploadImage(formData);
+        const imageUrl = response.data?.data;
+        onChange(imageUrl);
+        setIsLoading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (e) {
+      console.error("Error uploading image:", e);
+      setIsLoading(false);
+    }
+  };
+
+  const handleRemoveImage = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onChange(null);
+    },
+    [onChange]
+  );
 
   return (
     <div className="space-y-3">
@@ -30,13 +53,18 @@ function ImageUpload({ image, onChange }) {
                  border-gray-300 hover:border-green-500 transition-colors cursor-pointer 
                  overflow-hidden group"
       >
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-20">
+            <ClipLoader color="#22C55E" size={40} />
+          </div>
+        )}
         <input
           type="file"
           accept="image/*"
           onChange={handleImageChange}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
         />
-        
+
         {!image ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
             <Upload className="w-8 h-8 text-gray-400 mb-2 group-hover:text-green-500 transition-colors" />
@@ -52,7 +80,9 @@ function ImageUpload({ image, onChange }) {
         ) : (
           <div className="relative w-full h-full">
             <img
-              src={URL.createObjectURL(image)}
+              src={
+                typeof image === "string" ? image : URL.createObjectURL(image)
+              }
               alt="Preview"
               className="w-full h-full object-cover"
             />
@@ -69,9 +99,7 @@ function ImageUpload({ image, onChange }) {
           </div>
         )}
       </motion.div>
-      <p className="text-xs text-gray-500 mt-1">
-        推奨: JPG, PNG形式 (最大5MB)
-      </p>
+      <p className="text-xs text-gray-500 mt-1">推奨: JPG, PNG形式 (最大5MB)</p>
     </div>
   );
 }

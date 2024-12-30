@@ -1,10 +1,17 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Clock, CreditCard, FileText } from 'lucide-react';
-import ImageUpload from './ImageUpload';
-import AttractionSelect from './AttractionSelect';
+import { motion } from "framer-motion";
+import { MapPin, Clock, CreditCard, FileText } from "lucide-react";
+import ImageUpload from "./ImageUpload";
+import AttractionSelect from "./AttractionSelect";
 
-function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
+function PlaygroundForm({
+  formData,
+  setFormData,
+  onSubmit,
+  onCancel,
+  allAttractions,
+  checkedAttractions,
+  setCheckedAttractions,
+}) {
   return (
     <div className="bg-white rounded-xl shadow-lg border-2 border-green-500/20 overflow-hidden">
       <div className="p-6">
@@ -15,14 +22,14 @@ function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
             <div>
               <div className="flex items-center space-x-2 mb-2">
                 <MapPin className="w-5 h-5 text-green-600" />
-                <label className="text-sm font-bold text-green-600">
-                  名前
-                </label>
+                <label className="text-sm font-bold text-green-600">名前</label>
               </div>
               <input
                 type="text"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                value={formData?.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 
          rounded-xl outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500
          hover:border-green-400 transition-all duration-200 text-sm"
@@ -32,8 +39,10 @@ function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
 
             {/* Image Upload */}
             <ImageUpload
-              image={formData.image}
-              onChange={(image) => setFormData({ ...formData, image })}
+              image={formData?.imageUrl}
+              onChange={(image) =>
+                setFormData({ ...formData, imageUrl: image })
+              }
             />
           </div>
 
@@ -50,8 +59,10 @@ function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
               <div className="flex items-center gap-4">
                 <input
                   type="time"
-                  value={formData.openTime}
-                  onChange={(e) => setFormData({ ...formData, openTime: e.target.value })}
+                  value={formData?.openingTime}
+                  onChange={(e) =>
+                    setFormData({ ...formData, openingTime: e.target.value })
+                  }
                   className="flex-1 px-4 py-3 bg-white border-2 border-gray-200 
                          rounded-xl focus:ring-0 focus:border-green-500 outline-none
                          hover:border-green-400 transition-all duration-200 text-sm"
@@ -59,8 +70,10 @@ function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
                 <span className="text-gray-400">→</span>
                 <input
                   type="time"
-                  value={formData.closeTime}
-                  onChange={(e) => setFormData({ ...formData, closeTime: e.target.value })}
+                  value={formData?.closingTime}
+                  onChange={(e) =>
+                    setFormData({ ...formData, closingTime: e.target.value })
+                  }
                   className="flex-1 px-4 py-3 bg-white border-2 border-gray-200 
                          rounded-xl focus:ring-0 focus:border-green-500 outline-none
                          hover:border-green-400 transition-all duration-200 text-sm"
@@ -78,9 +91,11 @@ function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
               </div>
               <input
                 type="text"
-                value={formData.ticket}
-                onChange={(e) => setFormData({ ...formData, ticket: e.target.value })}
-                placeholder="¥"
+                value={formData?.admissionFee}
+                onChange={(e) =>
+                  setFormData({ ...formData, admissionFee: e.target.value })
+                }
+                placeholder=""
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 
          rounded-xl outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500
          hover:border-green-400 transition-all duration-200 text-sm"
@@ -89,10 +104,9 @@ function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
 
             {/* Attractions */}
             <AttractionSelect
-              attractions={formData.attractions}
-              checkedAttractions={formData.checkedAttractions}
-              setCheckedAttractions={(newChecked) => 
-                setFormData({ ...formData, checkedAttractions: newChecked })}
+              attractions={allAttractions}
+              checkedAttractions={checkedAttractions}
+              setCheckedAttractions={setCheckedAttractions}
             />
 
             {/* Description */}
@@ -104,8 +118,10 @@ function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
                 </label>
               </div>
               <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                value={formData?.description}
+                onChange={(e) =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
                 rows={4}
                 className="w-full px-4 py-3 bg-white border-2 border-gray-200 
          rounded-xl outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500
@@ -118,8 +134,10 @@ function PlaygroundForm({ formData, setFormData, onSubmit, onCancel }) {
       </div>
 
       {/* Action Buttons */}
-      <div className="px-6 py-4 bg-gradient-to-br from-gray-50 to-gray-100/80 
-                   border-t-2 border-green-500/20 flex justify-end space-x-3">
+      <div
+        className="px-6 py-4 bg-gradient-to-br from-gray-50 to-gray-100/80 
+                   border-t-2 border-green-500/20 flex justify-end space-x-3"
+      >
         <motion.button
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}

@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Sparkles } from 'lucide-react';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Plus, Sparkles } from "lucide-react";
 
-function AttractionSelect({ 
-  attractions,
+function AttractionSelect({
+  allAttractions,
   checkedAttractions,
   setCheckedAttractions,
-  className 
+  className,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [previousState, setPreviousState] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [previousCheckedState, setPreviousCheckedState] = useState({});
+
+  const handleCheckboxChange = (attractionId) => {
+    setCheckedAttractions((prev) => ({
+      ...prev,
+      [attractionId]: !prev[attractionId],
+    }));
+  };
 
   const handleExpandClick = () => {
-    setPreviousState([...checkedAttractions]);
+    setPreviousCheckedState({ ...checkedAttractions });
     setIsExpanded(true);
   };
 
@@ -22,12 +29,12 @@ function AttractionSelect({
   };
 
   const handleCancel = () => {
-    setCheckedAttractions(previousState);
+    setCheckedAttractions(previousCheckedState);
     setIsExpanded(false);
   };
 
-  const filteredAttractions = attractions.filter(attraction =>
-    attraction.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAttractions = allAttractions?.filter((attraction) =>
+    attraction?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -42,25 +49,21 @@ function AttractionSelect({
       {/* Preview Grid */}
       <div className="bg-white rounded-xl border-2 border-gray-200 p-4 mb-3">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {attractions.slice(0, 8).map((attraction, index) => (
+          {allAttractions?.slice(0, 8).map((attraction) => (
             <label
-              key={index}
+              key={attraction._id}
               className="flex items-center space-x-2 text-sm hover:text-green-600 
                        transition-colors cursor-pointer group"
             >
               <input
                 type="checkbox"
-                checked={checkedAttractions[index]}
-                onChange={(e) => {
-                  const newState = [...checkedAttractions];
-                  newState[index] = e.target.checked;
-                  setCheckedAttractions(newState);
-                }}
+                checked={checkedAttractions[attraction._id] || false}
+                onChange={() => handleCheckboxChange(attraction._id)}
                 className="rounded border-gray-300 text-green-600 
                          focus:ring-green-500 cursor-pointer"
               />
               <span className="group-hover:text-green-600 transition-colors">
-                {attraction}
+                {attraction?.name}
               </span>
             </label>
           ))}
@@ -121,25 +124,21 @@ function AttractionSelect({
 
                 <div className="border-2 border-gray-200 rounded-xl p-4 bg-white max-h-[60vh] overflow-y-auto">
                   <div className="grid grid-cols-3 gap-4">
-                    {filteredAttractions.map((attraction, index) => (
+                    {filteredAttractions.map((attraction) => (
                       <label
-                        key={index}
+                        key={attraction._id}
                         className="flex items-center space-x-2 text-sm hover:text-green-600 
                                  transition-colors cursor-pointer group"
                       >
                         <input
                           type="checkbox"
-                          checked={checkedAttractions[index]}
-                          onChange={(e) => {
-                            const newState = [...checkedAttractions];
-                            newState[index] = e.target.checked;
-                            setCheckedAttractions(newState);
-                          }}
+                          checked={checkedAttractions[attraction._id] || false}
+                          onChange={() => handleCheckboxChange(attraction._id)}
                           className="rounded border-gray-300 text-green-600 
                                    focus:ring-green-500 cursor-pointer"
                         />
                         <span className="group-hover:text-green-600 transition-colors">
-                          {attraction}
+                          {attraction?.name}
                         </span>
                       </label>
                     ))}
