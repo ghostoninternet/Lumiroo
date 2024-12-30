@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Plus, Sparkles } from 'lucide-react'; // Thêm icon Sparkles
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Plus, Sparkles } from "lucide-react"; // Thêm icon Sparkles
 
-function AttractionSelect({ 
+function AttractionSelect({
   attractions,
   checkedAttractions,
   setCheckedAttractions,
-  className 
+  className,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [previousState, setPreviousState] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [previousState, setPreviousState] = useState({});
 
   const handleExpandClick = () => {
-    setPreviousState([...checkedAttractions]);
+    setPreviousState({ ...checkedAttractions });
     setIsExpanded(true);
   };
 
@@ -26,8 +26,8 @@ function AttractionSelect({
     setIsExpanded(false);
   };
 
-  const filteredAttractions = attractions.filter(attraction =>
-    attraction.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAttractions = attractions.filter((attraction) =>
+    attraction?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -42,23 +42,24 @@ function AttractionSelect({
       {/* Preview Grid */}
       <div className="bg-white rounded-xl border-2 border-gray-200 p-4 mb-3">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {attractions.slice(0, 8).map((attraction, index) => (
+          {attractions.slice(0, 8).map((attraction) => (
             <label
-              key={index}
+              key={attraction?._id}
               className="flex items-center space-x-2 text-sm"
             >
               <input
                 type="checkbox"
-                checked={checkedAttractions[index]}
-                onChange={(e) => {
-                  const newState = [...checkedAttractions];
-                  newState[index] = e.target.checked;
-                  setCheckedAttractions(newState);
+                checked={checkedAttractions[attraction?._id] || false}
+                onChange={() => {
+                  setCheckedAttractions((prev) => ({
+                    ...prev,
+                    [attraction?._id]: !checkedAttractions[attraction?._id],
+                  }));
                 }}
                 className="rounded border-gray-300 text-green-600 
                          focus:ring-green-500"
               />
-              <span>{attraction}</span>
+              <span>{attraction?.name}</span>
             </label>
           ))}
         </div>
@@ -119,22 +120,24 @@ function AttractionSelect({
                 {/* Checkboxes Grid */}
                 <div className="border-2 border-gray-200 rounded-xl p-4 bg-white max-h-[60vh] overflow-y-auto">
                   <div className="grid grid-cols-3 gap-4">
-                    {filteredAttractions.map((attraction, index) => (
+                    {filteredAttractions.map((attraction) => (
                       <label
-                        key={index}
+                        key={attraction?._id}
                         className="flex items-center space-x-2 text-sm"
                       >
                         <input
                           type="checkbox"
-                          checked={checkedAttractions[index]}
-                          onChange={(e) => {
-                            const newState = [...checkedAttractions];
-                            newState[index] = e.target.checked;
-                            setCheckedAttractions(newState);
+                          checked={checkedAttractions[attraction?._id] || false}
+                          onChange={() => {
+                            setCheckedAttractions((prev) => ({
+                              ...prev,
+                              [attraction?._id]:
+                                !checkedAttractions[attraction?._id],
+                            }));
                           }}
                           className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                         />
-                        <span>{attraction}</span>
+                        <span>{attraction?.name}</span>
                       </label>
                     ))}
                   </div>

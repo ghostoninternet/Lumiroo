@@ -1,18 +1,28 @@
-import React from 'react';
-import { FaEye, FaTrash } from 'react-icons/fa';
-import { motion } from 'framer-motion';
-import Pagination from '../../../../components/PlaygroundList/Pagination';
-import { useNavigate } from 'react-router-dom';  
+import { FaEye, FaTrash } from "react-icons/fa";
+import { motion } from "framer-motion";
+import Pagination from "../../../../components/PlaygroundList/Pagination";
+import { useNavigate } from "react-router-dom";
+import convertTimeToString from "../../../../utils/convertTimeToString";
+import { deletePlayground } from "../../../../apis/admin";
 
-function PlaygroundTable() {
+function PlaygroundTable({
+  displayPlaygrounds,
+  pagination,
+  onPageChange,
+  onDelete,
+}) {
   const navigate = useNavigate();
-  const playgrounds = [
-    { id: "00000001", name: "Place#1", attractions: "300000", price: "300000", hours: "8:00-16:00" },
-    { id: "00000002", name: "Place#2", attractions: "300000", price: "300000", hours: "8:00-16:00" },
-    { id: "00000003", name: "Place#3", attractions: "300000", price: "300000", hours: "8:00-16:00" },
-    { id: "00000004", name: "Place#4", attractions: "300000", price: "300000", hours: "8:00-16:00" },
-    { id: "00000005", name: "Place#5", attractions: "300000", price: "300000", hours: "8:00-16:00" },
-  ];
+
+  const handleDelete = async (id) => {
+    if (window.confirm("本当に削除しますか？")) {
+      try {
+        await deletePlayground(id);
+        onDelete(); // Refresh playground list
+      } catch (error) {
+        console.error("Error deleting playground:", error);
+      }
+    }
+  };
 
   return (
     <motion.div
@@ -35,10 +45,7 @@ function PlaygroundTable() {
                   施設名
                 </th>
                 <th className="py-4 px-6 text-left font-bold text-green-700 uppercase text-xs tracking-wider">
-                  アトラクション
-                </th>
-                <th className="py-4 px-6 text-left font-bold text-green-700 uppercase text-xs tracking-wider">
-                  料金
+                  料金-べトナムドン
                 </th>
                 <th className="py-4 px-6 text-left font-bold text-green-700 uppercase text-xs tracking-wider">
                   営業時間
@@ -49,9 +56,9 @@ function PlaygroundTable() {
               </tr>
             </thead>
             <tbody className="divide-y divide-green-100">
-              {playgrounds.map((playground, index) => (
+              {displayPlaygrounds?.map((playground, index) => (
                 <motion.tr
-                  key={playground.id}
+                  key={playground?._id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -61,35 +68,34 @@ function PlaygroundTable() {
                     {index + 1}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-500 group-hover:text-green-600 transition-colors">
-                    {playground.id}
+                    {playground?._id}
                   </td>
                   <td className="py-4 px-6 text-sm font-medium text-gray-900 group-hover:text-green-700">
-                    {playground.name}
+                    {playground?.name}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-500 group-hover:text-green-600 transition-colors">
-                    {playground.attractions}
+                    {playground?.admissionFee}
                   </td>
                   <td className="py-4 px-6 text-sm text-gray-500 group-hover:text-green-600 transition-colors">
-                    ¥{playground.price}
-                  </td>
-                  <td className="py-4 px-6 text-sm text-gray-500 group-hover:text-green-600 transition-colors">
-                    {playground.hours}
+                    {convertTimeToString(playground?.openingTime)}-
+                    {convertTimeToString(playground?.closingTime)}
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex items-center justify-center space-x-3">
-                    <motion.button 
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => {
-                        navigate(`/admin/playgrounds/${playground.id}`); // Đường dẫn cho admin view
-                      }}  // Đảm bảo đường dẫn này đúng
-                      className="p-2 text-green-600 hover:text-green-500 hover:bg-green-50 
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => {
+                          navigate(`/admin/playgrounds/${playground?._id}`); // Đường dẫn cho admin view
+                        }} // Đảm bảo đường dẫn này đúng
+                        className="p-2 text-green-600 hover:text-green-500 hover:bg-green-50 
                                 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
-                      title="詳細を見る"
-                    >
-                      <FaEye className="w-4 h-4" />
-                    </motion.button>
-                      <motion.button 
+                        title="詳細を見る"
+                      >
+                        <FaEye className="w-4 h-4" />
+                      </motion.button>
+                      <motion.button
+                        onClick={() => handleDelete(playground?._id)}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         className="p-2 text-red-600 hover:text-white hover:bg-red-500 
@@ -109,12 +115,12 @@ function PlaygroundTable() {
         <div className="px-6 py-4 border-t-2 border-green-500/20 bg-gradient-to-br from-green-50 to-white">
           <div className="flex justify-between items-center">
             <div className="text-sm text-green-600 font-medium">
-              表示: {playgrounds.length} 件
+              表示: {displayPlaygrounds?.length} 件
             </div>
             <Pagination
-              currentPage={1}
-              totalPages={5}
-              onPageChange={() => {}}
+              currentPage={pagination.currentPage}
+              totalPages={pagination.totalPages}
+              onPageChange={onPageChange}
             />
           </div>
         </div>

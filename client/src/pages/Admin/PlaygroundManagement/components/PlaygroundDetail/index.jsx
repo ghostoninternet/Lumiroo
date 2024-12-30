@@ -1,30 +1,34 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Pencil } from 'lucide-react';
-import PlaygroundInfo from './PlaygroundInfo';
-import PlaygroundBreadcrumb from './PlaygroundBreadcrumb';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Pencil } from "lucide-react";
+import PlaygroundInfo from "./PlaygroundInfo";
+import PlaygroundBreadcrumb from "./PlaygroundBreadcrumb";
+import { getPlaygroundDetails } from "../../../../../apis/playground";
+import { updatePlayground } from "../../../../../apis/admin";
 
 function PlaygroundDetail() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [playground, setPlayground] = useState({});
 
-  // Mock data
-  const mockData = {
-    id: id,
-    name: "Place#1",
-    image: null,
-    openTime: "8:00",
-    closeTime: "16:00",
-    ticket: "300000",
-    attractions: ['プール', 'レストラン', 'お化け屋敷', 'ローラー',
-                 '観覧車', 'メリーゴーランド', 'コースター', 'キャラバン'],
-    checkedAttractions: [true, true, false, true, false, true, false, true],
-    description: "遊び場の詳細情報です。\n様々なアトラクションをお楽しみいただけます。"
+  const fetchPlaygroundData = async () => {
+    try {
+      const { data } = await getPlaygroundDetails(id);
+      setPlayground(data);
+    } catch (err) {
+      console.error("Error fetching playground:", err);
+    }
   };
 
-  const [playgroundData, setPlaygroundData] = useState(mockData);
+  useEffect(() => {
+    fetchPlaygroundData();
+  }, [id, isEditing]);
+
+  const handleOnSave = async (playgroundId, updateData) => {
+    await updatePlayground(playgroundId, updateData);
+    setIsEditing(false);
+  };
 
   return (
     <div className="min-h-screen">
@@ -38,7 +42,9 @@ function PlaygroundDetail() {
         <div className="flex justify-between items-start mb-6">
           <div className="space-y-1">
             <h1 className="text-2xl font-bold text-green-600">遊び場詳細</h1>
-            <p className="text-sm text-gray-600">遊び場の情報を確認・編集できます。</p>
+            <p className="text-sm text-gray-600">
+              遊び場の情報を確認・編集できます。
+            </p>
           </div>
           {!isEditing && (
             <motion.button
@@ -57,15 +63,10 @@ function PlaygroundDetail() {
         </div>
 
         {/* Playground Information */}
-        <PlaygroundInfo 
-          data={playgroundData} 
+        <PlaygroundInfo
+          data={playground}
           isEditing={isEditing}
-          onSave={async (updatedData) => {
-            // Mock API update
-            console.log('Saving updated data:', updatedData);
-            setPlaygroundData(updatedData);
-            setIsEditing(false);
-          }}
+          onSave={handleOnSave}
           onCancel={() => setIsEditing(false)}
         />
       </motion.div>
