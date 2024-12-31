@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "init": "node src/seed/seed_data.js src/seed/seed_user.js",
+    "init": "node src/seed/seed_data.js && node src/seed/seed_user.js",
     "init:faker": "node src/seed/seed_data_fake.js",
     "init:users": "node src/seed/seed_user.js"
   },
