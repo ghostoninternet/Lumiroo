@@ -51,14 +51,14 @@ const filterPlayground = async (filterParams) => {
   if (openingTime) {
     condition = {
       ...condition,
-      openingTime: { $gte: openingTime },
+      openingTime: { $lte: openingTime },
     };
   }
 
   if (closingTime) {
     condition = {
       ...condition,
-      closingTime: { $lte: closingTime },
+      closingTime: { $gte: closingTime },
     };
   }
 

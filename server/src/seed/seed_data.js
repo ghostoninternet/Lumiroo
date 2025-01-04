@@ -83,6 +83,7 @@ const reviewsData = [
     },
 ];
 
+
 const areaNames = [
     'ハノイ', 'ホーチミン', 'ダナン', 'ハイフォン', 'カントー', 'ニャチャン', 'ダラット', 'フエ', 
     'ビン', 'クアンニン', 'バクニン', 'ハザン', 'カオバン', 'ライチャウ', 'ディエンビエン', 'ラオカイ', 
@@ -125,6 +126,9 @@ const usersData = [
         ],
     },
 ];
+
+
+
 const playgroundData = [
     {
         _id: new mongoose.Types.ObjectId('6742a19077300f01cf591b04'),
